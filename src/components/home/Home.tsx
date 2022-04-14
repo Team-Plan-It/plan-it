@@ -14,7 +14,7 @@ import "./Home.css";
 // types
 type EventName = string;
 type TimeSelect = string;
-type DateSelected = string;
+type DateSelected = string | null;
 type Email = string;
 type TimeZone = string;
 
@@ -33,9 +33,12 @@ const Home = () => {
   const { register, handleSubmit, setValue, formState: { errors}, reset } = useForm<FormData>();
 
   // initialize state - date selected by user 
-  const [ chosenDay, setChosenDay ] = useState<DateSelected>(new DayPilot.Date().value)
+  const [ chosenDay, setChosenDay ] = useState<DateSelected>();
 
+  // if not date selected
+  const [ noDate, setNoDate ] = useState<Boolean>(false);
 
+  // get timezone of user
   const getTimezone:string = (new DayPilot.Date().toDateLocal().toString());
   const extractTimezone:RegExpExecArray | null = /(GMT).*$/.exec(getTimezone);
   const timezone:string = extractTimezone![0];
@@ -44,13 +47,18 @@ const Home = () => {
   // when user clicks generate link button to submit form
   const onSubmit = handleSubmit(data => {
     console.log(data);
-    // axios POST
-    axios.post("", data)
-    .then(res => console.log(res.data))
-    .catch(error => console.log(error));
-    // reset form fields
-    reset();
-    setChosenDay(new DayPilot.Date().value);
+    if (chosenDay){
+      // axios POST
+      axios.post("", data)
+      .then(res => console.log(res.data))
+      .catch(error => console.log(error));
+      // reset form fields
+      reset();
+      setChosenDay(new DayPilot.Date().value);
+      setNoDate(false);
+    }else {
+      setNoDate(true);
+    }
   });
 
   return(
@@ -113,18 +121,24 @@ const Home = () => {
        
         <DayPilotNavigator 
           selectMode={"day"}
-          startDate={chosenDay}
+          startDate={new DayPilot.Date().value}
           onTimeRangeSelected={(args:any) => {
             console.log(
               `You clicked ${args.day}; start=${args.start}; end=${args.end}`
               );
               setChosenDay(args.day.value);
-            }}
-            />
+          }}
+        />
+        {
+          noDate 
+          ?<p>Please select a date</p>
+          :null
+        }
+
         <button
           type="submit"
           onClick={() => {
-            setValue("date", chosenDay);
+            setValue("date", chosenDay ?chosenDay :null);
             setValue("timezone", timezone);
           }}>
           Generate Link
