@@ -16,11 +16,14 @@ type EventName = string;
 type TimeSelect = string;
 type DateSelected = string;
 type Email = string;
+type TimeZone = string;
+
 
 type FormData = {
   eventName: EventName;
   length: TimeSelect;
   date: DateSelected;
+  timezone: TimeZone;
   users: Email;
 }
 
@@ -31,6 +34,12 @@ const Home = () => {
 
   // initialize state - date selected by user 
   const [ chosenDay, setChosenDay ] = useState<DateSelected>(new DayPilot.Date().value)
+
+
+  const getTimezone:string = (new DayPilot.Date().toDateLocal().toString());
+  const extractTimezone:RegExpExecArray | null = /(GMT).*$/.exec(getTimezone);
+  const timezone:string = extractTimezone![0];
+  console.log(getTimezone, timezone)
 
   // when user clicks generate link button to submit form
   const onSubmit = handleSubmit(data => {
@@ -54,6 +63,9 @@ const Home = () => {
 
       <div className="homeInput">
        <form onSubmit={ onSubmit }>
+         <section className="formEventDetails">
+
+        
           <label htmlFor="eventName"> Name of Event </label>
           <input 
             type="text" 
@@ -83,6 +95,8 @@ const Home = () => {
             </span> 
           )}
 
+           <p>Your time zone is: {timezone}</p>
+
           <label htmlFor="users">Invite participants</label>
           <input 
             type="email" 
@@ -93,18 +107,10 @@ const Home = () => {
               Email address is required
             </span> 
           )}
-
-        <button
-          type="submit"
-          onClick={() => {
-            setValue("date", chosenDay)
-          }}>
-          Generate Link
-        </button>
-       </form>
-       
-      <div className="homeCalendar">
+       </section>
+      <section className="formEventCalendar">
         <p>Choose Date(s)</p>
+       
         <DayPilotNavigator 
           selectMode={"day"}
           startDate={chosenDay}
@@ -115,7 +121,18 @@ const Home = () => {
               setChosenDay(args.day.value);
             }}
             />
-        </div>
+        <button
+          type="submit"
+          onClick={() => {
+            setValue("date", chosenDay);
+            setValue("timezone", timezone);
+          }}>
+          Generate Link
+        </button>
+        </section>
+        
+       </form>
+       
        
       </div>
     </div>
