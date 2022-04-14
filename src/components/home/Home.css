@@ -1,0 +1,34 @@
+/* Home styles */
+
+.home{
+  display: flex;
+  flex-direction: column;
+}
+
+.homeIntro{
+  text-align: left;
+}
+
+.homeInput {
+  display: flex;
+}
+.homeInput form{
+  display: flex;
+  flex-direction: column;
+  
+  width: 50%;
+}
+
+.homeInput label{
+  padding: 25px 0;
+}
+
+.homeInput select,
+.homeInput input {
+  width: 250px;
+}
+
+.homeInput button{
+  width: 200px;
+  margin-top: 25px;
+}

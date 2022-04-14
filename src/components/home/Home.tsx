@@ -1,5 +1,11 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import { DayPilot, DayPilotCalendar, DayPilotNavigator } from "@daypilot/daypilot-lite-react";
+
+// styles
+import "./Home.css";
 
 //components
 
@@ -19,6 +25,8 @@ const Home = () => {
   
   const { register, handleSubmit, setValue, watch, formState: { errors}, reset } = useForm<FormData>();
 
+  const [ chosenDay, setChosenDay ] = useState<DateSelected>(new DayPilot.Date())
+
   const onSubmit = handleSubmit(data => {
     console.log(data);
     reset();
@@ -32,16 +40,13 @@ const Home = () => {
       </div>
       <div className="homeInput">
        <form onSubmit={ onSubmit }>
-        <label htmlFor="eventName">
-          Name of Event
-          <input 
-            type="text" 
-            {...register("eventName", {required: true })} />
-            {errors.eventName && "Event name is required"}
-        </label>
+        <label htmlFor="eventName"> Name of Event </label>
+        <input 
+          type="text" 
+          {...register("eventName", {required: true })} />
+        {errors.eventName && "Event name is required"}
 
-        <label htmlFor="length">
-          How long will your event be?
+        <label htmlFor="length">How long will your event be?</label>
           <select 
             {...register("length")}
             id="timeSelect">
@@ -53,20 +58,32 @@ const Home = () => {
               <option value="90">1 hour 30 minutes</option>
               <option value="120">2 hours</option>
           </select>
-        </label>
 
-        
+
 
 
         <button
           type="submit"
           onClick={() => {
             // setValue("eventName")
-           
+            setValue("date", chosenDay)
           }}>
           Generate Link
         </button>
        </form>
+       
+      <div className="homeCalendar">
+        <p>Choose Date(s)</p>
+        <DayPilotNavigator 
+          selectMode={"day"}
+          onTimeRangeSelected={(args:any) => {
+            console.log(
+              `You clicked ${args.day}; start=${args.start}; end=${args.end}`
+              );
+              setChosenDay(args.day.value);
+            }}
+            />
+        </div>
        
       </div>
 
