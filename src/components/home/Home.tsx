@@ -1,13 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { DayPilot, DayPilotNavigator } from "@daypilot/daypilot-lite-react";
+
 //components
+import TimeZone from "../TimeZone/TimeZone";
 
 // styles
 import "./Home.css";
+
 
 
 
@@ -16,14 +19,14 @@ type EventName = string;
 type TimeSelect = string;
 type DateSelected = string | null;
 type Email = string;
-type TimeZone = string;
+type UserTimeZone = string;
 
 
 type FormData = {
   eventName: EventName;
   length: TimeSelect;
   date: DateSelected;
-  timezone: TimeZone;
+  timezone: UserTimeZone;
   users: Email;
 }
 
@@ -32,17 +35,22 @@ const Home = () => {
   // initialize useForm
   const { register, handleSubmit, setValue, formState: { errors}, reset } = useForm<FormData>();
 
-  // initialize state - date selected by user 
+  // initialize state 
+  // date selected by user 
   const [ chosenDay, setChosenDay ] = useState<DateSelected>();
-
+  // timezone
+  const [ timezone, setTimezone ] = useState<string>();
   // if not date selected
   const [ noDate, setNoDate ] = useState<Boolean>(false);
 
+
   // get timezone of user
-  const getTimezone:string = (new DayPilot.Date().toDateLocal().toString());
-  const extractTimezone:RegExpExecArray | null = /(GMT).*$/.exec(getTimezone);
-  const timezone:string = extractTimezone![0];
-  console.log(getTimezone, timezone)
+  useEffect(() => {
+    const eventTimeZone = TimeZone();
+    setTimezone(eventTimeZone);
+    
+  }, [])
+  
 
   // when user clicks generate link button to submit form
   const onSubmit = handleSubmit(data => {
@@ -62,7 +70,7 @@ const Home = () => {
   });
 
   return(
-    <div className="home">
+    <div className="home wrapper">
       <div className="homeIntro">
         <h1>Schedule a New Event</h1>
         <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam deserunt enim sint architecto! Aliquid iste accusantium possimus quod.</p>
@@ -139,7 +147,7 @@ const Home = () => {
           type="submit"
           onClick={() => {
             setValue("date", chosenDay ?chosenDay :null);
-            setValue("timezone", timezone);
+            setValue("timezone", timezone ?timezone :"");
           }}>
           Generate Link
         </button>
