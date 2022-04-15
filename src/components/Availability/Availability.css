@@ -1,0 +1,22 @@
+.availability form{
+  display: flex;
+  padding: 2%;
+}
+
+.availabilityFormCalendar {
+  display: flex;
+  flex-direction: column;
+  padding: 0 2%;
+}
+
+.availabilityFormName input{
+  border-radius: 5px;
+  height: 25px;
+}
+.availabilityFormCalendar button {
+  align-self: flex-end;
+  font-size: .6em;
+  width: 150px;
+  padding: 10px;
+  margin-top: 20px;
+}

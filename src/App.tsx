@@ -1,13 +1,28 @@
 import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+// components
 import Home from "./components/home/Home";
+import Availability from './components/Availability/Availability';
+
+//styles
 import './App.css';
+
 
 const App: React.FC = () => {
   return (
-    <div className="App">
-      <Home />
+    <Router>
+      <div className="App">
 
-    </div>
+        <Routes>
+          <Route path="/" element={<Home />}/>
+          <Route path="/availability" element={ <Availability />}/>
+        </Routes>
+      
+
+      </div>
+
+    </Router>
   );
 }
 
