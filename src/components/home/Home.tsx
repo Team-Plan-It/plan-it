@@ -49,7 +49,7 @@ const Home = () => {
     console.log(data);
     if (chosenDay){
       // axios POST
-      axios.post("", data)
+      axios.post("http://localhost:4000/dates/add", data)
       .then(res => console.log(res.data))
       .catch(error => console.log(error));
       // reset form fields
