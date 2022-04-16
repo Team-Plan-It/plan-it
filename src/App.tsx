@@ -7,6 +7,7 @@ import Availability from './components/Availability/Availability';
 
 //styles
 import './App.css';
+import DisplayAvailability from './components/DisplayAvailability/DisplayAvailability';
 
 
 const App: React.FC = () => {
@@ -17,6 +18,7 @@ const App: React.FC = () => {
         <Routes>
           <Route path="/" element={<Home />}/>
           <Route path="/availability" element={ <Availability />}/>
+          <Route path="/results" element={<DisplayAvailability />}/>
         </Routes>
       
 
