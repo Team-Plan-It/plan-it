@@ -22,12 +22,13 @@ type Email = string;
 type UserTimeZone = string;
 
 
+
 type FormData = {
   eventName: EventName;
   length: TimeSelect;
   date: DateSelected;
   timezone: UserTimeZone;
-  users: Email;
+  emails: Email;
 }
 
 
@@ -117,8 +118,8 @@ const Home = () => {
           <input 
             type="email" 
             multiple
-            {...register("users", {required: true })}/>
-          {errors.users && (
+            {...register("emails", {required: true })}/>
+          {errors.emails && (
             <span role="alert">
               Email address is required
             </span> 

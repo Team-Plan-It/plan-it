@@ -12,4 +12,15 @@ meetDateRoute.route('/add').post(function (req, res) {
     });
 });
 
+meetDateRoute.route("/availability/:id").get(function (req, res) {
+    const id = req.params.id
+    const mainmeeting = MeetDateModel.findById(id).then((meeting) => {
+        res.status(200).json({'mainmeeting': meeting});
+    })
+})
+
+meetDateRoute.route("/availability/:id").post(function (req, res) {
+    
+})
+
 module.exports = meetDateRoute;
