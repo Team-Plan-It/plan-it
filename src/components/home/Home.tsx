@@ -18,7 +18,7 @@ import "./Home.css";
 type EventName = string;
 type TimeSelect = string;
 type DateSelected = string | null;
-type Email = string;
+type Email = string[];
 type UserTimeZone = string;
 
 
