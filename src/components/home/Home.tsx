@@ -18,8 +18,10 @@ import "./Home.css";
 type EventName = string;
 type TimeSelect = string;
 type DateSelected = string | null;
-type Email = string;
+type UserEmails = string;
 type UserTimeZone = string;
+type Email = string;
+
 
 
 type FormData = {
@@ -27,7 +29,8 @@ type FormData = {
   length: TimeSelect;
   date: DateSelected;
   timezone: UserTimeZone;
-  users: Email;
+  users: UserEmails;
+  emails: Email[];
 }
 
 
@@ -56,6 +59,13 @@ const Home = () => {
   const onSubmit = handleSubmit(data => {
     console.log(data);
     if (chosenDay){
+      // split emails into array of strings
+      const emails = data.users;
+      const emailArray:string[] = emails.split(", ")
+      // console.log(emailArray)
+      data.emails = [...emailArray];
+      // console.log(data.emails)
+    
       // axios POST
       axios.post("", data)
       .then(res => console.log(res.data))
