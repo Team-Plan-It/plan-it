@@ -13,7 +13,11 @@ import availabilities from "../../testEvents";
 
 
 // types
+type UserAvailabilities = {
+  user: string;
+  dates: string[][];
 
+} 
 
 
 
@@ -23,57 +27,79 @@ const DisplayAvailability = () => {
   
   
   //initialize state
-  const [eventArray, setEventArray] = useState(availabilities);
+  const [eventArray, setEventArray] = useState<UserAvailabilities[]>([]);
+  const [ eventCreated, setEventCreated ] = useState<Boolean>(false);
+  const [ userNames, setUserNames ] = useState<string[]>([]);
 
 
+  // gets all usernames from data
+  useEffect(() => {
+    let userArray:string[] = [];
+    availabilities.forEach((obj) => {
+      let name:string = obj.user;
+      userArray.push(name);
+    })
+    setUserNames(userArray);
+  }, [availabilities])
   
+  // creates events from data
   useEffect(() => {
     const colorArray:string[] = ["#ff5733", "#ffb533", "#fcff33", "#33ff46", "#33f6ff", "#3361ff", "#d733ff"];
 
-    let eventList = [...eventArray];
-    console.log(eventList);
-     try{
-       // map through each object in the events array
-       eventList.forEach((obj, index) => {
-         // assign a color for each user object
-         let color:string = colorArray[index];
-         if (obj === undefined){
-           console.log("obj is undefined", index)
-         }else {
-           console.log(obj, index)
-            obj.dates.forEach((date:string[]) => {
-              // in each object, map through the array of dates to create new Date Pilot events
-              if(date === undefined){
-                console.log("date is undefined", date)
+    try{
+      if(!eventCreated){
+        setEventArray(availabilities);
+        let eventList = [...eventArray];
+        console.log(eventList);
 
-              }else {
-                console.log(date)
-                let newEvent:any[] = new DayPilot.Event({
-                  start: date[0],
-                  end: date[1],
-                  id: DayPilot.guid(),
-                  text: obj.user,
-                  backColor: color,
-                  fontColor: "#000000",
-                 });
-                //  add the new event to the events list
-                 calendar.events.add(newEvent);
-                 console.log(newEvent)
-                 if(calendar === undefined){
-                   console.log("calendar is undefined");
-                 }else {
-                   console.log(calendar)
-                 }
-              }
-            })
-         }
-        })
+         // map through each object in the events array
+         eventList.forEach((obj, index) => {
+           // assign a color for each user object
+           let color:string = colorArray[index];
+
+            
+           if (obj === undefined){
+             console.log("obj is undefined", index)
+           }else {
+             console.log(obj, index)
+              obj.dates.forEach((date:string[]) => {
+                // in each object, map through the array of dates to create new Date Pilot events
+                if(date === undefined){
+                  console.log("date is undefined", date)
+  
+                }else {
+                  console.log(date)
+                  let newEvent:any[] = new DayPilot.Event({
+                    start: date[0],
+                    end: date[1],
+                    id: DayPilot.guid(),
+                    text: obj.user,
+                    backColor: color,
+                    fontColor: "#000000",
+                   });
+                  //  add the new event to the events list
+                   calendar.events.add(newEvent);
+                   console.log(newEvent);
+                   
+                   if(calendar === undefined){
+                     console.log("calendar is undefined");
+                   }else {
+                     console.log(calendar)
+                   }
+                }
+              })
+           } if (index = eventList.length -1){
+              setEventCreated(true)
+              setEventArray([]);}
+          });
+       };
      }catch{
-       console.log("error")
+       console.log("error");
      }
+  }, [eventArray, calendar, eventCreated]);
 
- 
-  }, [eventArray, calendar])
+
+  // 
 
   return(
     <div className="display">
