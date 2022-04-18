@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import { ReactMultiEmail, isEmail } from 'react-multi-email';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { DayPilot, DayPilotNavigator } from "@daypilot/daypilot-lite-react";
@@ -9,6 +10,7 @@ import { DayPilot, DayPilotNavigator } from "@daypilot/daypilot-lite-react";
 import TimeZone from "../TimeZone/TimeZone";
 
 // styles
+import 'react-multi-email/style.css';
 import "./Home.css";
 
 
@@ -18,8 +20,8 @@ import "./Home.css";
 type EventName = string;
 type TimeSelect = string;
 type DateSelected = string | null;
-type Email = string;
 type UserTimeZone = string;
+type Email = string;
 
 
 type FormData = {
@@ -27,11 +29,11 @@ type FormData = {
   length: TimeSelect;
   date: DateSelected;
   timezone: UserTimeZone;
-  users: Email;
+  emails: Email[];
 }
 
 
-const Home = () => {
+const Home:React.FC = () => {
   // initialize useForm
   const { register, handleSubmit, setValue, formState: { errors}, reset } = useForm<FormData>();
 
@@ -42,6 +44,10 @@ const Home = () => {
   const [ timezone, setTimezone ] = useState<string>();
   // if not date selected
   const [ noDate, setNoDate ] = useState<Boolean>(false);
+  // emails
+  const [ inputtedEmails, setInputtedEmails ] = useState<string[]>([]);
+  // if no emails entered
+  const [ noEmails, setNoEmails ] = useState<Boolean>(false)
 
 
   // get timezone of user
@@ -55,17 +61,20 @@ const Home = () => {
   // when user clicks generate link button to submit form
   const onSubmit = handleSubmit(data => {
     console.log(data);
-    if (chosenDay){
+    // user needs to have selected a date and entered an email addresss in order to run the axios call
+    if (chosenDay && !noEmails){
       // axios POST
-      axios.post("", data)
+      axios.post("http://localhost:4000/dates/add", data)
       .then(res => console.log(res.data))
       .catch(error => console.log(error));
       // reset form fields
       reset();
       setChosenDay(new DayPilot.Date().value);
       setNoDate(false);
-    }else {
+    }else if(!chosenDay){
       setNoDate(true);
+    }else if (noEmails){
+      setNoEmails(true);
     }
   });
 
@@ -80,19 +89,20 @@ const Home = () => {
       <div className="homeInput">
        <form onSubmit={ onSubmit }>
          <section className="formEventDetails">
-
-        
+          {/* input for name of meeting */}
           <label htmlFor="eventName"> Name of Event </label>
           <input 
             type="text" 
             aria-invalid={errors.eventName ?"true" :"false"}
             {...register("eventName", {required: true })} />
+            {/* error message if no name entered */}
           {errors.eventName && (
             <span role="alert">
               Event name is required
             </span> 
           )}
-
+          
+          {/* input for length of meeting */}
           <label htmlFor="length">How long will your event be?</label>
           <select 
             {...register("length", {required: true })}
@@ -105,25 +115,46 @@ const Home = () => {
               <option value="90">1 hour 30 minutes</option>
               <option value="120">2 hours</option>
           </select>
+          {/* error message if no time selected */}
           {errors.length && (
             <span role="alert">
               Length is required
             </span> 
           )}
 
+          {/* displays current time zone of user */}
            <p>Your time zone is: {timezone}</p>
 
+          {/* input for email addressess */}
           <label htmlFor="users">Invite participants</label>
-          <input 
-            type="email" 
-            multiple
-            {...register("users", {required: true })}/>
-          {errors.users && (
-            <span role="alert">
-              Email address is required
-            </span> 
-          )}
+          <ReactMultiEmail 
+            placeholder="Email address"
+            emails={inputtedEmails}
+            onChange={(_emails:string[]) => {setInputtedEmails(_emails)}}
+            validateEmail={ email => { return isEmail(email)}} //return Boolean
+            getLabel={(
+              email: string,
+              index: number,
+              removeEmail: (index: number) => void, 
+            ) => {
+              return(
+                <div data-tag key={index}>
+                  {email}
+                  <span data-tag-handle onClick={() => removeEmail(index)}>
+                    x
+                  </span>
+                </div>
+              )
+            }}
+          />
+          {/* error message if no emails entered */}
+          {
+            noEmails
+            ?<p>Please enter an email address</p>
+            :null
+          }   
        </section>
+
       <section className="formEventCalendar">
         <p>Choose Date(s)</p>
        
@@ -137,25 +168,32 @@ const Home = () => {
               setChosenDay(args.day.value);
           }}
         />
+
+        {/* error message if no date selected */}
         {
           noDate 
           ?<p>Please select a date</p>
           :null
         }
 
+        {/*  button to submit form */}
         <button
           type="submit"
           onClick={() => {
-            setValue("date", chosenDay ?chosenDay :null);
-            setValue("timezone", timezone ?timezone :"");
+            if(inputtedEmails.length > 0){
+              setNoEmails(false)
+              setValue("date", chosenDay ?chosenDay :null);
+              setValue("timezone", timezone ?timezone :"");
+              setValue("emails", inputtedEmails ?inputtedEmails :[])
+            }else {
+              setNoEmails(true);
+            }
+    
           }}>
           Generate Link
         </button>
-        </section>
-        
+        </section>       
        </form>
-       
-       
       </div>
     </div>
   )
