@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import Modal from "react-modal";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ReactMultiEmail, isEmail } from 'react-multi-email';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -37,17 +39,25 @@ const Home:React.FC = () => {
   // initialize useForm
   const { register, handleSubmit, setValue, formState: { errors}, reset } = useForm<FormData>();
 
+  let navigate = useNavigate();
+
+  Modal.setAppElement('#root');
+
   // initialize state 
   // date selected by user 
   const [ chosenDay, setChosenDay ] = useState<DateSelected>();
   // timezone
   const [ timezone, setTimezone ] = useState<string>();
   // if not date selected
-  const [ noDate, setNoDate ] = useState<Boolean>(false);
+  const [ noDate, setNoDate ] = useState<boolean>(false);
   // emails
   const [ inputtedEmails, setInputtedEmails ] = useState<string[]>([]);
   // if no emails entered
-  const [ noEmails, setNoEmails ] = useState<Boolean>(false)
+  const [ noEmails, setNoEmails ] = useState<boolean>(false);
+  // schedule meeting modal open or closed
+  const [ schedModalIsOpen, setSchedModalIsOpen ] = useState<boolean>(false);
+  // success modal open or closed
+  const [ successModalIsOpen, setSuccessModalIsOpen ] = useState<boolean>(false);
 
 
   // get timezone of user
@@ -56,6 +66,28 @@ const Home:React.FC = () => {
     setTimezone(eventTimeZone);
     
   }, [])
+
+
+  // open modal to schedule meeting
+  const openSchedulingModal = () => {
+    setSchedModalIsOpen(true);
+  }
+
+  // when scheduling modal is closed
+  const closeSchedulingModal = () => {
+    setSchedModalIsOpen(false);
+  }
+
+  // // open success modal
+  // const openSuccessModal = () => {
+  //   setSuccessModalIsOpen(true);
+  // }
+
+  // close success module and navigate to availability page
+  const closeSuccessModal = () => {
+    setSuccessModalIsOpen(false);
+     navigate("/availability");
+  }
   
 
   // when user clicks generate link button to submit form
@@ -71,6 +103,8 @@ const Home:React.FC = () => {
       reset();
       setChosenDay(new DayPilot.Date().value);
       setNoDate(false);
+      setSchedModalIsOpen(false); // closes scheduling modal
+      setSuccessModalIsOpen(true); // opens success modal
     }else if(!chosenDay){
       setNoDate(true);
     }else if (noEmails){
@@ -85,116 +119,135 @@ const Home:React.FC = () => {
         <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam deserunt enim sint architecto! Aliquid iste accusantium possimus quod.</p>
       </div>
 
+      <button className="scheduleModalOpen" onClick={openSchedulingModal}>Schedule a meeting</button>
 
-      <div className="homeInput">
-       <form onSubmit={ onSubmit }>
-         <section className="formEventDetails">
-          {/* input for name of meeting */}
-          <label htmlFor="eventName"> Name of Event </label>
-          <input 
-            type="text" 
-            aria-invalid={errors.eventName ?"true" :"false"}
-            {...register("eventName", {required: true })} />
-            {/* error message if no name entered */}
-          {errors.eventName && (
-            <span role="alert">
-              Event name is required
-            </span> 
-          )}
-          
-          {/* input for length of meeting */}
-          <label htmlFor="length">How long will your event be?</label>
-          <select 
-            {...register("length", {required: true })}
-            id="timeSelect">
-              <option value="">Select</option>
-              <option value="15">15 minutes</option>
-              <option value="30">30 minutes</option>
-              <option value="45">45 minutes</option>
-              <option value="60">1 hour</option>
-              <option value="90">1 hour 30 minutes</option>
-              <option value="120">2 hours</option>
-          </select>
-          {/* error message if no time selected */}
-          {errors.length && (
-            <span role="alert">
-              Length is required
-            </span> 
-          )}
+      <Modal 
+        isOpen={schedModalIsOpen}
+        onRequestClose={closeSchedulingModal}
+        contentLabel="Meeting Scheduling"
+      >
+        <div className="homeInput">
+        <form onSubmit={ onSubmit }>
+          <section className="formEventDetails">
+            {/* input for name of meeting */}
+            <label htmlFor="eventName"> Name of Event </label>
+            <input 
+              type="text" 
+              aria-invalid={errors.eventName ?"true" :"false"}
+              {...register("eventName", {required: true })} />
+              {/* error message if no name entered */}
+            {errors.eventName && (
+              <span role="alert">
+                Event name is required
+              </span> 
+            )}
+            
+            {/* input for length of meeting */}
+            <label htmlFor="length">How long will your event be?</label>
+            <select 
+              {...register("length", {required: true })}
+              id="timeSelect">
+                <option value="">Select</option>
+                <option value="15">15 minutes</option>
+                <option value="30">30 minutes</option>
+                <option value="45">45 minutes</option>
+                <option value="60">1 hour</option>
+                <option value="90">1 hour 30 minutes</option>
+                <option value="120">2 hours</option>
+            </select>
+            {/* error message if no time selected */}
+            {errors.length && (
+              <span role="alert">
+                Length is required
+              </span> 
+            )}
 
-          {/* displays current time zone of user */}
-           <p>Your time zone is: {timezone}</p>
+            {/* displays current time zone of user */}
+            <p>Your time zone is: {timezone}</p>
 
-          {/* input for email addressess */}
-          <label htmlFor="users">Invite participants</label>
-          <ReactMultiEmail 
-            placeholder="Email address"
-            emails={inputtedEmails}
-            onChange={(_emails:string[]) => {setInputtedEmails(_emails)}}
-            validateEmail={ email => { return isEmail(email)}} //return Boolean
-            getLabel={(
-              email: string,
-              index: number,
-              removeEmail: (index: number) => void, 
-            ) => {
-              return(
-                <div data-tag key={index}>
-                  {email}
-                  <span data-tag-handle onClick={() => removeEmail(index)}>
-                    x
-                  </span>
-                </div>
-              )
+            {/* input for email addressess */}
+            <label htmlFor="users">Invite participants</label>
+            <ReactMultiEmail 
+              placeholder="Email address"
+              emails={inputtedEmails}
+              onChange={(_emails:string[]) => {setInputtedEmails(_emails)}}
+              validateEmail={ email => { return isEmail(email)}} //return Boolean
+              getLabel={(
+                email: string,
+                index: number,
+                removeEmail: (index: number) => void, 
+              ) => {
+                return(
+                  <div data-tag key={index}>
+                    {email}
+                    <span data-tag-handle onClick={() => removeEmail(index)}>
+                      x
+                    </span>
+                  </div>
+                )
+              }}
+            />
+            {/* error message if no emails entered */}
+            {
+              noEmails
+              ?<p>Please enter an email address</p>
+              :null
+            }   
+        </section>
+
+        <section className="formEventCalendar">
+          <p>Choose Date(s)</p>
+        
+          <DayPilotNavigator 
+            selectMode={"day"}
+            startDate={new DayPilot.Date().value}
+            onTimeRangeSelected={(args:any) => {
+              console.log(
+                `You clicked ${args.day}; start=${args.start}; end=${args.end}`
+                );
+                setChosenDay(args.day.value);
             }}
           />
-          {/* error message if no emails entered */}
+
+          {/* error message if no date selected */}
           {
-            noEmails
-            ?<p>Please enter an email address</p>
+            noDate 
+            ?<p>Please select a date</p>
             :null
-          }   
-       </section>
+          }
 
-      <section className="formEventCalendar">
-        <p>Choose Date(s)</p>
-       
-        <DayPilotNavigator 
-          selectMode={"day"}
-          startDate={new DayPilot.Date().value}
-          onTimeRangeSelected={(args:any) => {
-            console.log(
-              `You clicked ${args.day}; start=${args.start}; end=${args.end}`
-              );
-              setChosenDay(args.day.value);
-          }}
-        />
+          {/*  button to submit form */}
+          <button
+            type="submit"
+            onClick={() => {
+              if(inputtedEmails.length > 0){
+                setNoEmails(false)
+                setValue("date", chosenDay ?chosenDay :null);
+                setValue("timezone", timezone ?timezone :"");
+                setValue("emails", inputtedEmails ?inputtedEmails :[])
+              }else {
+                setNoEmails(true);
+              }
+      
+            }}>
+            Generate Link
+          </button>
+          </section>       
+        </form>
+        </div>
 
-        {/* error message if no date selected */}
-        {
-          noDate 
-          ?<p>Please select a date</p>
-          :null
-        }
+      </Modal>
 
-        {/*  button to submit form */}
-        <button
-          type="submit"
-          onClick={() => {
-            if(inputtedEmails.length > 0){
-              setNoEmails(false)
-              setValue("date", chosenDay ?chosenDay :null);
-              setValue("timezone", timezone ?timezone :"");
-              setValue("emails", inputtedEmails ?inputtedEmails :[])
-            }else {
-              setNoEmails(true);
-            }
-    
-          }}>
-          Generate Link
-        </button>
-        </section>       
-       </form>
-      </div>
+      {/* success modal */}
+      <Modal
+        isOpen={successModalIsOpen}
+        onRequestClose={closeSuccessModal}
+        contentLabel="Link was sent successfully"
+      >
+        <h2>Success!</h2>
+        <p>Your link was sent.</p>
+        <button onClick={closeSuccessModal}>Add your availability</button>
+      </Modal>
     </div>
   )
 };
