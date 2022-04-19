@@ -30,16 +30,16 @@ meetDateRoute.route("/availability/:id").post(function (req, res) {
       .catch(err => {
           res.status(400).send("unable to save to database");
       })
-    let mainmeeting = await MeetDateModel.findById(id).then((mainmeeting) => {
-        mainmeeting.users.unshift(user);
-        mainmeeting.save()
-            .then(meetingSaved => {
-                res.status(200).json({'meetingSaved': 'User in added successfully'});
-            })
-            .catch(err => {
-                res.status(400).send("unable to save to database");
-            });
-    })
+    // let mainmeeting = MeetDateModel.findById(id).then((mainmeeting) => {
+    //     mainmeeting.users.unshift(user);
+    //     mainmeeting.save()
+    //         .then(meetingSaved => {
+    //             res.status(200).json({'meetingSaved': 'User in added successfully'});
+    //         })
+    //         .catch(err => {
+    //             res.status(400).send("unable to save to database");
+    //         });
+    // })
 })
 
 module.exports = meetDateRoute;
