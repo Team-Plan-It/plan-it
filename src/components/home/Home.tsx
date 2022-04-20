@@ -22,7 +22,7 @@ type TimeSelect = string;
 type DateSelected = string | null;
 type UserTimeZone = string;
 type Email = string;
-type meetingNumber = number;
+type meetingNumber = string;
 
 
 
@@ -59,7 +59,9 @@ const Home:React.FC = () => {
   const [ schedModalIsOpen, setSchedModalIsOpen ] = useState<boolean>(false);
   // success modal open or closed
   const [ successModalIsOpen, setSuccessModalIsOpen ] = useState<boolean>(false);
-
+  // the meeting number
+  const [ meetingNumID, setMeetingNumID ] = useState<string>();
+  
 
   // get timezone of user
   useEffect(() => {
@@ -84,19 +86,13 @@ const Home:React.FC = () => {
   const closeSuccessModal = () => {
     setSuccessModalIsOpen(false);
     
-    // get meeting id from db
-    // axios.get("http://localhost:4000/")
-    // .then((response) => {
-    //   console.log(response.data)
-    //   // get event id from response.data
-  
+    // get meeting id from state
     //   // use event id as params for navigate/:id
     //   // make changes to Route in App.tsx to match
-      navigate("/availability/8370");
-    // })
-    // .catch((error) => {
-    //   console.log(error)
-    // })
+      if(meetingNumID){
+        navigate(`/availability/${meetingNumID}`);
+      }
+
   }
 
   function getRndInteger(min = 1000, max = 9999) {
@@ -106,8 +102,10 @@ const Home:React.FC = () => {
 
   // when user clicks generate link button to submit form
   const onSubmit = handleSubmit(data => {
-     let rndNum = getRndInteger(1000,9999) 
-     data.meetingNumber = rndNum;
+     let rndNum = getRndInteger(1000,9999);
+     let rndNumString = rndNum.toString();
+     data.meetingNumber = rndNumString;
+     setMeetingNumID(rndNumString);
     //  console.log(data);
     
     // user needs to have selected a date and entered an email addresss in order to run the axios call
