@@ -9,6 +9,11 @@
   text-align: left;
 }
 
+.scheduleModalOpen {
+  width: 250px;
+}
+
+/* scheduling modal */
 .homeInput {
   display: flex;
 }
