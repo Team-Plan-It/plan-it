@@ -16,8 +16,6 @@ import 'react-multi-email/style.css';
 import "./Home.css";
 
 
-
-
 // types
 type EventName = string;
 type TimeSelect = string;
@@ -78,10 +76,6 @@ const Home:React.FC = () => {
     setSchedModalIsOpen(false);
   }
 
-  // // open success modal
-  // const openSuccessModal = () => {
-  //   setSuccessModalIsOpen(true);
-  // }
 
   // close success module and navigate to availability page
   const closeSuccessModal = () => {
