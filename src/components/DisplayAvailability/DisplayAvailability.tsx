@@ -9,7 +9,7 @@ import { DayPilot, DayPilotCalendar } from "@daypilot/daypilot-lite-react";
 import availabilities from "../../testEvents";
 
 //styles
-
+import "./DisplayAvailability";
 
 
 // types
@@ -118,7 +118,7 @@ const DisplayAvailability = () => {
             startDate={"2022-05-09T09:00:00"}
             viewType={"Week"}
             headerDateFormat={"d MMMM yyyy"}
-            eventArrangement={"Full"}
+            eventArrangement={"SideBySide"}
             ref={(component:any | void) => {
               calendar = component && component.control;
             }}
