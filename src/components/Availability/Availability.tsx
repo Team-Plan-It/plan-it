@@ -97,7 +97,7 @@ const Availability = () => {
   const onSubmit = handleSubmit<FormData>(data => {
     console.log(data);
     // axios POST
-    axios.post("", data)
+    axios.post("http://localhost:4000/dates/availability/:id", data)
     .then(res => console.log(res.data))
     .catch(error => console.log(error));
 

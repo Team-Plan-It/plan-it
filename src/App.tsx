@@ -4,10 +4,10 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 // components
 import Home from "./components/home/Home";
 import Availability from './components/Availability/Availability';
+// import DisplayAvailability from './components/DisplayAvailability/DisplayAvailability';
 
 //styles
 import './App.css';
-import DisplayAvailability from './components/DisplayAvailability/DisplayAvailability';
 
 
 const App: React.FC = () => {
@@ -17,8 +17,7 @@ const App: React.FC = () => {
 
         <Routes>
           <Route path="/" element={<Home />}/>
-          <Route path="/availability" element={ <Availability />}/>
-          <Route path="/results" element={<DisplayAvailability />}/>
+          <Route path="/availability/:id" element={ <Availability />}/>
         </Routes>
       
 
