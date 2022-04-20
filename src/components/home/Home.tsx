@@ -22,6 +22,7 @@ type TimeSelect = string;
 type DateSelected = string | null;
 type UserTimeZone = string;
 type Email = string;
+type meetingNumber = number;
 
 
 
@@ -31,6 +32,7 @@ type FormData = {
   date: DateSelected;
   timezone: UserTimeZone;
   emails: Email[];
+  meetingNumber: meetingNumber;
 }
 
 
@@ -90,22 +92,29 @@ const Home:React.FC = () => {
   
     //   // use event id as params for navigate/:id
     //   // make changes to Route in App.tsx to match
-      navigate("/availability");
+      navigate("/availability/8370");
     // })
     // .catch((error) => {
     //   console.log(error)
     // })
   }
+
+  function getRndInteger(min = 1000, max = 9999) {
+    return Math.floor(Math.random() * (max - min + 1) ) + min;
+  }
   
 
   // when user clicks generate link button to submit form
   const onSubmit = handleSubmit(data => {
-    console.log(data);
+     let rndNum = getRndInteger(1000,9999) 
+     data.meetingNumber = rndNum;
+    //  console.log(data);
+    
     // user needs to have selected a date and entered an email addresss in order to run the axios call
     if (chosenDay && !noEmails){
       // axios POST
       axios.post("http://localhost:4000/dates/add", data)
-      .then(res => console.log(res.data))
+      .then(res => console.log(data))
       .catch(error => console.log(error));
       // reset form fields
       reset();
@@ -119,6 +128,7 @@ const Home:React.FC = () => {
       setNoEmails(true);
     }
   });
+  
 
   return(
     <div className="home wrapper">

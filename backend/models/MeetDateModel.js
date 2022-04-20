@@ -7,6 +7,7 @@ let MeetDateModel = new Schema({
     date: { type: String },
     timezone: { type: String },
     emails: [{ type: String }],
+    meetingNumber: { type: Number },
     users: [{ type: Schema.Types.ObjectId, ref: 'User' }],
 },{
     collection: 'meetdates'
