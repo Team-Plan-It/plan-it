@@ -80,7 +80,20 @@ const Home:React.FC = () => {
   // close success module and navigate to availability page
   const closeSuccessModal = () => {
     setSuccessModalIsOpen(false);
-     navigate("/availability");
+    
+    // get meeting id from db
+    // axios.get("http://localhost:4000/")
+    // .then((response) => {
+    //   console.log(response.data)
+    //   // get event id from response.data
+  
+    //   // use event id as params for navigate/:id
+    //   // make changes to Route in App.tsx to match
+      navigate("/availability");
+    // })
+    // .catch((error) => {
+    //   console.log(error)
+    // })
   }
   
 
