@@ -1,3 +1,13 @@
-.calendar_default_event{
-  width: 25%;
+div.calendar_default_event{
+  width: calc(100%/6);
+}
+
+
+.displayResults {
+  display: flex;
+  padding-top: 30px;
+}
+.displayNames {
+  width: 200px;
+  padding-right: 20px;
 }

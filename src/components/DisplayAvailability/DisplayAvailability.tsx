@@ -7,6 +7,7 @@ import { DayPilot, DayPilotCalendar } from "@daypilot/daypilot-lite-react";
 
 //components
 import availabilities from "../../testEvents";
+import meetingData from "../../testEventsMeetingInfo";
 
 //styles
 import "./DisplayAvailability";
@@ -28,8 +29,12 @@ const DisplayAvailability = () => {
   
   //initialize state
   const [eventArray, setEventArray] = useState<UserAvailabilities[]>([]);
-  const [ eventCreated, setEventCreated ] = useState<Boolean>(false);
+  const [ eventCreated, setEventCreated ] = useState<boolean>(false);
   const [ userNames, setUserNames ] = useState<string[]>([]);
+
+
+
+
 
 
   // gets all usernames from data
@@ -40,7 +45,7 @@ const DisplayAvailability = () => {
       userArray.push(name);
     })
     setUserNames(userArray);
-  }, [availabilities])
+  }, [])
   
   // creates events from data
   useEffect(() => {
@@ -88,7 +93,7 @@ const DisplayAvailability = () => {
                    }
                 }
               })
-           } if (index = eventList.length -1){
+           } if (index === eventList.length -1){
               setEventCreated(true)
               setEventArray([]);}
           });
