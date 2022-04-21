@@ -7,6 +7,7 @@
 type UserInfo = {
   userName: string;
   timeZone: string;
+  dateArray: string[];
   availability: {
     start: string;
     end:string;
@@ -37,6 +38,7 @@ type MeetingData = {
       {
       userName: "Thor",
       timeZone: "GMT-0400 (Eastern Daylight Saving Time)",
+      dateArray: ["2022-05-09", "2022-05-10", "2022-05-11", "2022-05-12", "2022-05-13"],
       availability:[
         {
           start:"2022-05-09T09:00:00",
@@ -73,6 +75,7 @@ type MeetingData = {
      {
       userName: "Loki",
       timeZone: "GMT-0400 (Eastern Daylight Saving Time)",
+      dateArray: ["2022-05-09", "2022-05-10", "2022-05-11", "2022-05-12", "2022-05-13"],
       availability:[
         {
           start:"2022-05-09T12:00:00",
@@ -109,6 +112,7 @@ type MeetingData = {
     {
       userName: "Gamora",
       timeZone: "GMT-0400 (Eastern Daylight Saving Time)",
+      dateArray: ["2022-05-09", "2022-05-10", "2022-05-11", "2022-05-12", "2022-05-13"],
       availability:[
         {
           start:"2022-05-09T10:00:00",
@@ -145,6 +149,7 @@ type MeetingData = {
     {
       userName: "Natasha",
       timeZone: "GMT-0400 (Eastern Daylight Saving Time)",
+      dateArray: ["2022-05-09", "2022-05-10", "2022-05-11", "2022-05-12", "2022-05-13"],
       availability:[
         {
           start: "2022-05-09T09:00:00",

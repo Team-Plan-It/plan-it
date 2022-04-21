@@ -11,3 +11,6 @@ div.calendar_default_event{
   width: 200px;
   padding-right: 20px;
 }
+.displayNames ul {
+  list-style: none;
+}

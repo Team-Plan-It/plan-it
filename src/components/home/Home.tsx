@@ -106,7 +106,7 @@ const Home:React.FC = () => {
      let rndNumString = rndNum.toString();
      data.meetingNumber = rndNumString;
      setMeetingNumID(rndNumString);
-    //  console.log(data);
+     console.log(data);
     
     // user needs to have selected a date and entered an email addresss in order to run the axios call
     if (chosenDay && !noEmails){
@@ -215,7 +215,7 @@ const Home:React.FC = () => {
           <p>Choose Date(s)</p>
         
           <DayPilotNavigator 
-            selectMode={"day"}
+            selectMode={"week"}
             startDate={new DayPilot.Date().value}
             onTimeRangeSelected={(args:any) => {
               console.log(

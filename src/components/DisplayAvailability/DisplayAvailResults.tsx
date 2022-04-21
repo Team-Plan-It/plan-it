@@ -191,7 +191,7 @@ const DisplayAvailResults = () => {
       </div>
       <div className="displayResults">
         <div className="displayNames">
-          <p>Names should appear here</p>
+          <p>Names </p>
           <ul>
             <>
             {
