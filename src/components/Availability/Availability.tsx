@@ -27,8 +27,17 @@ const Availability = () => {
   // initialize useForm
   const { register, handleSubmit, setValue, formState: { errors}, reset } = useForm<FormData>();
 
-  // initialize DayPilot calendar
-  // let calendar = DayPilot.Calendar;
+  // on page load, get meeting info from db
+  useEffect(() => {
+    axios.get("http://localhost:4000/dates/availability/:id")
+    .then(data => {
+      console.log(data)
+      // get meeting name and date from data
+      // display meeting name
+      // pass date into calendar
+      // do we need meeting number?
+    })
+  }, [])
 
   // initialize state
   // const [ time, setTime ] = useState<string[]>([]);
