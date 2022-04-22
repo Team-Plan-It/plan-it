@@ -11,6 +11,7 @@ import meetingData from "../../testEventsMeetingInfo";
 //styles
 import "./DisplayAvailability.css";
 import { calculateNewValue } from "@testing-library/user-event/dist/utils";
+import UserToggles from "../UserToggles/UserToggles";
 
 
 // types
@@ -34,6 +35,10 @@ type UserInfo = {
   }[]
 } 
 
+// function toggle(value){
+//   return !value;
+// }
+
 
 const DisplayAvailResults = () => {
   let calendar = DayPilot.Calendar;
@@ -56,7 +61,7 @@ const DisplayAvailResults = () => {
   const [ userInfoData, setUserInfoData ] = useState<UserInfo[]>()
   // if an event has been created
   const [ eventCreated, setEventCreated ] = useState<boolean>(false);
-  
+ 
 
 
 
@@ -197,16 +202,7 @@ const DisplayAvailResults = () => {
             <>
             {
               userNames
-              ?userNames.map((user, index) => {
-                return(
-                  <li key={index}>
-                    <label htmlFor={user}>
-                      <input type="checkbox" id={user} className={user} />
-                      {user}
-                    </label>
-                  </li>
-                )
-              })
+              ?<UserToggles names={userNames}/>
               :null
             }
             </>
