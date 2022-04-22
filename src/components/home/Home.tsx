@@ -90,11 +90,20 @@ const Home:React.FC = () => {
     //   // use event id as params for navigate/:id
     //   // make changes to Route in App.tsx to match
       if(meetingNumID){
-        navigate(`/availability/${meetingNumID}`);
+        //do axios get call here to get meeting info also with that meeting number
+        axios.get(`http://localhost:4000/dates/availability/${meetingNumID}`)
+        .then(data => {
+        //  Passing the meeting number through the URL to the Availability page
+          navigate(`/availability/${meetingNumID}`, { 
+           state: {
+             meetingNumID: meetingNumID,
+           }
+          });
+        })
       }
-
   }
-
+  // function that gets ranodm number for meeting
+  // Might change this to be more on the backend
   function getRndInteger(min = 1000, max = 9999) {
     return Math.floor(Math.random() * (max - min + 1) ) + min;
   }
@@ -110,9 +119,9 @@ const Home:React.FC = () => {
     
     // user needs to have selected a date and entered an email addresss in order to run the axios call
     if (chosenDay && !noEmails){
-      // axios POST
+      // axios POST request that adds the meeting to the database
       axios.post("http://localhost:4000/dates/add", data)
-      .then(res => console.log(data))
+      .then(res => console.log('done'))
       .catch(error => console.log(error));
       // reset form fields
       reset();

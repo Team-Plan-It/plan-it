@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import { useLocation } from "react-router-dom";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { DayPilot, DayPilotCalendar } from "@daypilot/daypilot-lite-react";
@@ -17,27 +18,31 @@ type AvailabilityArray = any[];
 type Timezone = string;
 
 
+
 type FormData = {
   userName: UserName;
   availability: AvailabilityArray;
   timezone: Timezone;
 }
 
-const Availability = () => {
-  // initialize useForm
-  const { register, handleSubmit, setValue, formState: { errors}, reset } = useForm<FormData>();
 
+
+const Availability = (props: any) => {
+  // initialize useForm
+
+  const { register, handleSubmit, setValue, formState: { errors}, reset } = useForm<FormData>();
+  
   // on page load, get meeting info from db
-  useEffect(() => {
-    axios.get("http://localhost:4000/dates/availability/:id")
-    .then(data => {
-      console.log(data)
-      // get meeting name and date from data
-      // display meeting name
-      // pass date into calendar
-      // do we need meeting number?
-    })
-  }, [])
+  // useEffect(() => {
+  //   axios.get("http://localhost:4000/dates/availability/:id")
+  //   .then(data => {
+  //     console.log(data)
+  //     // get meeting name and date from data
+  //     // display meeting name
+  //     // pass date into calendar
+  //     // do we need meeting number?
+  //   })
+  // }, [])
 
   // initialize state
   // const [ time, setTime ] = useState<string[]>([]);
@@ -60,6 +65,7 @@ const Availability = () => {
     // console.log(`You selected: start=${args.start}; end=${args.end}`);
     // setTime([args.start, args.end]);
     console.log(args);
+    
 
     // the two parameters of the event time block in string format
     // eg. "2022-04-05T09:00:00"
@@ -100,13 +106,18 @@ const Availability = () => {
     console.log(dp.events);
     setEventArray(dp.events.list);
   }
-
+  
+  const availabilityNavigation: any = useLocation()
+  const meetingNumID = availabilityNavigation.state['meetingNumID']
+  // console.log(meetingNumID)
 
   // when user submits availability form
+  //***NEED TO GET THE MEETING NUMBER FROM THE URL AND THEN SET THE POST REQUEST TO THAT */
   const onSubmit = handleSubmit<FormData>(data => {
     console.log(data);
+
     // axios POST
-    axios.post("http://localhost:4000/dates/availability/:id", data)
+    axios.post(`http://localhost:4000/dates/availability/${meetingNumID}`, data)
     .then(res => console.log(res.data))
     .catch(error => console.log(error));
 
