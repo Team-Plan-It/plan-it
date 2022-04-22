@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 
 let UserModel = new Schema({
     userName: { type: String },
+    timeZone: { type: String },
     availability: [{ type: Object }]
 },{
     collection: 'users'
