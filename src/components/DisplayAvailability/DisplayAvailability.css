@@ -1,5 +1,8 @@
-div.calendar_default_event{
-  width: calc(100%/6);
+
+
+div.calendar_default_event_inner{
+  width: 20px;
+  padding: 2px;
 }
 
 
@@ -13,4 +16,8 @@ div.calendar_default_event{
 }
 .displayNames ul {
   list-style: none;
+}
+
+.target {
+  width: 10%;
 }

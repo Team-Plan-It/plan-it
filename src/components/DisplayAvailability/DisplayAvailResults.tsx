@@ -120,7 +120,8 @@ const DisplayAvailResults = () => {
                     toolTip: user.userName,
                     backColor: color,
                     fontColor: "#000000",
-                    
+                    // cssClass: user.userName,
+                    cssClass: "target",
                    });
                   //  add the new event to the events list
                    calendar.events.add(newEvent);
@@ -218,8 +219,10 @@ const DisplayAvailResults = () => {
             viewType={"WorkWeek"}
             headerDateFormat={"d MMMM yyyy"}
             eventArrangement={"SideBySide"}
+            CssOnly={"true"}
             cssOnly={"true"}
             showToolTip={"true"}
+            // cssClassPrefix = {"calendar_black"}
             ref={(component:any | void) => {
               calendar = component && component.control;
             }}
