@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
+import mailer from "../../utils/mailer";
 import axios from "axios";
 import { ReactMultiEmail, isEmail } from 'react-multi-email';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -93,10 +94,13 @@ const Home:React.FC = () => {
         //do axios get call here to get meeting info also with that meeting number
         axios.get(`http://localhost:4000/dates/availability/${meetingNumID}`)
         .then(data => {
+          console.log(data['data'][0]['eventName'])
         //  Passing the meeting number through the URL to the Availability page
           navigate(`/availability/${meetingNumID}`, { 
            state: {
              meetingNumID: meetingNumID,
+             eventName: data['data'][0]['eventName'],
+             date: data['data'][0]['date'],
            }
           });
         })
@@ -115,13 +119,18 @@ const Home:React.FC = () => {
      let rndNumString = rndNum.toString();
      data.meetingNumber = rndNumString;
      setMeetingNumID(rndNumString);
-    //  console.log(data);
+     let firstEmail = data.emails[0];
+     console.log(firstEmail);
+    //  mailer.sendMail(firstEmail)
+     
     
     // user needs to have selected a date and entered an email addresss in order to run the axios call
     if (chosenDay && !noEmails){
       // axios POST request that adds the meeting to the database
       axios.post("http://localhost:4000/dates/add", data)
-      .then(res => console.log('done'))
+      .then(res => 
+        console.log(data)
+        )
       .catch(error => console.log(error));
       // reset form fields
       reset();

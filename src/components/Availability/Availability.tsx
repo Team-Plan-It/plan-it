@@ -31,19 +31,6 @@ const Availability = (props: any) => {
   // initialize useForm
 
   const { register, handleSubmit, setValue, formState: { errors}, reset } = useForm<FormData>();
-  
-  // on page load, get meeting info from db
-  // useEffect(() => {
-  //   axios.get("http://localhost:4000/dates/availability/:id")
-  //   .then(data => {
-  //     console.log(data)
-  //     // get meeting name and date from data
-  //     // display meeting name
-  //     // pass date into calendar
-  //     // do we need meeting number?
-  //   })
-  // }, [])
-
   // initialize state
   // const [ time, setTime ] = useState<string[]>([]);
   // all availabilites selected by user
@@ -106,10 +93,18 @@ const Availability = (props: any) => {
     console.log(dp.events);
     setEventArray(dp.events.list);
   }
-  
+  //Params passsed throught naviagtion
+    // on page load, get meeting info from db
+
+      // get meeting name and date from data
+      // display meeting name
+      // pass date into calendar
+      // do we need meeting number?
   const availabilityNavigation: any = useLocation()
   const meetingNumID = availabilityNavigation.state['meetingNumID']
-  // console.log(meetingNumID)
+  const eventName = availabilityNavigation.state['eventName']
+  const eventDate = availabilityNavigation.state['eventDate']
+  // console.log(eventName)
 
   // when user submits availability form
   //***NEED TO GET THE MEETING NUMBER FROM THE URL AND THEN SET THE POST REQUEST TO THAT */
@@ -118,7 +113,7 @@ const Availability = (props: any) => {
 
     // axios POST
     axios.post(`http://localhost:4000/dates/availability/${meetingNumID}`, data)
-    .then(res => console.log(res.data))
+    .then(res => console.log('hello'))
     .catch(error => console.log(error));
 
 
