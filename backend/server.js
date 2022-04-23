@@ -11,7 +11,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 require('../backend/config/db.config')
-app.use(express.static(path.resolve(__dirname, "./client/build")));
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.resolve(__dirname, "./client/build")));
+}
+
 app.use('/dates', meetDateRoute);
 
 const PORT = process.env.PORT || 4000;
