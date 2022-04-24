@@ -5,6 +5,11 @@ div.calendar_default_event_inner{
   padding: 2px;
 }
 
+.hide{
+  color: white;
+  visibility: hidden;
+}
+
 
 .displayResults {
   display: flex;

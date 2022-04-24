@@ -10,20 +10,9 @@ import meetingData from "../../testEventsMeetingInfo";
 
 //styles
 import "./DisplayAvailability.css";
-import { calculateNewValue } from "@testing-library/user-event/dist/utils";
-import UserToggles from "../UserToggles/UserToggles";
 
 
-// types
-// interface Availability {
-//     Start: string,
-//     End: string,
-// }
 
-// interface UserInfo {
-//   UserName: string,
-//   UserAvailabiliy: Availability
-// }
 type UserInfo = {
   userName: string;
   timeZone: string;
@@ -35,9 +24,11 @@ type UserInfo = {
   }[]
 } 
 
-// function toggle(value){
-//   return !value;
-// }
+type ToggleProps = {
+  names: string[];
+  userData: UserInfo[];
+}
+
 
 
 const DisplayAvailResults = () => {
@@ -61,7 +52,33 @@ const DisplayAvailResults = () => {
   const [ userInfoData, setUserInfoData ] = useState<UserInfo[]>()
   // if an event has been created
   const [ eventCreated, setEventCreated ] = useState<boolean>(false);
- 
+  // array of all events created
+  const [ arrayOfEvents, setArrayOfEvents ] = useState<any[]>();
+
+    // if checkbox toggled
+  const [ user1checked, setUser1Checked ] = useState<boolean>(true);
+  const [ user2checked, setUser2Checked ] = useState<boolean>(true);
+  const [ user3checked, setUser3Checked ] = useState<boolean>(true);
+  const [ user4checked, setUser4Checked ] = useState<boolean>(true);
+  const [ user5checked, setUser5Checked ] = useState<boolean>(true);
+  const [ user6checked, setUser6Checked ] = useState<boolean>(true);
+
+  // toggle event to show or hide
+  const [ user1visible, setUser1Visible ] = useState<boolean>(true);
+  const [ user2visible, setUser2Visible ] = useState<boolean>(true);
+  const [ user3visible, setUser3Visible ] = useState<boolean>(true);
+  const [ user4visible, setUser4Visible ] = useState<boolean>(true);
+  const [ user5visible, setUser5Visible ] = useState<boolean>(true);
+  const [ user6visible, setUser6Visible ] = useState<boolean>(true);
+
+
+  // arrays of each users events
+  const [ user1eventArray, setUser1eventArray ] = useState<UserInfo>();
+  const [ user2eventArray, setUser2eventArray ] = useState<UserInfo>();
+  const [ user3eventArray, setUser3eventArray ] = useState<UserInfo>();
+  const [ user4eventArray, setUser4eventArray ] = useState<UserInfo>();
+  const [ user5eventArray, setUser5eventArray ] = useState<UserInfo>();
+  const [ user6eventArray, setUser6eventArray ] = useState<UserInfo>();
 
 
 
@@ -86,73 +103,190 @@ const DisplayAvailResults = () => {
 
   }, []);
 
-  //  create events from meeting data
+  // separate users
   useEffect(() => {
-    const colorArray:string[] = ["#ff5733", "#ffb533", "#fcff33", "#33ff46", "#33f6ff", "#3361ff", "#d733ff"];
+     const colorArray:string[] = ["#ff5733", "#ffb533", "#fcff33", "#33ff46", "#33f6ff", "#3361ff", "#d733ff"];
 
-    let userInfoArray = userInfoData ?[...userInfoData] :null;
-    
-    try{
+      let eventArray:any[] = [];
+
+      if(!eventCreated && userInfoData){
+
+        userInfoData!.forEach((user, index) => {
+         
+             // assign a color for each user 
+             let color:string = colorArray[index];
   
-        let eventArray = [];
-        if(userInfoData){
+             switch(index){
+               case 0:
+                  let user1array = user;
+                  let user1color = color;
 
-        // map through each user object in the meeting data
-        userInfoData.forEach((user, index) => {
-           if(!eventCreated){
-
-           // assign a color for each user 
-           let color:string = colorArray[index];
-
-          console.log(index, userInfoData.length)
-            
-           if (user === undefined){
-             console.log("obj is undefined", index)
-           }else {
-             // loop through the availability for the user
-              user.availability.forEach((availBlock) => {
-                // in each object, map through the array of dates to create new Date Pilot events
-                if(availBlock === undefined){
-                  console.log("availBlock is undefined", availBlock)
+                  setUser1eventArray(user)
   
-                }else {
-                  // create a new DayPilot event for each time block
-                  let newEvent:any[] = new DayPilot.Event({
-                    start: availBlock.start,
-                    end: availBlock.end,
-                    id: DayPilot.guid(),
-                    text: user.userName,
-                    toolTip: user.userName,
-                    backColor: color,
-                    fontColor: "#000000",
-                    // cssClass: user.userName,
-                    cssClass: "target",
-                   });
-                  //  add the new event to the events list
-                   calendar.events.add(newEvent);
+                   // loop through the availability for the user
+                  user1array.availability.forEach(availBlock => {
+                    //  create a new event for each availability block
+                    let newEvent:any[] = new DayPilot.Event({
+                      start: availBlock.start,
+                      end: availBlock.end,
+                      id: "user1",
+                      text: user1array.userName,
+                      toolTip: user1array.userName,
+                      backColor: user1color,
+                      fontColor: "#000000",
+                      // cssClass: user1visible ?"show" :"hide",
+                      
+                      ref:"user1"
+                     });
+                    //  add the new event to the events list
+                     calendar.events.add(newEvent);
+  
+                     eventArray.push(newEvent);
+                  })
+                  break;
+                case 1:
+                  let user2array = user;
+                  let user2color = color;
 
-                   eventArray.push(newEvent);
-                   
-                   if(calendar === undefined){
-                     console.log("calendar is undefined");
-                   }else {
-                     console.log(calendar)
-                   }
-                }
-              })
-           } 
-           console.log(index, userInfoData.length - 1)
-          if (index === userInfoData.length -1){
-              setEventCreated(true)
-              console.log("eventCreated should be true")
-            }
-          };
-          });
-        };
-     }catch{
-       console.log("error");
-     }
+                  setUser2eventArray(user);
+
+                  // loop through the availability for the user
+                  user2array.availability.forEach(availBlock => {
+                    //  create a new event for each availability block
+                    let newEvent:any[] = new DayPilot.Event({
+                      start: availBlock.start,
+                      end: availBlock.end,
+                      id: "user2",
+                      text: user2array.userName,
+                      toolTip: user2array.userName,
+                      backColor: user2color,
+                      fontColor: "#000000",
+                      cssClass: user2visible ?"show" :"hide",
+                      ref:"user2"
+                     });
+                    //  add the new event to the events list
+                     calendar.events.add(newEvent);
+  
+                     eventArray.push(newEvent);
+                  })
+                  break;
+                case 2:
+                  let user3array = user;
+                  let user3color = color;
+
+                  setUser3eventArray(user);
+  
+                  // loop through the availability for the user
+                  user3array.availability.forEach(availBlock => {
+                    //  create a new event for each availability block
+                    let newEvent:any[] = new DayPilot.Event({
+                      start: availBlock.start,
+                      end: availBlock.end,
+                      id: "user3",
+                      text: user3array.userName,
+                      toolTip: user3array.userName,
+                      backColor: user3color,
+                      fontColor: "#000000",
+                      cssClass: user3visible ?"show" :"hide",
+                      ref:"user3"
+                     });
+                    //  add the new event to the events list
+                     calendar.events.add(newEvent);
+  
+                     eventArray.push(newEvent);
+                  })
+                  break;
+                case 3:
+                  let user4array = user;
+                  let user4color = color;
+
+                  setUser4eventArray(user);
+  
+                  // loop through the availability for the user
+                  user4array.availability.forEach(availBlock => {
+                    //  create a new event for each availability block
+                    let newEvent:any[] = new DayPilot.Event({
+                      start: availBlock.start,
+                      end: availBlock.end,
+                      id: "user4",
+                      text: user4array.userName,
+                      toolTip: user4array.userName,
+                      backColor: user4color,
+                      fontColor: "#000000",
+                      cssClass: user4visible ?"show" :"hide",
+                      ref:"user4"
+                     });
+                    //  add the new event to the events list
+                     calendar.events.add(newEvent);
+  
+                     eventArray.push(newEvent);
+                  })
+                  break;
+                case 4:
+                  let user5array = user;
+                  let user5color = color;
+  
+                  setUser5eventArray(user);
+
+                  // loop through the availability for the user
+                  user5array.availability.forEach(availBlock => {
+                    //  create a new event for each availability block
+                    let newEvent:any[] = new DayPilot.Event({
+                      start: availBlock.start,
+                      end: availBlock.end,
+                      id: "user5",
+                      text: user5array.userName,
+                      toolTip: user5array.userName,
+                      backColor: user5color,
+                      fontColor: "#000000",
+                      cssClass: user5visible ?"show" :"hide",
+                      ref:"user5"
+                     });
+                    //  add the new event to the events list
+                     calendar.events.add(newEvent);
+  
+                     eventArray.push(newEvent);
+                  })
+                  break;
+                case 5:
+                  let user6array = user;
+                  let user6color = color;
+  
+                  setUser6eventArray(user);
+
+                  // loop through the availability for the user
+                  user6array.availability.forEach(availBlock => {
+                    //  create a new event for each availability block
+                    let newEvent:any[] = new DayPilot.Event({
+                      start: availBlock.start,
+                      end: availBlock.end,
+                      id: "user6",
+                      text: user6array.userName,
+                      toolTip: user6array.userName,
+                      backColor: user6color,
+                      fontColor: "#000000",
+                      cssClass: user6visible ?"show" :"hide",
+                      ref:"user6"
+                     });
+                    //  add the new event to the events list
+                     calendar.events.add(newEvent);
+  
+                     eventArray.push(newEvent);
+                  })
+                  break;
+             }
+  
+              if (index === userInfoData!.length -1){
+                setEventCreated(true)
+                setArrayOfEvents(eventArray)
+                console.log("eventCreated should be true")
+              }
+        })
+      }
+     
   }, [userInfoData])
+
+ 
 
 
   // calculate overlapping times when all users available
@@ -177,13 +311,17 @@ const DisplayAvailResults = () => {
       timeSlotArray.push({ time: timeDisplay,  array: [] });
     }
  
-
-    // get the userInfo 
-    // 
+   
+    // go through each user and sort into each day
+     user1eventArray!.availability.forEach((timeBlock) => {
+        let startDate = new DayPilot.Date(timeBlock.start);
+        let endDate = new DayPilot.Date(timeBlock.end);
+        console.log(startDate, endDate)
+     })
 
 
     
-  }, [selectedDate])
+  }, [])
 
 
 
@@ -202,7 +340,138 @@ const DisplayAvailResults = () => {
             <>
             {
               userNames
-              ?<UserToggles names={userNames}/>
+              ?
+               <>
+              <ul className="userToggles">
+                <li key="1">
+                  {
+                    userNames.length > 0
+
+                    ?<label htmlFor={userNames[0]}>
+                      <input 
+                      type="checkbox" 
+                      id={userNames[0]} 
+                      className={userNames[0]} 
+                      checked={user1checked}
+                      onChange={e => {
+                        setUser1Checked(e.target.checked);
+                        let eventChange = calendar.elements.events;
+                        const user1events = eventChange.filter((event:any) => {return event.textContent === userNames[0]});
+                        user1events.forEach((event:any) => {event.classList.toggle("hide")})
+                        console.log(user1events!)
+                        calendar.events.update(user1events)
+                        setUser1Visible(e.target.checked);
+                      }}
+                      />
+                      {userNames[0]}
+                    </label>
+                    :null
+                  }
+                </li>
+                <li key="2">
+                  {
+                    userNames.length === 2 || userNames.length === 3 || userNames.length === 4 || userNames.length === 5 || userNames.length === 6
+
+                    ?<label htmlFor={userNames[1]}>
+                      <input 
+                      type="checkbox" 
+                      id={userNames[1]} 
+                      className={userNames[1]} 
+                      checked={user2checked}
+                      onChange={e => {
+                        setUser2Checked(e.target.checked)
+                        setUser2Visible(!user2visible);
+                      }}
+                      />
+                      {userNames[1]}
+                    </label>
+                    :null
+                  }
+                </li>
+                <li key="3">
+                  {
+                    userNames.length === 3 || userNames.length === 4 || userNames.length === 5 || userNames.length === 6 
+
+                    ?<label htmlFor={userNames[2]}>
+                      <input 
+                      type="checkbox" 
+                      id={userNames[2]} 
+                      className={userNames[2]} 
+                      checked={user3checked}
+                      onChange={e => {
+                        setUser3Checked(e.target.checked)
+                        setUser3Visible(!user3visible);
+                      }}
+                      />
+                      {userNames[2]}
+                    </label>
+                    :null
+                  }
+                </li>
+                <li key="4">
+                  {
+                    userNames.length === 4 || userNames.length === 5 || userNames.length === 6 
+
+                    ?<label htmlFor={userNames[3]}>
+                      <input 
+                      type="checkbox" 
+                      id={userNames[3]} 
+                      className={userNames[3]} 
+                      checked={user4checked}
+                      onChange={e => {
+                        console.log(e.target)
+                        setUser4Checked(e.target.checked)
+                        setUser4Visible(!user4visible);
+                      }}
+                      />
+                      {userNames[3]}
+                    </label>
+                    :null
+                  }
+                </li>
+                <li key="5">
+                  {
+                    userNames.length === 5 || userNames.length === 6 
+
+                    ?<label htmlFor={userNames[4]}>
+                      <input 
+                      type="checkbox" 
+                      id={userNames[4]} 
+                      className={userNames[4]} 
+                      checked={user5checked}
+                      onChange={e => {
+                        setUser5Checked(e.target.checked);
+                        setUser5Visible(!user5visible);
+                      }}
+                      />
+                      {userNames[4]}
+                    </label>
+                    :null
+                  }
+                </li>  
+                <li key="6">
+                  {
+                    userNames.length === 6
+
+                    ?<label htmlFor={userNames[5]}>
+                      <input 
+                      type="checkbox" 
+                      id={userNames[5]} 
+                      className={userNames[5]} 
+                      checked={user6checked}
+                      onChange={e => {
+                        setUser6Checked(e.target.checked);
+                        setUser6Visible(!user6visible);
+                      }}
+                      />
+                      {userNames[5]}
+                    </label>
+                    :null
+                  }
+                </li>   
+              </ul>
+              
+              </>
               :null
             }
             </>
@@ -218,6 +487,18 @@ const DisplayAvailResults = () => {
             CssOnly={"true"}
             cssOnly={"true"}
             showToolTip={"true"}
+            onEventClick={(args:any)  => {
+              if(args.e.id() === "user1"){
+                console.log("user1 event clicked", args.e.calendar.events.list);
+                const allevents = args.e.calendar.events.list;
+                let user1events = allevents.filter((event:any) => {return event.id === "user1"});
+                console.log(user1events)
+                user1events.forEach((event:any) => {event.cssClass = "hide"})
+                console.log(user1events)
+                // args.e.data.cssClass= "hide";
+                
+              }
+            }}
             // cssClassPrefix = {"calendar_black"}
             ref={(component:any | void) => {
               calendar = component && component.control;
