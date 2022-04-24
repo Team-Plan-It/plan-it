@@ -28,11 +28,17 @@ type FormData = {
 
 
 const Availability = (props: any) => {
-  // initialize useForm
+  //Params passsed throught naviagtion
+  // on page load, get meeting info from data
+  const availabilityNavigation: any = useLocation();
+  const meetingNumID = availabilityNavigation.state['meetingNumID'];
+  const eventName = availabilityNavigation.state['eventName'];
+  const eventDate = availabilityNavigation.state['eventDate'];
 
+  // initialize useForm
   const { register, handleSubmit, setValue, formState: { errors}, reset } = useForm<FormData>();
+
   // initialize state
-  // const [ time, setTime ] = useState<string[]>([]);
   // all availabilites selected by user
   const [ eventArray, setEventArray ] = useState<AvailabilityArray>([]);
   // timezone
@@ -43,43 +49,51 @@ const Availability = (props: any) => {
   useEffect(() => {
     const eventTimeZone = TimeZone();
     setTimezone(eventTimeZone);
-    
   }, [])
 
+  // function to put time in hours/minutes in am/pm format
+  const timeFormatCalc = (time:any) => {
+    const hours = time.getHours();
+    const hour = (hours % 12) || 12;
+    let pm = false;
+    if(hours > 11){
+      pm = true;
+    }
+    const minutes = time.getMinutes() <= 9 ? "0" + time.getMinutes() : time.getMinutes();
+
+    return `${hour}:${minutes} ${pm ?"pm" :"am"}`
+  }
 
   // creates an event when the user clicks on a time block
   const handleTimeSelected = (args:any) => {
-    // console.log(`You selected: start=${args.start}; end=${args.end}`);
-    // setTime([args.start, args.end]);
-    console.log(args);
-    
 
+    console.log(args);
     // the two parameters of the event time block in string format
     // eg. "2022-04-05T09:00:00"
     const start = args.start;
     const end = args.end;
+    
+    // get day of week number
+    const dayOfWeek = start.getDayOfWeek();
+
+    // create text with start and end time of selection
+    const startText = timeFormatCalc(start);
+    const endText = timeFormatCalc(end);
+       
 
     const dp = args.control;
     dp.clearSelection();
 
-    console.log(args);
     dp.events.add(
       new DayPilot.Event({
-        start: args.start,
-        end: args.end,
-        id: DayPilot.guid(),
-        text: `Available: ${start.getHours()}:${
-          start.getMinutes() <= 9
-            ? "0" + start.getMinutes()
-            : start.getMinutes()
-        }-${end.getHours()}:${
-          end.getMinutes() <= 9 ? "0" + end.getMinutes() : end.getMinutes()
-        }`,
+        start: start,
+        end: end,
+        id: dayOfWeek,
+        text: `Avail: ${startText} - ${endText}`,
       })
     );
     // dp.events.list contains all of the events that have been created
     setEventArray(dp.events.list);
-    // }
   };
 
 
@@ -93,29 +107,19 @@ const Availability = (props: any) => {
     console.log(dp.events);
     setEventArray(dp.events.list);
   }
-  //Params passsed throught naviagtion
-    // on page load, get meeting info from db
 
-      // get meeting name and date from data
-      // display meeting name
-      // pass date into calendar
-      // do we need meeting number?
-  const availabilityNavigation: any = useLocation()
-  const meetingNumID = availabilityNavigation.state['meetingNumID']
-  const eventName = availabilityNavigation.state['eventName']
-  const eventDate = availabilityNavigation.state['eventDate']
-  // console.log(eventName)
+
+
+
 
   // when user submits availability form
-  //***NEED TO GET THE MEETING NUMBER FROM THE URL AND THEN SET THE POST REQUEST TO THAT */
   const onSubmit = handleSubmit<FormData>(data => {
     console.log(data);
 
     // axios POST
     axios.post(`http://localhost:4000/dates/availability/${meetingNumID}`, data)
-    .then(res => console.log('hello'))
+    .then(res => console.log('post successful'))
     .catch(error => console.log(error));
-
 
     //reset form fields
     reset();
@@ -125,7 +129,7 @@ const Availability = (props: any) => {
     <div className="availability wrapper">
       <div className="availabilityIntro">
         {/* get meeting name from database */}
-        <h1>Meeting Name</h1>
+        <h1>{eventName}</h1>
         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam tempora similique corporis nesciunt quo numquam!</p>
       </div>
       <form onSubmit={ onSubmit }>
@@ -138,7 +142,7 @@ const Availability = (props: any) => {
           />
           {errors.userName && (
             <span role="alert">
-              Event name is required
+              Please enter your name
             </span> 
           )}
         </section>
@@ -149,6 +153,7 @@ const Availability = (props: any) => {
           <DayPilotCalendar 
             viewType={"Week"}
             headerDateFormat={"d MMMM yyyy"}
+            startDate={eventDate}
             onTimeRangeSelected={handleTimeSelected}
             onEventClick={handleEventClicked}
           />
