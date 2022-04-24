@@ -109,11 +109,11 @@ const Availability = (props: any) => {
   // when user submits availability form
   //***NEED TO GET THE MEETING NUMBER FROM THE URL AND THEN SET THE POST REQUEST TO THAT */
   const onSubmit = handleSubmit<FormData>(data => {
-    console.log(data);
+    // console.log(data);
 
     // axios POST
     axios.post(`http://localhost:4000/dates/availability/${meetingNumID}`, data)
-    .then(res => console.log('hello'))
+    .then(res => console.log('Added Availability'))
     .catch(error => console.log(error));
 
 

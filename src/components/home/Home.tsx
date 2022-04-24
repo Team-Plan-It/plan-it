@@ -94,7 +94,7 @@ const Home:React.FC = () => {
         //do axios get call here to get meeting info also with that meeting number
         axios.get(`http://localhost:4000/dates/availability/${meetingNumID}`)
         .then(data => {
-          console.log(data['data'][0]['eventName'])
+          console.log('Recieved Meeting Object')
         //  Passing the meeting number through the URL to the Availability page
           navigate(`/availability/${meetingNumID}`, { 
            state: {
@@ -120,7 +120,7 @@ const Home:React.FC = () => {
      data.meetingNumber = rndNumString;
      setMeetingNumID(rndNumString);
      let firstEmail = data.emails[0];
-     console.log(firstEmail);
+    //  console.log(firstEmail);
     //  mailer.sendMail(firstEmail)
      
     
@@ -128,9 +128,10 @@ const Home:React.FC = () => {
     if (chosenDay && !noEmails){
       // axios POST request that adds the meeting to the database
       axios.post("http://localhost:4000/dates/add", data)
-      .then(res => 
-        console.log(data)
-        )
+      .then(res => {
+        // console.log(data)
+        console.log('Successfully added meeting to database')
+      })
       .catch(error => console.log(error));
       // reset form fields
       reset();
