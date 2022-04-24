@@ -11,7 +11,7 @@ type UserInfo = {
   availability: {
     start: string;
     end:string;
-    id: string;
+    id: number;
     text: string;
   }[]
 } 
@@ -43,31 +43,31 @@ type MeetingData = {
         {
           start:"2022-05-09T09:00:00",
           end:"2022-05-09T14:00:00",
-          id: "kjwhkjwhg889889",
+          id: 1,
           text: "Available 9:00 - 2:00"
         },
         {
           start: "2022-05-10T11:00:00",
           end: "2022-05-10T16:00:00",
-          id: "kjw456456fghj889",
+          id: 2,
           text: "Available 11:00 - 4:00"
         },
         {
           start: "2022-05-11T09:00:00",
           end: "2022-05-11T12:00:00",
-          id: "kjw456fff6788889",
+          id: 3,
           text: "Available 9:00 - 12:00"
         },
         {
           start: "2022-05-12T12:00:00",
           end: "2022-05-12T14:00:00",
-          id: "kjw456fffwseg689",
+          id: 4,
           text: "Available 12:00 - 2:00"
         },
         {
           start: "2022-05-13T09:00:00",
           end: "2022-05-13T14:00:00",
-          id: "kj23jjj6fffwseg689",
+          id: 5,
           text: "Available 9:00 - 2:00"
         },
       ]
@@ -80,31 +80,31 @@ type MeetingData = {
         {
           start:"2022-05-09T12:00:00",
           end:"2022-05-09T13:00:00",
-          id: "45hhkjwhg889889",
+          id: 1,
           text: "Available 12:00 - 1:00"
         },
         {
           start: "2022-05-10T10:00:00",
           end: "2022-05-10T17:00:00",
-          id: "kgg446456fghj889",
+          id: 2,
           text: "Available 10:00 - 5:00"
         },
         {
           start: "2022-05-11T12:00:00",
           end: "2022-05-11T14:00:00",
-          id: "kj33lilff6788889",
+          id: 3,
           text: "Available 12:00 - 2:00"
         },
         {
           start: "2022-05-12T11:00:00",
           end: "2022-05-12T17:00:00",
-          id: "kjwby78kfwseg689",
+          id: 4,
           text: "Available 11:00 - 5:00"
         },
         {
           start: "2022-05-13T12:00:00",
           end: "2022-05-13T17:00:00",
-          id: "kjggni35gff6seg689",
+          id: 5,
           text: "Available 12:00 - 5:00"
         },
       ]
@@ -117,31 +117,31 @@ type MeetingData = {
         {
           start:"2022-05-09T10:00:00",
           end:"2022-05-09T12:00:00",
-          id: "45hh33gg789889",
+          id: 1,
           text: "Available 10:00 - 12:00"
         },
         {
           start: "2022-05-10T13:00:00",
           end: "2022-05-10T17:00:00",
-          id: "kggg772sf6456fghj889",
+          id: 2,
           text: "Available 1:00 - 5:00"
         },
         {
           start: "2022-05-11T12:00:00",
           end: "2022-05-11T14:00:00",
-          id: "kj3dcw4lff6788889",
+          id: 3,
           text: "Available 12:00 - 2:00"
         },
         {
           start: "2022-05-12T11:00:00",
           end: "2022-05-12T15:00:00",
-          id: "kjwfw5hj8988kfwseg689",
+          id: 4,
           text: "Available 11:00 - 3:00"
         },
         {
           start: "2022-05-13T10:00:00",
           end: "2022-05-13T12:00:00",
-          id: "kjggfwdh8if6seg689",
+          id: 5,
           text: "Available 10:00 - 12:00"
         },
       ]
@@ -154,37 +154,37 @@ type MeetingData = {
         {
           start: "2022-05-09T09:00:00",
           end:"2022-05-09T12:00:00",
-          id: "4d5g7jj3gg789889",
+          id: 1,
           text: "Available 10:00 - 12:00"
         },
         {
           start:"2022-05-09T14:00:00",
           end:"2022-05-09T17:00:00",
-          id: "45hvrh6689889",
+          id: 1,
           text: "Available 2:00 - 5:00"
         },
         {
           start: "2022-05-10T10:00:00",
           end: "2022-05-10T13:00:00",
-          id: "kggg7gzzddf56fghj889",
+          id: 2,
           text: "Available 10:00 - 1:00"
         },
         {
           start: "2022-05-11T09:00:00",
           end: "2022-05-11T11:00:00",
-          id: "kj3dcw4lff6788889",
+          id: 3,
           text: "Available 9:00 - 11:00"
         },
         {
           start: "2022-05-12T11:00:00",
           end: "2022-05-12T17:00:00",
-          id: "kjwffff6688kfwseg689",
+          id: 4,
           text: "Available 11:00 - 5:00"
         },
         {
           start: "2022-05-13T09:00:00",
           end: "2022-05-13T12:00:00",
-          id: "kjggfwdh8if6seg689",
+          id: 5,
           text: "Available 10:00 - 12:00"
         },
       ]
