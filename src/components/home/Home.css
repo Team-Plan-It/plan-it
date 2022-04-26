@@ -1,21 +1,7 @@
 /* Home styles */
 
-/* .home{
-  display: flex;
-  flex-direction: column;
-}
 
-.homeIntro{
-  text-align: left;
-} */
-/* 
-.scheduleModalOpen {
-  width: 250px;
-} */
-
-
-
-/* modal styles */
+/* general modal styles */
 .ReactModal__Overlay {
   position: fixed;
   top: 0;
@@ -26,7 +12,8 @@
 }
 
 
-.welcomeModal, .scheduleModal {
+.welcomeModal, .scheduleModal, 
+.successModal {
   position: absolute;
   top: 40px;
   left: 320px;
@@ -85,17 +72,24 @@
 
 }
 
-.welcomeModal span{
+.welcomeModal span,
+.successModal span{
   color: #1657F3;
 }
 
 
 
 /* scheduling modal styles */
-.scheduleModal {
+.scheduleModal,
+.successMessages {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.scheduleModal {
+  padding-left: 70px;
+  min-width: calc(870px - 274px);
 }
 
 .scheduleModal h1 {
@@ -111,6 +105,13 @@
 
 .homeInput form{
   display: flex;
+  flex: 0 1;
+  width: 100%;
+  min-width: 700px;
+}
+.homeInput section {
+  width: 50%;
+  padding: 20px;
 }
 
 /* details section of form */
@@ -184,9 +185,6 @@
 }
 
 /* calendar section of form */
-/* .formEventCalendar {
-  /* padding-top: 30px; */
-/* } */
 
 .navigator_default_main {
   border-left: 1px solid #fff;
@@ -194,6 +192,9 @@
   border-bottom: 1px solid #fff;
   font-family: 'Lexend', sans-serif;
   font-size: 12px;
+  border-radius: 15px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  margin-top: 10px;
 }
 
 .navigator_default_main *,
@@ -244,7 +245,6 @@
 }
 
 
-
 .navigator_default_todaybox {
   border: 1px solid #1657F3;
   border-radius: 10px;
@@ -262,6 +262,23 @@
   background-color: #FFFFFF;
 }
 
+/* button to submit meeting info */
+.meetingSubmitBtn {
+  position: relative;
+  right: -70px;
+  margin-top: 30px;
+
+}
+
+/* sucess modal styles */
+.successMessages {
+  height: 100%;
+  justify-content: space-evenly;
+}
+.successMessages h2 {
+  font-size: 2.25rem;
+  text-align: center;
+}
 
 
 /* media queries */

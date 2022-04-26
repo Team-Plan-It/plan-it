@@ -13,6 +13,12 @@ import { DayPilot, DayPilotNavigator } from "@daypilot/daypilot-lite-react";
 //components
 import TimeZone from "../TimeZone/TimeZone";
 
+//assets
+import AirplaneIcon from "../../assets/paperAirplane.js";
+import AvailabilityIcon from "../../assets/availability.js";
+import MeetingIcon from "../../assets/meetingDetails.js";
+import OverlapIcon from "../../assets/overlap.js";
+
 // styles
 import 'react-multi-email/style.css';
 import "../../dayPilotNavigator.css";
@@ -182,21 +188,24 @@ const Home:React.FC = () => {
             <li>
               <h3>Meeting <span>Details</span></h3>
               <div className="imageContainer">
-                <img src="https://placekitten.com/100/200" alt="random cute kitten"></img>
+                <MeetingIcon />
+               
               </div>
               <p>Set the calendar parameters to your liking.</p>
             </li>
             <li>
               <h3>Add <span>Availability</span></h3>
               <div className="imageContainer">
-                <img src="https://placekitten.com/100/200" alt="random cute kitten"></img>
+                <AvailabilityIcon />
+               
               </div>
               <p>Everyone is emailed a link to add their availability.</p>
             </li>
             <li>
               <h3>View <span>Overlapped Times</span></h3>
               <div className="imageContainer">
-                <img src="https://placekitten.com/100/200" alt="random cute kitten"></img>
+                <OverlapIcon />
+
               </div>
               <p>View overlapping times amongst your team.</p>
             </li>
@@ -312,6 +321,7 @@ const Home:React.FC = () => {
               {/*  button to submit form */}
               <button
                 type="submit"
+                className="meetingSubmitBtn"
                 onClick={() => {
                   console.log(inputtedEmails.length)
                   if(inputtedEmails.length > 0 && chosenDay){
@@ -348,9 +358,13 @@ const Home:React.FC = () => {
           className={"successModal"}
           overlayClassName={"successOverlay"}
         >
-          <h2>Success!</h2>
-          <p>Your link was sent.</p>
-          <button onClick={closeSuccessModal}>Add your availability</button>
+          <div className="successMessages">
+            <h2>Link was <span>Successfully Sent</span></h2>
+            <div className="imageContainer">
+                <AirplaneIcon />
+            </div>
+            <button onClick={closeSuccessModal}>Add availability</button>
+          </div>
         </Modal>
 
       </div>
