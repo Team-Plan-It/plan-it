@@ -67,6 +67,9 @@
   text-align: center;
 }
 
+.welcomeModal .imageContainer {
+  height: 150px;
+}
 .welcomeModal img {
   padding-bottom: 20px;
 

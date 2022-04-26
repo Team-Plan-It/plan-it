@@ -301,7 +301,7 @@ const Home:React.FC = () => {
               <p>Choose up to 7 days</p>
             
               <DayPilotNavigator 
-                selectMode={"day"}
+                selectMode={"week"}
                 startDate={new DayPilot.Date().value}
                 onTimeRangeSelected={(args:any) => {
                   console.log(
