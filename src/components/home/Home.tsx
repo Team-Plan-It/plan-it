@@ -299,7 +299,7 @@ const Home:React.FC = () => {
 
             <section className="formEventCalendar">
               <p>Choose up to 7 days</p>
-            
+      
               <DayPilotNavigator 
                 selectMode={"week"}
                 startDate={new DayPilot.Date().value}
