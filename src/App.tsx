@@ -17,15 +17,17 @@ const App: React.FC = () => {
   return (
     <Router>
       <div className="App">
-
-        <Routes>
-          <Route path="/" element={<Home />}/>
-          <Route path="/availability/:id" element={ <Availability />}/>
-          {/* <Route path="/results" element={<DisplayAvailability />} /> */}
-          <Route path="/results" element={ <DisplayAvailResults />} />
-        </Routes>
-      
-
+        <div className="sidebar">
+          <p className='logo'>Logo</p>
+        </div>
+        <main id='modalRoot'>
+          <Routes>
+            <Route path="/" element={<Home />}/>
+            <Route path="/availability/:id" element={ <Availability />}/>
+            <Route path="/results" element={ <DisplayAvailResults />} />
+            {/* add results route */}
+          </Routes>
+        </main>
       </div>
 
     </Router>

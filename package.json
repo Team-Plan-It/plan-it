@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@daypilot/daypilot-lite-react": "^3.2.1",
+    "@hookform/error-message": "^2.0.0",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.0.1",
     "@testing-library/user-event": "^13.5.0",
