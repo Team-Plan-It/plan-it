@@ -1,42 +1,271 @@
 /* Home styles */
 
-.home{
+/* .home{
   display: flex;
   flex-direction: column;
 }
 
 .homeIntro{
   text-align: left;
-}
-
+} */
+/* 
 .scheduleModalOpen {
   width: 250px;
+} */
+
+
+
+/* modal styles */
+.ReactModal__Overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #00000040;
 }
 
-/* scheduling modal */
+
+.welcomeModal, .scheduleModal {
+  position: absolute;
+  top: 40px;
+  left: 320px;
+  right: 45px;
+  bottom: 40px;
+  border: 1px solid #ccc;
+  background: #fff;
+  overflow: auto;
+  border-radius: 20px;
+  outline: none;
+  padding: 30px 20px;
+}
+
+/* welcome modal styles */
+.welcomeModal {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  min-width: calc(870px - 274px);
+}
+
+.welcomeModal h1 {
+  font-size: 1.2em;
+}
+
+.welcomeModal h2 {
+  font-size: 1.8em;
+}
+
+.welcomeModal h3 {
+  font-size: 1em;
+  padding-bottom: 10px;
+  height: 35px;
+}
+
+.welcomeModal p{
+  font-size: .8em;
+  max-width: 214px;
+}
+
+.welcomeModal ul {
+  display: flex;
+}
+
+.welcomeModal li {
+  display: flex;
+  flex-direction: column;
+  margin: 0 25px;
+  padding: 1rem;
+  text-align: center;
+}
+
+.welcomeModal img {
+  padding-bottom: 20px;
+
+}
+
+.welcomeModal span{
+  color: #1657F3;
+}
+
+
+
+/* scheduling modal styles */
+.scheduleModal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.scheduleModal h1 {
+  font-size: 1.8em;
+}
+
+.scheduleModal span{
+  color: #1657F3;
+}
 .homeInput {
   display: flex;
 }
+
 .homeInput form{
   display: flex;
 }
 
+/* details section of form */
 .formEventDetails{
   display: flex;
   flex-direction: column;
-  padding: 2%;
+  padding: 0 2%;
 }
 
 .homeInput label{
-  padding: 25px 0;
+  padding: 5px 0;
+  margin-top: 30px;
+
+}
+
+.formEventDetails>label:nth-child(1) {
+  margin-top: 0;
 }
 
 .homeInput select,
 .homeInput input {
-  width: 250px;
+  width: 345px;
+  height: 48px;
+  background: #FFFFFF;
+  border: 1px solid #C8C8C8;
+  box-sizing: border-box;
+  border-radius: 6px;
 }
 
-.homeInput button{
-  width: 200px;
-  margin-top: 25px;
+.homeInput .error {
+  border: 1px solid #ff0000;
+
+}
+.homeInput .errorMessage {
+  color: #ff0000;
+  padding-top: 5px;
+  font-size: .8rem;
+}
+
+.homeInput .errorMessage::before {
+  display: inline;
+  content: "⚠ ";
+  
+}
+
+.react-multi-email {
+  font-size: .8em;
+  padding: 0 5px;
+  /* margin-bottom: 40px; */
+  max-width: 345px;
+}
+
+.react-multi-email>[data-tag] {
+  color: #FFFFFF;
+  background-color: #4198F7;
+  border-radius: 24px;
+  line-height: 20px;
+}
+
+.react-multi-email>div:nth-child(2)>span:nth-child(1) {
+  color: #FFFFFFFF;
+}
+
+.homeInput p{
+  font-size: .8em;
+  max-width: 345px;
+}
+
+.timezoneMessage {
+  margin-top: 30px;
+}
+
+/* calendar section of form */
+/* .formEventCalendar {
+  /* padding-top: 30px; */
+/* } */
+
+.navigator_default_main {
+  border-left: 1px solid #fff;
+  border-right: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+  font-family: 'Lexend', sans-serif;
+  font-size: 12px;
+}
+
+.navigator_default_main *,
+.navigator_default_main *:before,
+.navigator_default_main *:after {
+  box-sizing: border-box;
+}
+
+.navigatore_default_line {
+  border-bottom: 1px solid #fff;
+}
+
+/* month header */
+.navigatore_default_title,
+.navigatore_default_titleleft,
+.navigatore_default_titleright {
+  border-top: 1px solid #fff;
+  color: #383c40;
+  background: rgb(255, 255, 255);
+}
+
+.navigatore_default_title {
+  text-align: center;
+}
+
+.navigatore_default_titleleft,
+.navigatore_default_titleright {
+  text-align: center;
+}
+
+/* day headers */
+.navigatore_default_dayheader {
+  color: #383c40;
+  background: #ffffff;
+  padding: 0px;
+  text-align: center;
+}
+
+/* day cells */
+.navigatore_default_cell {
+  color: #383c40;
+  background: #ffffff;
+  text-align: center;
+}
+
+.navigatore_default_cell_text {
+  padding: 0px;
+}
+
+
+
+.navigator_default_todaybox {
+  border: 1px solid #1657F3;
+  border-radius: 10px;
+}
+
+.navigator_default_select .navigator_default_cell_box{
+  background-color: #4198F7;
+  border-radius: 10px;
+
+}
+
+.navigator_default_title,
+.navigator_default_titleleft,
+.navigator_default_titleright {
+  background-color: #FFFFFF;
+}
+
+
+
+/* media queries */
+.welcomeModal h3 {
+  height: 55px;
+  margin-bottom: 15px;
 }
