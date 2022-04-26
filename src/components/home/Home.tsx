@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useController, UseControllerProps } from "react-hook-form";
+import { ErrorMessage } from "@hookform/error-message";
 import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
 import mailer from "../../utils/mailer";
@@ -12,8 +13,15 @@ import { DayPilot, DayPilotNavigator } from "@daypilot/daypilot-lite-react";
 //components
 import TimeZone from "../TimeZone/TimeZone";
 
+//assets
+import AirplaneIcon from "../../assets/paperAirplane.js";
+import AvailabilityIcon from "../../assets/availability.js";
+import MeetingIcon from "../../assets/meetingDetails.js";
+import OverlapIcon from "../../assets/overlap.js";
+
 // styles
 import 'react-multi-email/style.css';
+import "../../dayPilotNavigator.css";
 import "./Home.css";
 
 
@@ -24,6 +32,10 @@ type DateSelected = string | null;
 type UserTimeZone = string;
 type Email = string;
 type meetingNumber = string;
+
+type FormValues = {
+  NameOfEvent: string; 
+}
 
 
 
@@ -39,11 +51,13 @@ type FormData = {
 
 const Home:React.FC = () => {
   // initialize useForm
-  const { register, handleSubmit, setValue, formState: { errors}, reset } = useForm<FormData>();
+  const { register, handleSubmit, setValue, formState: { errors}, reset, control } = useForm<FormData>();
+
 
   let navigate = useNavigate();
 
   Modal.setAppElement('#root');
+  // const parentSelector = document.querySelector("#modalRoot");
 
   // initialize state 
   // date selected by user 
@@ -56,6 +70,8 @@ const Home:React.FC = () => {
   const [ inputtedEmails, setInputtedEmails ] = useState<string[]>([]);
   // if no emails entered
   const [ noEmails, setNoEmails ] = useState<boolean>(false);
+  // welcome modal
+  const [ welcomeModalIsOpen, setWelcomeModalIsOpen ] = useState<boolean>(false);
   // schedule meeting modal open or closed
   const [ schedModalIsOpen, setSchedModalIsOpen ] = useState<boolean>(false);
   // success modal open or closed
@@ -64,15 +80,23 @@ const Home:React.FC = () => {
   const [ meetingNumID, setMeetingNumID ] = useState<string>();
   
 
+
+
   // get timezone of user
   useEffect(() => {
-    const eventTimeZone = TimeZone();
+    const eventTimeZone = new Date().toLocaleTimeString(undefined, {timeZoneName: "short"}).split(" ")[2];;
+    console.log(eventTimeZone)
     setTimezone(eventTimeZone);
-    
+  
+  }, [])
+
+  // open welocme modal
+  useEffect(() => {
+    setWelcomeModalIsOpen(true)
   }, [])
 
 
-  // open modal to schedule meeting
+  //  open scheduling modal to schedule meeting
   const openSchedulingModal = () => {
     setSchedModalIsOpen(true);
   }
@@ -88,10 +112,9 @@ const Home:React.FC = () => {
     setSuccessModalIsOpen(false);
     
     // get meeting id from state
-    //   // use event id as params for navigate/:id
-    //   // make changes to Route in App.tsx to match
+    // use event id as params for navigate/:id
       if(meetingNumID){
-        //do axios get call here to get meeting info also with that meeting number
+        //do axios get call here to get meeting info also with the meeting number
         axios.get(`http://localhost:4000/dates/availability/${meetingNumID}`)
         .then(data => {
           console.log('Recieved Meeting Object')
@@ -108,24 +131,26 @@ const Home:React.FC = () => {
   }
   // function that gets ranodm number for meeting
   // Might change this to be more on the backend
-  function getRndInteger(min = 1000, max = 9999) {
+  const getRndInteger = (min = 1000, max = 9999) => {
     return Math.floor(Math.random() * (max - min + 1) ) + min;
   }
   
 
   // when user clicks generate link button to submit form
   const onSubmit = handleSubmit(data => {
-     let rndNum = getRndInteger(1000,9999);
-     let rndNumString = rndNum.toString();
-     data.meetingNumber = rndNumString;
-     setMeetingNumID(rndNumString);
-     let firstEmail = data.emails[0];
-    //  console.log(firstEmail);
-    //  mailer.sendMail(firstEmail)
-     
     
-    // user needs to have selected a date and entered an email addresss in order to run the axios call
+    
+    // user needs to have selected a date and entered an email addresss in order to run the axios POST call
     if (chosenDay && !noEmails){
+      // generate meeting number
+      let rndNum = getRndInteger(1000,9999);
+      let rndNumString = rndNum.toString();
+      data.meetingNumber = rndNumString;
+      setMeetingNumID(rndNumString);
+      let firstEmail = data.emails[0];
+      console.log(firstEmail);
+     //  mailer.sendMail(firstEmail)
+
       // axios POST request that adds the meeting to the database
       axios.post("http://localhost:4000/dates/add", data)
       .then(res => {
@@ -150,139 +175,200 @@ const Home:React.FC = () => {
   return(
     <div className="home wrapper">
       <div className="homeIntro">
-        <h1>Schedule a New Event</h1>
-        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam deserunt enim sint architecto! Aliquid iste accusantium possimus quod.</p>
+        <Modal
+          className={"welcomeModal"}
+          overlayClassName={"welcomeOverlay"}
+          isOpen={welcomeModalIsOpen}
+          onRequestClose={openSchedulingModal}
+          contentLabel="Welcome page"
+          style={{content: {WebkitOverflowScrolling: 'touch',}}}
+        >
+          <h1>Welcome to Plan-it, ......</h1>
+          <h2>How it works</h2>
+          <ul>
+            <li>
+              <h3>Meeting <span>Details</span></h3>
+              <div className="imageContainer">
+                <MeetingIcon />
+               
+              </div>
+              <p>Set the calendar parameters to your liking.</p>
+            </li>
+            <li>
+              <h3>Add <span>Availability</span></h3>
+              <div className="imageContainer">
+                <AvailabilityIcon />
+               
+              </div>
+              <p>Everyone is emailed a link to add their availability.</p>
+            </li>
+            <li>
+              <h3>View <span>Overlapped Times</span></h3>
+              <div className="imageContainer">
+                <OverlapIcon />
+
+              </div>
+              <p>View overlapping times amongst your team.</p>
+            </li>
+          </ul>
+  
+          <button className="scheduleModalOpen" onClick={openSchedulingModal}>Get Started!</button>
+        </Modal>
       </div>
 
-      <button className="scheduleModalOpen" onClick={openSchedulingModal}>Schedule a meeting</button>
-
-      <Modal 
-        isOpen={schedModalIsOpen}
-        onRequestClose={closeSchedulingModal}
-        contentLabel="Meeting Scheduling"
-      >
-        <div className="homeInput">
-        <form onSubmit={ onSubmit }>
-          <section className="formEventDetails">
-            {/* input for name of meeting */}
-            <label htmlFor="eventName"> Name of Event </label>
-            <input 
-              type="text" 
-              aria-invalid={errors.eventName ?"true" :"false"}
-              {...register("eventName", {required: true })} />
-              {/* error message if no name entered */}
-            {errors.eventName && (
-              <span role="alert">
-                Event name is required
-              </span> 
-            )}
+      {/* schedule modal */}
+      <div className="homeScheduling">
+        <Modal 
+          isOpen={schedModalIsOpen}
+          onRequestClose={closeSchedulingModal}
+          contentLabel="Meeting Scheduling"
+          className={"scheduleModal"}
+          overlayClassName={"scheduleOverlay"}
+        >
+          <h1>Meeting <span>Details</span></h1>
+          <div className="homeInput">
+            <form onSubmit={ onSubmit }>
+              <section className="formEventDetails">
+                {/* input for name of meeting */}
+                <label htmlFor="eventName"> Name of event </label>
+                <input 
+                  placeholder= {"Enter name here..." }
+                  className={errors.eventName ?"error" :"success"}
+                  aria-label="Enter name here"
+                  aria-invalid={errors.eventName ?"true" :"false"}
+                  {...register("eventName", { required: "Name is required"})}
+                  />
+                  {/* error message if no name entered */}
+                  <ErrorMessage errors={errors} name="eventName" as="p" className="errorMessage"/>
             
-            {/* input for length of meeting */}
-            <label htmlFor="length">How long will your event be?</label>
-            <select 
-              {...register("length", {required: true })}
-              id="timeSelect">
-                <option value="">Select</option>
-                <option value="15">15 minutes</option>
-                <option value="30">30 minutes</option>
-                <option value="45">45 minutes</option>
-                <option value="60">1 hour</option>
-                <option value="90">1 hour 30 minutes</option>
-                <option value="120">2 hours</option>
-            </select>
-            {/* error message if no time selected */}
-            {errors.length && (
-              <span role="alert">
-                Length is required
-              </span> 
-            )}
+                
+                
+                {/* input for length of meeting */}
+                <label htmlFor="length">How long will your event be?</label>
+                <select 
+                  className={errors.length ?"error" :"success"}
+                  aria-invalid={errors.length ?"true" :"false"}
+                  {...register("length", {required: "Length is required" })}
+                  id="timeSelect">
+                    <option value="">Select</option>
+                    <option value="15">15 minutes</option>
+                    <option value="30">30 minutes</option>
+                    <option value="45">45 minutes</option>
+                    <option value="60">1 hour</option>
+                    <option value="90">1 hour 30 minutes</option>
+                    <option value="120">2 hours</option>
+                </select>
+                {/* error message if no time selected */}
+                <ErrorMessage errors={errors} name="length" as="p" className="errorMessage"/>
 
-            {/* displays current time zone of user */}
-            <p>Your time zone is: {timezone}</p>
 
-            {/* input for email addressess */}
-            <label htmlFor="users">Invite participants</label>
-            <ReactMultiEmail 
-              placeholder="Email address"
-              emails={inputtedEmails}
-              onChange={(_emails:string[]) => {setInputtedEmails(_emails)}}
-              validateEmail={ email => { return isEmail(email)}} //return Boolean
-              getLabel={(
-                email: string,
-                index: number,
-                removeEmail: (index: number) => void, 
-              ) => {
-                return(
-                  <div data-tag key={index}>
-                    {email}
-                    <span data-tag-handle onClick={() => removeEmail(index)}>
-                      x
-                    </span>
-                  </div>
-                )
-              }}
-            />
-            {/* error message if no emails entered */}
-            {
-              noEmails
-              ?<p>Please enter an email address</p>
-              :null
-            }   
-        </section>
+                {/* input for email addressess */}
+                <label htmlFor="users">Invite participants</label>
+                <ReactMultiEmail 
+                  placeholder="Add an Email"
+                  className={noEmails ?"error" :"success"}
+                  emails={inputtedEmails}
+                  onChange={(_emails:string[]) => {setInputtedEmails(_emails);
+                  setNoEmails(false)}}
+                  validateEmail={ email => { return isEmail(email)}} //return Boolean
+                  getLabel={(
+                    email: string,
+                    index: number,
+                    removeEmail: (index: number) => void, 
+                  ) => {
+                    return(
+                      <div data-tag key={index}>
+                        {email}
+                        <span data-tag-handle onClick={() => removeEmail(index)}>
+                          x
+                        </span>
+                      </div>
+                    )
+                  }}
+                />
+                {/* error message if no emails entered */}
+                {
+                  noEmails
+                  ?<p className="errorMessage">Please enter an email address</p>
+                  :null
+                }   
 
-        <section className="formEventCalendar">
-          <p>Choose Date(s)</p>
-        
-          <DayPilotNavigator 
-            selectMode={"day"}
-            startDate={new DayPilot.Date().value}
-            onTimeRangeSelected={(args:any) => {
-              console.log(
-                `You clicked ${args.day}; start=${args.start}; end=${args.end}`
-                );
-                setChosenDay(args.day.value);
-            }}
-          />
 
-          {/* error message if no date selected */}
-          {
-            noDate 
-            ?<p>Please select a date</p>
-            :null
-          }
+                {/* displays current time zone of user */}
+                <p className="timezoneMessage">Your time shows as <span>{timezone}</span>. This means everyone's times will be converted to {timezone} for you.</p>
+            </section>
 
-          {/*  button to submit form */}
-          <button
-            type="submit"
-            onClick={() => {
-              if(inputtedEmails.length > 0){
-                setNoEmails(false)
-                setValue("date", chosenDay ?chosenDay :null);
-                setValue("timezone", timezone ?timezone :"");
-                setValue("emails", inputtedEmails ?inputtedEmails :[])
-              }else {
-                setNoEmails(true);
+            <section className="formEventCalendar">
+              <p>Choose up to 7 days</p>
+            
+              <DayPilotNavigator 
+                selectMode={"week"}
+                startDate={new DayPilot.Date().value}
+                onTimeRangeSelected={(args:any) => {
+                  console.log(
+                    `You selected ${args.day}`
+                    );
+                    setChosenDay(args.day.value);
+                }}
+              />
+
+              {/* error message if no date selected */}
+              {
+                noDate 
+                ?<p className="errorMessage">Please select a date</p>
+                :null
               }
-      
-            }}>
-            Generate Link
-          </button>
-          </section>       
-        </form>
-        </div>
 
-      </Modal>
+              {/*  button to submit form */}
+              <button
+                type="submit"
+                className="meetingSubmitBtn"
+                onClick={() => {
+                  console.log(inputtedEmails.length)
+                  if(inputtedEmails.length > 0 && chosenDay){
+                    setNoEmails(false);
+                    setNoDate(false);
+                    setValue("date", chosenDay ?chosenDay :null);
+                    setValue("timezone", timezone ?timezone :"");
+                    setValue("emails", inputtedEmails ?inputtedEmails :[])
+                  }else if (inputtedEmails.length === 0 && !chosenDay){
+                    setNoEmails(true);
+                    setNoDate(true);
+                  }else if (!chosenDay){
+                    setNoDate(true);
+                  }else if (inputtedEmails.length === 0 && chosenDay){
+                     setNoEmails(true);
+                  }
+          
+                }}>
+                Generate Link
+              </button>
+              </section>       
+            </form>
+          </div>
 
-      {/* success modal */}
-      <Modal
-        isOpen={successModalIsOpen}
-        onRequestClose={closeSuccessModal}
-        contentLabel="Link was sent successfully"
-      >
-        <h2>Success!</h2>
-        <p>Your link was sent.</p>
-        <button onClick={closeSuccessModal}>Add your availability</button>
-      </Modal>
+        </Modal>
+
+      </div>
+      <div className="homeSuccess">
+        {/* success modal */}
+        <Modal
+          isOpen={successModalIsOpen}
+          onRequestClose={closeSuccessModal}
+          contentLabel="Link was sent successfully"
+          className={"successModal"}
+          overlayClassName={"successOverlay"}
+        >
+          <div className="successMessages">
+            <h2>Link was <span>Successfully Sent</span></h2>
+            <div className="imageContainer">
+                <AirplaneIcon />
+            </div>
+            <button onClick={closeSuccessModal}>Add availability</button>
+          </div>
+        </Modal>
+
+      </div>
     </div>
   )
 };

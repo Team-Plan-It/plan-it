@@ -3,6 +3,7 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const express = require('express')
 const meetDateRoute = require('./routes/meet.date.routes')
+require('dotenv').config();
 
 const app = express()
 
