@@ -7,6 +7,7 @@ import { DayPilot, DayPilotCalendar } from "@daypilot/daypilot-lite-react";
 
 //components
 import meetingData from "../../testEventsMeetingInfo";
+import Sidebar from "../Sidebar/Sidebar";
 
 //styles
 import "./DisplayAvailability.css";
@@ -402,7 +403,8 @@ const DisplayAvailResults = () => {
 
 
   return(
-     <div className="display wrapper">
+     <div className="display">
+       <Sidebar />
       <div className="displayIntro">
         {/* get meeting name from database */}
         <h1>{eventName}</h1>

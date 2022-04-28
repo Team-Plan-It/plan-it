@@ -11,7 +11,7 @@ import { ReactMultiEmail, isEmail } from 'react-multi-email';
 import { DayPilot, DayPilotNavigator } from "@daypilot/daypilot-lite-react";
 
 //components
-import TimeZone from "../TimeZone/TimeZone";
+import Sidebar from "../Sidebar/Sidebar";
 
 //assets
 import AirplaneIcon from "../../assets/paperAirplane.js";
@@ -172,12 +172,14 @@ const Home:React.FC = () => {
   
 
   return(
-    <div className="home wrapper">
+    <div className="home">
+      <Sidebar />
       <div className="homeIntro">
         <Modal
           className={"welcomeModal"}
           overlayClassName={"welcomeOverlay"}
           isOpen={welcomeModalIsOpen}
+          shouldCloseOnOverlayClick={false}
           onRequestClose={openSchedulingModal}
           contentLabel="Welcome page"
           style={{content: {WebkitOverflowScrolling: 'touch',}}}
@@ -220,6 +222,7 @@ const Home:React.FC = () => {
         <Modal 
           isOpen={schedModalIsOpen}
           onRequestClose={closeSchedulingModal}
+          shouldCloseOnOverlayClick={false}
           contentLabel="Meeting Scheduling"
           className={"scheduleModal"}
           overlayClassName={"scheduleOverlay"}
@@ -354,6 +357,7 @@ const Home:React.FC = () => {
         <Modal
           isOpen={successModalIsOpen}
           onRequestClose={closeSuccessModal}
+          shouldCloseOnOverlayClick={false}
           contentLabel="Link was sent successfully"
           className={"successModal"}
           overlayClassName={"successOverlay"}

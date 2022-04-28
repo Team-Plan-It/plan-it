@@ -9,7 +9,7 @@ import { useLocation } from "react-router-dom";
 import { DayPilot, DayPilotCalendar } from "@daypilot/daypilot-lite-react";
 
 // components
-import TimeZone from "../TimeZone/TimeZone";
+import Sidebar from "../Sidebar/Sidebar";
 
 //styles
 import "./Availability.css";
@@ -141,13 +141,14 @@ const Availability = (props: any) => {
   })
 
   return(
-    <div className="availability wrapper">
-     
+    <div className="availability">
+        <Sidebar />
         <Modal 
           className={"availabilityModal"}
           overlayClassName={"availabilityOverlay"}
           isOpen={availabilityModalIsOpen}
-          onRequestClose={() => setAvailabilityModalIsOpen(false)}
+          shouldCloseOnOverlayClick={false}
+          // onRequestClose={() => setAvailabilityModalIsOpen(false)}
           contentLabel="Availability page"
           style={{content: {WebkitOverflowScrolling: 'touch',}}}
           >
