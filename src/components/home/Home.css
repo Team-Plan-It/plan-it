@@ -33,7 +33,7 @@
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  min-width: calc(870px - 274px);
+  min-width: 595px;
 }
 
 .welcomeModal h1 {

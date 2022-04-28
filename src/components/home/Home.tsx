@@ -117,7 +117,7 @@ const Home:React.FC = () => {
         //do axios get call here to get meeting info also with the meeting number
         axios.get(`http://localhost:4000/dates/availability/${meetingNumID}`)
         .then(data => {
-          console.log(data['data'][0]['eventName'])
+          console.log(data['data'][0]['date'])
         //  Passing the meeting number through the URL to the Availability page
           navigate(`/availability/${meetingNumID}`, { 
            state: {

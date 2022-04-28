@@ -35,8 +35,12 @@ const Availability = (props: any) => {
   const availabilityNavigation: any = useLocation();
   const meetingNumID = availabilityNavigation.state['meetingNumID'];
   const eventName = availabilityNavigation.state['eventName'];
-  const eventDate = availabilityNavigation.state['eventDate'];
+  const eventDate = availabilityNavigation.state['date'];
   const coordTimeZone = availabilityNavigation.state['coordTimeZone'];
+
+  // get month as string from event date
+  const month = new Date(eventDate).toLocaleString('default', {month: "long"});
+
 
   // initialize useForm
   const { register, handleSubmit, setValue, formState: { errors}, reset } = useForm<FormData>();
@@ -115,7 +119,7 @@ const Availability = (props: any) => {
     const dp = args.control;
    
     dp.events.remove(args.e);
-    console.log(dp.events);
+    // console.log(dp.events);
     setEventArray(dp.events.list);
   }
 
@@ -171,14 +175,40 @@ const Availability = (props: any) => {
               <p>Please add your availability</p>
               <p>Click and drag to add your availability. Please note that you are inputting your availability in your local time <span className="text">{timezone}</span> and it will be converted to the coordinator's time zone <span className="text">{coordTimeZone}</span>.</p>
 
-              <DayPilotCalendar 
-                viewType={"Week"}
-                headerDateFormat={"d MMMM yyyy"}
-                startDate={eventDate}
-                onTimeRangeSelected={handleTimeSelected}
-                onEventClick={handleEventClicked}
-                durationBarVisible = {false}
-              />
+              <div className="calendarContainer">
+                <div className="calendarHeader">
+                  <p>{month}</p>
+                  {/* <ul>
+                    <li className="blank"></li>
+                    <li>Sun</li>
+                    <li>Mon</li>
+                    <li>Tue</li>
+                    <li>Wed</li>
+                    <li>Thu</li>
+                    <li>Fri</li>
+                    <li>Sat</li>
+                  </ul>
+                  <ul>
+                    <li className="blank"></li>
+                    <li>day0</li>
+                    <li>day1</li>
+                    <li>day2</li>
+                    <li>day3</li>
+                    <li>day4</li>
+                    <li>day5</li>
+                    <li>day6</li>
+                  </ul> */}
+                </div>
+                <DayPilotCalendar 
+                  viewType={"Week"}
+                  headerDateFormat={"ddd dd"}
+                  startDate={eventDate}
+                  onTimeRangeSelected={handleTimeSelected}
+                  onEventClick={handleEventClicked}
+                  durationBarVisible = {false}
+                  heightSpec={"Full"}
+                />
+              </div>
               <button
                 type="submit"
                 className="availabilitySubmitBtn"
