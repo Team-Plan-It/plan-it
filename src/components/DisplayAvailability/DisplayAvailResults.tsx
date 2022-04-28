@@ -10,7 +10,7 @@ import meetingData from "../../testEventsMeetingInfo";
 
 //styles
 import "./DisplayAvailability.css";
-import { time } from "console";
+
 
 
 // types
@@ -402,183 +402,189 @@ const DisplayAvailResults = () => {
 
 
   return(
-     <div className="display wrapper">
-      <div className="displayIntro">
-        {/* get meeting name from database */}
-        <h1>{eventName}</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam tempora similique corporis nesciunt quo numquam!</p>
+     <div className="display ">
+      <div className="resultsSidebar">
+        <p className='logo'>Logo</p>
       </div>
-      <div className="displayResults">
-        <div className="displayNames">
-          <p>Names </p>
-          <ul>
-            <>
-            {
-              userNames
-              ?
-               <>
-              <ul className="userToggles">
-                <li key="1">
-                  {
-                    userNames.length > 0
+      <div className="displayMain">
 
-                    ?<label htmlFor={userNames[0]}>
-                      <input 
-                      type="checkbox" 
-                      id={userNames[0]} 
-                      className={userNames[0]} 
-                      checked={user1checked}
-                      onChange={e => {
-                        setUser1Checked(e.target.checked);
-                        let eventChange = calendar.elements.events;
-                        const user1events = eventChange.filter((event:any) => {return event.textContent === userNames[0]});
-                        user1events.forEach((event:any) => {event.classList.toggle("hide")})
-                        console.log(user1events!)
-                        calendar.events.update(user1events)
-                        setUser1Visible(e.target.checked);
-                      }}
-                      />
-                      {userNames[0]}
-                    </label>
-                    :null
-                  }
-                </li>
-                <li key="2">
-                  {
-                    userNames.length === 2 || userNames.length === 3 || userNames.length === 4 || userNames.length === 5 || userNames.length === 6
-
-                    ?<label htmlFor={userNames[1]}>
-                      <input 
-                      type="checkbox" 
-                      id={userNames[1]} 
-                      className={userNames[1]} 
-                      checked={user2checked}
-                      onChange={e => {
-                        setUser2Checked(e.target.checked)
-                        setUser2Visible(!user2visible);
-                      }}
-                      />
-                      {userNames[1]}
-                    </label>
-                    :null
-                  }
-                </li>
-                <li key="3">
-                  {
-                    userNames.length === 3 || userNames.length === 4 || userNames.length === 5 || userNames.length === 6 
-
-                    ?<label htmlFor={userNames[2]}>
-                      <input 
-                      type="checkbox" 
-                      id={userNames[2]} 
-                      className={userNames[2]} 
-                      checked={user3checked}
-                      onChange={e => {
-                        setUser3Checked(e.target.checked)
-                        setUser3Visible(!user3visible);
-                      }}
-                      />
-                      {userNames[2]}
-                    </label>
-                    :null
-                  }
-                </li>
-                <li key="4">
-                  {
-                    userNames.length === 4 || userNames.length === 5 || userNames.length === 6 
-
-                    ?<label htmlFor={userNames[3]}>
-                      <input 
-                      type="checkbox" 
-                      id={userNames[3]} 
-                      className={userNames[3]} 
-                      checked={user4checked}
-                      onChange={e => {
-                        console.log(e.target)
-                        setUser4Checked(e.target.checked)
-                        setUser4Visible(!user4visible);
-                      }}
-                      />
-                      {userNames[3]}
-                    </label>
-                    :null
-                  }
-                </li>
-                <li key="5">
-                  {
-                    userNames.length === 5 || userNames.length === 6 
-
-                    ?<label htmlFor={userNames[4]}>
-                      <input 
-                      type="checkbox" 
-                      id={userNames[4]} 
-                      className={userNames[4]} 
-                      checked={user5checked}
-                      onChange={e => {
-                        setUser5Checked(e.target.checked);
-                        setUser5Visible(!user5visible);
-                      }}
-                      />
-                      {userNames[4]}
-                    </label>
-                    :null
-                  }
-                </li>  
-                <li key="6">
-                  {
-                    userNames.length === 6
-
-                    ?<label htmlFor={userNames[5]}>
-                      <input 
-                      type="checkbox" 
-                      id={userNames[5]} 
-                      className={userNames[5]} 
-                      checked={user6checked}
-                      onChange={e => {
-                        setUser6Checked(e.target.checked);
-                        setUser6Visible(!user6visible);
-                      }}
-                      />
-                      {userNames[5]}
-                    </label>
-                    :null
-                  }
-                </li>   
-              </ul>
-              
-              </>
-              :null
-            }
-            </>
-          </ul>
+        <div className="displayIntro">
+          {/* get meeting name from database */}
+          <h1>{eventName}</h1>
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam tempora similique corporis nesciunt quo numquam!</p>
         </div>
-        <div className="displayCalendar">
-          <DayPilotCalendar 
-            durationBarVisible={false}
-            startDate={"2022-05-09T09:00:00"}
-            viewType={"WorkWeek"}
-            headerDateFormat={"d MMMM yyyy"}
-            eventArrangement={"SideBySide"}
-            CssOnly={"true"}
-            cssOnly={"true"}
-            showToolTip={"true"}
-            onEventClick={(args:any)  => {
-              if(args.e.id() === "user1"){
-                console.log("user1 event clicked", args.e.calendar.events.list);
-                const allevents = args.e.calendar.events.list;
-                let user1events = allevents.filter((event:any) => {return event.id === "user1"});
-                console.log(user1events)
-                user1events.forEach((event:any) => {event.cssClass = "hide"})
-                console.log(user1events)
-                // args.e.data.cssClass= "hide";
+        <div className="displayResults">
+          <div className="displayNames">
+            <p>Names </p>
+            <ul>
+              <>
+              {
+                userNames
+                ?
+                <>
+                <ul className="userToggles">
+                  <li key="1">
+                    {
+                      userNames.length > 0
+
+                      ?<label htmlFor={userNames[0]}>
+                        <input 
+                        type="checkbox" 
+                        id={userNames[0]} 
+                        className={userNames[0]} 
+                        checked={user1checked}
+                        onChange={e => {
+                          setUser1Checked(e.target.checked);
+                          let eventChange = calendar.elements.events;
+                          const user1events = eventChange.filter((event:any) => {return event.textContent === userNames[0]});
+                          user1events.forEach((event:any) => {event.classList.toggle("hide")})
+                          console.log(user1events!)
+                          calendar.events.update(user1events)
+                          setUser1Visible(e.target.checked);
+                        }}
+                        />
+                        {userNames[0]}
+                      </label>
+                      :null
+                    }
+                  </li>
+                  <li key="2">
+                    {
+                      userNames.length === 2 || userNames.length === 3 || userNames.length === 4 || userNames.length === 5 || userNames.length === 6
+
+                      ?<label htmlFor={userNames[1]}>
+                        <input 
+                        type="checkbox" 
+                        id={userNames[1]} 
+                        className={userNames[1]} 
+                        checked={user2checked}
+                        onChange={e => {
+                          setUser2Checked(e.target.checked)
+                          setUser2Visible(!user2visible);
+                        }}
+                        />
+                        {userNames[1]}
+                      </label>
+                      :null
+                    }
+                  </li>
+                  <li key="3">
+                    {
+                      userNames.length === 3 || userNames.length === 4 || userNames.length === 5 || userNames.length === 6 
+
+                      ?<label htmlFor={userNames[2]}>
+                        <input 
+                        type="checkbox" 
+                        id={userNames[2]} 
+                        className={userNames[2]} 
+                        checked={user3checked}
+                        onChange={e => {
+                          setUser3Checked(e.target.checked)
+                          setUser3Visible(!user3visible);
+                        }}
+                        />
+                        {userNames[2]}
+                      </label>
+                      :null
+                    }
+                  </li>
+                  <li key="4">
+                    {
+                      userNames.length === 4 || userNames.length === 5 || userNames.length === 6 
+
+                      ?<label htmlFor={userNames[3]}>
+                        <input 
+                        type="checkbox" 
+                        id={userNames[3]} 
+                        className={userNames[3]} 
+                        checked={user4checked}
+                        onChange={e => {
+                          console.log(e.target)
+                          setUser4Checked(e.target.checked)
+                          setUser4Visible(!user4visible);
+                        }}
+                        />
+                        {userNames[3]}
+                      </label>
+                      :null
+                    }
+                  </li>
+                  <li key="5">
+                    {
+                      userNames.length === 5 || userNames.length === 6 
+
+                      ?<label htmlFor={userNames[4]}>
+                        <input 
+                        type="checkbox" 
+                        id={userNames[4]} 
+                        className={userNames[4]} 
+                        checked={user5checked}
+                        onChange={e => {
+                          setUser5Checked(e.target.checked);
+                          setUser5Visible(!user5visible);
+                        }}
+                        />
+                        {userNames[4]}
+                      </label>
+                      :null
+                    }
+                  </li>  
+                  <li key="6">
+                    {
+                      userNames.length === 6
+
+                      ?<label htmlFor={userNames[5]}>
+                        <input 
+                        type="checkbox" 
+                        id={userNames[5]} 
+                        className={userNames[5]} 
+                        checked={user6checked}
+                        onChange={e => {
+                          setUser6Checked(e.target.checked);
+                          setUser6Visible(!user6visible);
+                        }}
+                        />
+                        {userNames[5]}
+                      </label>
+                      :null
+                    }
+                  </li>   
+                </ul>
                 
+                </>
+                :null
               }
-            }}
-            // cssClassPrefix = {"calendar_black"}
-            ref={(component:any | void) => {
-              calendar = component && component.control;
-            }}
-          />
+              </>
+            </ul>
+          </div>
+          <div className="displayCalendar">
+            <DayPilotCalendar 
+              durationBarVisible={false}
+              startDate={"2022-05-09T09:00:00"}
+              viewType={"WorkWeek"}
+              headerDateFormat={"d MMMM yyyy"}
+              eventArrangement={"SideBySide"}
+              CssOnly={"true"}
+              cssOnly={"true"}
+              showToolTip={"true"}
+              onEventClick={(args:any)  => {
+                if(args.e.id() === "user1"){
+                  console.log("user1 event clicked", args.e.calendar.events.list);
+                  const allevents = args.e.calendar.events.list;
+                  let user1events = allevents.filter((event:any) => {return event.id === "user1"});
+                  console.log(user1events)
+                  user1events.forEach((event:any) => {event.cssClass = "hide"})
+                  console.log(user1events)
+                  // args.e.data.cssClass= "hide";
+                  
+                }
+              }}
+              // cssClassPrefix = {"calendar_black"}
+              ref={(component:any | void) => {
+                calendar = component && component.control;
+              }}
+            />
+          </div>
         </div>
       </div>
 

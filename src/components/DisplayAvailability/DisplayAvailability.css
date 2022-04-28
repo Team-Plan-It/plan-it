@@ -1,4 +1,6 @@
-
+.display{
+  display: flex;
+}
 
 .display div.calendar_default_event_inner{
   width: 20px;
@@ -25,4 +27,12 @@
 
 .target {
   width: 10%;
+}
+
+.resultsSidebar {
+  position: fixed;
+  width: 274px;
+  height: 100vh;
+  background-color: #1A181B;
+
 }
