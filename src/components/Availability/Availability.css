@@ -1,22 +1,157 @@
-.availability form{
+.ReactModal__Overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #00000040;
+}
+
+/* .ReactModal__Content--after-open::-webkit-scrollbar-thumb{
+  border-radius: 10px;
+  color: purple;
+} */
+
+.availabilityModal {
+  position: absolute;
   display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  min-width: 595px;
+  top: 20px;
+  left: 300px;
+  right: 30px;
+  bottom: 20px;
+  border: 1px solid #ccc;
+  background: #fff;
+  overflow: auto;
+  border-radius: 20px;
+  outline: none;
+  padding: 30px 20px;
+}
+
+/* .availabilityModal::-webkit-scrollbar{
+  border-radius: 4px;
+} */
+
+.availabilityModal h1 {
+  font-size: 2.25rem;
+  margin-top: 1115px;
+}
+
+.availabilityModal p {
+  font-size: 1rem;
+  padding: 8px 0;
+}
+  
+.ReactModal__Content>form:nth-child(3)>p:nth-child(3) {
+  margin-top: 30px;
+}
+/* span in text */
+.availabilityModal .text{
+  color: #1657F3;
+}
+
+.availabilityModal form{
+  display: flex;
+  flex-direction: column;
   padding: 2%;
 }
 
-.availabilityFormCalendar {
-  display: flex;
-  flex-direction: column;
-  padding: 0 2%;
+.availabilityModal input {
+  width: 345px;
+  height: 48px;
+  background: #FFFFFF;
+  border: 1px solid #C8C8C8;
+  box-sizing: border-box;
+  border-radius: 6px;
 }
 
-.availabilityFormName input{
-  border-radius: 5px;
-  height: 25px;
+/* calendar header */
+.calendarHeader {
+  text-align: center;
+  width: 100%;
 }
-.availabilityFormCalendar button {
+/* .calendarHeader ul {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  
+}
+
+.calendarHeader li {
+  border-right: 1px solid #C8C8C8;
+}
+
+.calendarHeader>ul:nth-child(2)>li:nth-child(7) {
+  border-right: none;
+}
+.blank {
+  width: 30px;
+
+} */
+
+/* calendar styles */
+.calendar_default_main {
+  border: 1px solid #fff;;
+  /* border-left: 1px solid #fff;
+  border-right: 1px solid #fff;
+  border-bottom: 1px solid #fff; */
+  font-family: 'Lexend', sans-serif;
+  font-size: 12px;
+  border-radius: 15px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  margin-top: 10px;
+}
+
+.calendar_default_alldayheader_inner,
+.calendar_default_corner_inner,
+.calendar_default_cornerright_inner,
+.calendar_default_colheader_inner,
+.calendar_default_rowheader_inner  {
+  background-color: #C4C4C41A;
+}
+
+
+
+.calendar_default_rowheader_inner,
+.calendar_default_corner_inner {
+  border-bottom: none;
+  /* border-top: none; */
+}
+
+.calendar_default_cell_inner {
+  background-color: #FFFFFF;
+  
+}
+
+.calendar_default_colheader_inner{
+  flex-direction: column;
+}
+
+/* .calendar_default_main>div:nth-child(1)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(2)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(7)>div:nth-child(1)>div:nth-child(1){
+  border-right: none;
+} */
+
+/* events */
+.calendar_default_event_inner {
+  background: #1657F340;
+  border: 2px solid #FFFFFF;
+  box-sizing: border-box;
+  border-radius: 25px;
+  padding: 18px;
+}
+
+
+/* submit availability button */
+.availabilitySubmitBtn {
   align-self: flex-end;
   font-size: .6em;
   width: 150px;
   padding: 10px;
   margin-top: 20px;
+  position: relative;
+  right: -5px;
+  margin-top: 30px;
 }
