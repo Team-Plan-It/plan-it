@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useForm, useController, UseControllerProps } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
@@ -57,7 +57,7 @@ const Home:React.FC = () => {
   let navigate = useNavigate();
 
   Modal.setAppElement('#root');
-  // const parentSelector = document.querySelector("#modalRoot");
+
 
   // initialize state 
   // date selected by user 
@@ -84,8 +84,8 @@ const Home:React.FC = () => {
 
   // get timezone of user
   useEffect(() => {
-    const eventTimeZone = new Date().toLocaleTimeString(undefined, {timeZoneName: "short"}).split(" ")[2];;
-    console.log(eventTimeZone)
+    const eventTimeZone = new Date().toLocaleTimeString(undefined, {timeZoneName: "short"}).split(" ")[2];
+    // console.log(eventTimeZone)
     setTimezone(eventTimeZone);
   
   }, [])
@@ -124,7 +124,7 @@ const Home:React.FC = () => {
              meetingNumID: meetingNumID,
              eventName: data['data'][0]['eventName'],
              date: data['data'][0]['date'],
-           }
+             coordTimeZone: timezone           }
           });
         })
       }

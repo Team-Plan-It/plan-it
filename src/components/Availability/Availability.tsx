@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { ErrorMessage } from "@hookform/error-message";
+import Modal from "react-modal";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -34,22 +36,32 @@ const Availability = (props: any) => {
   const meetingNumID = availabilityNavigation.state['meetingNumID'];
   const eventName = availabilityNavigation.state['eventName'];
   const eventDate = availabilityNavigation.state['eventDate'];
+  const coordTimeZone = availabilityNavigation.state['coordTimeZone'];
 
   // initialize useForm
   const { register, handleSubmit, setValue, formState: { errors}, reset } = useForm<FormData>();
 
+   Modal.setAppElement('#root');
+
   // initialize state
   // all availabilites selected by user
   const [ eventArray, setEventArray ] = useState<AvailabilityArray>([]);
-  // timezone
+  // timezone of invitee/person using this page
   const [ timezone, setTimezone ] = useState<string>();
+  // availability modal open
+  const [ availabilityModalIsOpen, setAvailabilityModalIsOpen ] = useState<boolean>(false);
 
 
   // get timezone of user
   useEffect(() => {
-    const eventTimeZone = TimeZone();
+    const eventTimeZone = new Date().toLocaleTimeString(undefined, {timeZoneName: "short"}).split(" ")[2];
     setTimezone(eventTimeZone);
   }, [])
+
+  // open modal
+  useEffect(() => {
+    setAvailabilityModalIsOpen(true);
+  })
 
   // function to put time in hours/minutes in am/pm format
   const timeFormatCalc = (time:any) => {
@@ -66,8 +78,7 @@ const Availability = (props: any) => {
 
   // creates an event when the user clicks on a time block
   const handleTimeSelected = (args:any) => {
-
-    console.log(args);
+    console.log('event created');
     // the two parameters of the event time block in string format
     // eg. "2022-04-05T09:00:00"
     const start = args.start;
@@ -99,7 +110,7 @@ const Availability = (props: any) => {
 
   // deletes the event when the user clicks on it
   const handleEventClicked = (args: any) => {
-    console.log(args.e, args.e.start, args.e.end, args.e.text);
+    console.log('event deleted');
 
     const dp = args.control;
    
@@ -112,7 +123,7 @@ const Availability = (props: any) => {
 
 
 
-  // when user submits availability form
+  // makes axios call when user submits availability form
   const onSubmit = handleSubmit<FormData>(data => {
     console.log(data);
 
@@ -127,46 +138,60 @@ const Availability = (props: any) => {
 
   return(
     <div className="availability wrapper">
-      <div className="availabilityIntro">
-        {/* get meeting name from database */}
-        <h1>{eventName}</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam tempora similique corporis nesciunt quo numquam!</p>
-      </div>
-      <form onSubmit={ onSubmit }>
-        <section className="availabilityFormName">
-          <label htmlFor="userName">Name</label>
-          <input 
-            type="text" 
-            aria-invalid={errors.userName ?"true" :"false"}
-            {...register("userName", {required: true })} 
-          />
-          {errors.userName && (
-            <span role="alert">
-              Please enter your name
-            </span> 
-          )}
-        </section>
+     
+        <Modal 
+          className={"availabilityModal"}
+          overlayClassName={"availabilityOverlay"}
+          isOpen={availabilityModalIsOpen}
+          onRequestClose={() => setAvailabilityModalIsOpen(false)}
+          contentLabel="Availability page"
+          style={{content: {WebkitOverflowScrolling: 'touch',}}}
+          >
+          
+          <h1>Add <span className="text">Availability</span></h1>
+          {/* get meeting name from database */}
+          <h2>{eventName}</h2>
+          
+          <form onSubmit={ onSubmit }>
+           
+              <label htmlFor="userName">Name</label>
+              <input 
+                type="text" 
+                className={errors.userName ?"error" :"success"}
+                placeholder={"Input text"}
+                aria-label="Enter name here"
+                aria-invalid={errors.userName ?"true" :"false"}
+                {...register("userName", {required: "Name is required" })} 
+              />
+              {/* error message if no name entered */}
+              <ErrorMessage errors={errors} name="userName" as="p" className="errorMessage"/>
+          
 
-        <section className="availabilityFormCalendar">
-          <p>Choose availability</p>
-          <p>Time shown in local timezone: {timezone}</p>
-          <DayPilotCalendar 
-            viewType={"Week"}
-            headerDateFormat={"d MMMM yyyy"}
-            startDate={eventDate}
-            onTimeRangeSelected={handleTimeSelected}
-            onEventClick={handleEventClicked}
-          />
-          <button
-            type="submit"
-            onClick={() => {
-              setValue("availability", eventArray ?eventArray :[])
-              setValue("timezone", timezone ?timezone :"")
-            }}> 
-            Add Availability
-          </button>
-        </section>
-      </form>
+           
+              <p>Please add your availability</p>
+              <p>Click and drag to add your availability. Please note that you are inputting your availability in your local time <span className="text">{timezone}</span> and it will be converted to the coordinator's time zone <span className="text">{coordTimeZone}</span>.</p>
+
+              <DayPilotCalendar 
+                viewType={"Week"}
+                headerDateFormat={"d MMMM yyyy"}
+                startDate={eventDate}
+                onTimeRangeSelected={handleTimeSelected}
+                onEventClick={handleEventClicked}
+                durationBarVisible = {false}
+              />
+              <button
+                type="submit"
+                className="availabilitySubmitBtn"
+                onClick={() => {
+                  setValue("availability", eventArray ?eventArray :[])
+                  setValue("timezone", timezone ?timezone :"")
+                }}> 
+                Add Availability
+              </button>
+           
+          </form>
+
+        </Modal>
 
     
     </div>
