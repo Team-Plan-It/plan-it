@@ -1,28 +1,61 @@
-
-
-.display div.calendar_default_event_inner{
-  width: 20px;
-  padding: 2px;
-}
-
-.hide{
-  color: white;
-  visibility: hidden;
-}
-
-
-.displayResults {
+.results{
   display: flex;
-  padding-top: 30px;
+  
 }
-.displayNames {
-  width: 200px;
-  padding-right: 20px;
+
+.resultsMain {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 45em;
+  /* margin-left: 278px;
+  margin-right: 5px; */
 }
-.displayNames ul {
-  list-style: none;
+.resultsIntro{
+  padding-left: 53px;
+}
+
+.resultsIntro h1{
+  font-size: 2.25rem;
+  line-height: 45px;
+}
+
+.resultsIntro p{
+  font-size: 1rem;
+}
+
+
+.calendarHeader{
+  padding-left: 53px;
+  padding-top: 25px;
+  text-align: left;
+}
+
+.results .text{
+  color: #1657F3;
+}
+
+.results .calendar_default_event_inner{
+  width: 20px;
+  padding: 3px;
+}
+
+.results .calendar_default_cell {
+  height: 10px;
+}
+
+.results .calendar_default_corner_inner{
+  border-right: none;
+}
+
+.results .calendar_default_colheader_inner {
+  display: flex;
+  align-items: flex-start;
+  padding-left: 4px;
+  border-right: none;
 }
 
 .target {
   width: 10%;
+ 
 }
+

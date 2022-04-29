@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useForm, useController, UseControllerProps } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
@@ -11,7 +11,7 @@ import { ReactMultiEmail, isEmail } from 'react-multi-email';
 import { DayPilot, DayPilotNavigator } from "@daypilot/daypilot-lite-react";
 
 //components
-import TimeZone from "../TimeZone/TimeZone";
+import Sidebar from "../Sidebar/Sidebar";
 
 //assets
 import AirplaneIcon from "../../assets/paperAirplane.js";
@@ -57,7 +57,7 @@ const Home:React.FC = () => {
   let navigate = useNavigate();
 
   Modal.setAppElement('#root');
-  // const parentSelector = document.querySelector("#modalRoot");
+
 
   // initialize state 
   // date selected by user 
@@ -84,8 +84,8 @@ const Home:React.FC = () => {
 
   // get timezone of user
   useEffect(() => {
-    const eventTimeZone = new Date().toLocaleTimeString(undefined, {timeZoneName: "short"}).split(" ")[2];;
-    console.log(eventTimeZone)
+    const eventTimeZone = new Date().toLocaleTimeString(undefined, {timeZoneName: "short"}).split(" ")[2];
+    // console.log(eventTimeZone)
     setTimezone(eventTimeZone);
   
   }, [])
@@ -117,14 +117,14 @@ const Home:React.FC = () => {
         //do axios get call here to get meeting info also with the meeting number
         axios.get(`http://localhost:4000/dates/availability/${meetingNumID}`)
         .then(data => {
-          console.log('Recieved Meeting Object')
+          console.log(data['data'][0]['date'])
         //  Passing the meeting number through the URL to the Availability page
           navigate(`/availability/${meetingNumID}`, { 
            state: {
              meetingNumID: meetingNumID,
              eventName: data['data'][0]['eventName'],
              date: data['data'][0]['date'],
-           }
+             coordTimeZone: timezone           }
           });
         })
       }
@@ -173,12 +173,14 @@ const Home:React.FC = () => {
   
 
   return(
-    <div className="home wrapper">
+    <div className="home">
+      <Sidebar />
       <div className="homeIntro">
         <Modal
           className={"welcomeModal"}
           overlayClassName={"welcomeOverlay"}
           isOpen={welcomeModalIsOpen}
+          shouldCloseOnOverlayClick={false}
           onRequestClose={openSchedulingModal}
           contentLabel="Welcome page"
           style={{content: {WebkitOverflowScrolling: 'touch',}}}
@@ -221,6 +223,7 @@ const Home:React.FC = () => {
         <Modal 
           isOpen={schedModalIsOpen}
           onRequestClose={closeSchedulingModal}
+          shouldCloseOnOverlayClick={false}
           contentLabel="Meeting Scheduling"
           className={"scheduleModal"}
           overlayClassName={"scheduleOverlay"}
@@ -355,6 +358,7 @@ const Home:React.FC = () => {
         <Modal
           isOpen={successModalIsOpen}
           onRequestClose={closeSuccessModal}
+          shouldCloseOnOverlayClick={false}
           contentLabel="Link was sent successfully"
           className={"successModal"}
           overlayClassName={"successOverlay"}
