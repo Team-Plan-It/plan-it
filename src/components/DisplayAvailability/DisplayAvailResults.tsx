@@ -52,6 +52,8 @@ const DisplayAvailResults = () => {
   const [ selectedDate, setSelectedDate ] = useState<string>();
   // time zone of coordinator
   const [ coordTimeZone, setCoordTimeZone ] = useState<string>();
+  // number of invitees
+  const [ numOfAttendees, setNumOfAttendees ] = useState<number[]>();
   // meeting number/id
   const [ meetingNumber, setMeetingNumber ] = useState<string>();
   // user names
@@ -75,22 +77,30 @@ const DisplayAvailResults = () => {
   const [ user6eventArray, setUser6eventArray ] = useState<UserInfo>();
 
 
-   // get month as string from event date
-  //  if(selectedDate){
-  //    const month = new Date(selectedDate).toLocaleString('default', {month: "long"});
-  //  }
-
 
   // ** add axios call to get meeting data **
 
 
   // deconstruct data from meetingData
   useEffect(() => {
-    const { eventName, length, date, timeZone, meetingNumber, users} = meetingData;
+    const { eventName, length, date, timeZone, emails, meetingNumber, users} = meetingData;
 
+    // populate userNameArray 
     const userNamesArray = users.map(user => {
       return user.userName;
     });
+
+    // determine number of meeting attendees
+    // includes coordinator
+    let arrayOfNumOfUsers = [1];
+    if(emails.length > 0){
+      for (let i= 0; i < emails.length; i++){
+        arrayOfNumOfUsers.push(i + 2)
+      }
+      setNumOfAttendees(arrayOfNumOfUsers);
+    }
+      
+    
 
     
     // save data in state
@@ -192,7 +202,7 @@ const DisplayAvailResults = () => {
                       text: user3array.userName.charAt(0),
                       toolTip: user3array.userName,
                       backColor: user3color,
-                      fontColor: "#ffffff",
+                      fontColor: "#000000",
                       className:"target",
                       ref:"user3"
                      });
@@ -311,7 +321,7 @@ const DisplayAvailResults = () => {
 
   return(
      <div className="results">
-       <Sidebar userNames={userNames}/>
+       <Sidebar userNames={userNames} numOfAttendees={numOfAttendees} results={true}/>
     
       <div className="resultsMain">
 
