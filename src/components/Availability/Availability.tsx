@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import Modal from "react-modal";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { DayPilot, DayPilotCalendar } from "@daypilot/daypilot-lite-react";
@@ -30,6 +30,7 @@ type FormData = {
 
 
 const Availability = (props: any) => {
+
   //Params passsed throught naviagtion
   // on page load, get meeting info from data
   const availabilityNavigation: any = useLocation();
@@ -42,6 +43,7 @@ const Availability = (props: any) => {
   const month = new Date(eventDate).toLocaleString('default', {month: "long"});
   const year = new Date(eventDate).getFullYear();
 
+  let navigate = useNavigate();
 
   // initialize useForm
   const { register, handleSubmit, setValue, formState: { errors}, reset } = useForm<FormData>();
@@ -134,8 +136,13 @@ const Availability = (props: any) => {
 
     // axios POST
     axios.post(`http://localhost:4000/dates/availability/${meetingNumID}`, data)
-    .then(res => console.log('post successful'))
-    .catch(error => console.log(error));
+    .then(() => {
+      navigate(`/results/${meetingNumID}`, { 
+        state: {
+          meetingNumID: meetingNumID
+        }
+       });
+    })
 
     //reset form fields
     reset();

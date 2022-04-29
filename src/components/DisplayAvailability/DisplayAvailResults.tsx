@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-// import axios from "axios";
+import axios from "axios";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { DayPilot, DayPilotCalendar } from "@daypilot/daypilot-lite-react";
+import { useLocation } from "react-router-dom";
 
 
 //components
@@ -42,6 +43,8 @@ type EventObj = {
 
 const DisplayAvailResults = () => {
   let calendar = DayPilot.Calendar;
+  const availabilityNavigation: any = useLocation();
+  const meetingNumID = availabilityNavigation.state['meetingNumID'];
   
   //initialize state
   // event name
@@ -79,6 +82,11 @@ const DisplayAvailResults = () => {
 
 
   // ** add axios call to get meeting data **
+  axios.get(`http://localhost:4000/dates/results/${meetingNumID}`)
+        .then(data => {
+          console.log(data)
+        //  Passing the meeting number through the URL to the Availability page
+        })
 
 
   // deconstruct data from meetingData

@@ -23,7 +23,7 @@ const App: React.FC = () => {
             <Route path="/" element={<Home />}/>
             <Route path="/availability/:id" element={ <Availability />}/>
             {/* ??? customize the results page so it matches meeting id??? */}
-            <Route path="/results" element={ <DisplayAvailResults />} />
+            <Route path="/results/:id" element={ <DisplayAvailResults />} />
           </Routes>
         </main>
       </div>
