@@ -40,6 +40,7 @@ const Availability = (props: any) => {
 
   // get month as string from event date
   const month = new Date(eventDate).toLocaleString('default', {month: "long"});
+  const year = new Date(eventDate).getFullYear();
 
 
   // initialize useForm
@@ -178,27 +179,7 @@ const Availability = (props: any) => {
 
               <div className="calendarContainer">
                 <div className="calendarHeader">
-                  <p>{month}</p>
-                  {/* <ul>
-                    <li className="blank"></li>
-                    <li>Sun</li>
-                    <li>Mon</li>
-                    <li>Tue</li>
-                    <li>Wed</li>
-                    <li>Thu</li>
-                    <li>Fri</li>
-                    <li>Sat</li>
-                  </ul>
-                  <ul>
-                    <li className="blank"></li>
-                    <li>day0</li>
-                    <li>day1</li>
-                    <li>day2</li>
-                    <li>day3</li>
-                    <li>day4</li>
-                    <li>day5</li>
-                    <li>day6</li>
-                  </ul> */}
+                  <p>{month}, {year}</p>
                 </div>
                 <DayPilotCalendar 
                   viewType={"Week"}
@@ -208,6 +189,7 @@ const Availability = (props: any) => {
                   onEventClick={handleEventClicked}
                   durationBarVisible = {false}
                   heightSpec={"Full"}
+                  cellHeight={25}
                 />
               </div>
               <button
