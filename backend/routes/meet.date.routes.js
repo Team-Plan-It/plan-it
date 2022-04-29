@@ -61,6 +61,7 @@ meetDateRoute.route("/availability/:meetingNumber").post(async function (req, re
         } 
         availabilityObject.save()
     }
+    let mainMeeting = await MeetDateModel.updateOne({ meetingNumber: meetingNumber }, { $push: { users: user } })
     user.save()
       .then(userSaved => {
         return res.status(200).json({'userSaved': 'User in added successfully'});

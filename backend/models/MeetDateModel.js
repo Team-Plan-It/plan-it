@@ -17,7 +17,7 @@ let MeetDateModel = new Schema({
         friday: [{ type: Object }],
         saturday: [{ type: Object }],
     },
-    users: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    users: [{ type: Schema.Types.Object, ref: 'User' }],
 },{
     collection: 'meetings'
 });

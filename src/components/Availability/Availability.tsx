@@ -130,7 +130,7 @@ const Availability = (props: any) => {
 
   // makes axios call when user submits availability form
   const onSubmit = handleSubmit<FormData>(data => {
-    // console.log(data);
+    console.log(data);
 
     // axios POST
     axios.post(`http://localhost:4000/dates/availability/${meetingNumID}`, data)
