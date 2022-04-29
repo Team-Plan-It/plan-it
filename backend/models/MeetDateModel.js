@@ -8,9 +8,18 @@ let MeetDateModel = new Schema({
     timezone: { type: String },
     emails: [{ type: String }],
     meetingNumber: { type: String },
-    users: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    availabilityArray: {
+        sunday: [{ type: Object }],
+        monday: [{ type: Object }],
+        tuesday: [{ type: Object }],
+        wednesday: [{ type: Object }],
+        thursday: [{ type: Object }],
+        friday: [{ type: Object }],
+        saturday: [{ type: Object }],
+    },
+    users: [{ type: Schema.Types.Object, ref: 'User' }],
 },{
-    collection: 'meetdates'
+    collection: 'meetings'
 });
 
 module.exports = mongoose.model('MeetDateModel', MeetDateModel);

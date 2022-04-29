@@ -3,6 +3,7 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const express = require('express')
 const meetDateRoute = require('./routes/meet.date.routes')
+require('dotenv').config();
 
 const app = express()
 
@@ -11,9 +12,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 require('../backend/config/db.config')
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.resolve(__dirname, "../build")));
+}
+
 app.use('/dates', meetDateRoute);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
 console.log('Listening on port ' + PORT);
+// console.log(__dirname)
 });

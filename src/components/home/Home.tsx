@@ -177,9 +177,10 @@ const Home:React.FC = () => {
 
       // axios POST request that adds the meeting to the database
       axios.post("http://localhost:4000/dates/add", data)
-      .then(res => 
-        console.log(data)
-        )
+      .then(res => {
+        // console.log(data)
+        console.log('Successfully added meeting to database')
+      })
       .catch(error => console.log(error));
       // reset form fields
       reset();
