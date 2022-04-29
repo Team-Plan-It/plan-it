@@ -32,7 +32,7 @@ type MeetingData = {
     length: "30",
     date: "2022-05-09T00:00:00",
     timeZone: "EST",
-    emails: ["me@email.com", "you@email.com"],
+    emails: ["thor@email.com", "loki@email.com", "gamora@email.com", "natasha@email.com", "tchalla@email.com"],
     meetingNumber: "5336",
     users:[
       {

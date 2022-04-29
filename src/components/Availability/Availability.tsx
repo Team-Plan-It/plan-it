@@ -143,7 +143,7 @@ const Availability = (props: any) => {
 
   return(
     <div className="availability">
-        <Sidebar />
+        <Sidebar results={false}/>
         <Modal 
           className={"availabilityModal"}
           overlayClassName={"availabilityOverlay"}
@@ -156,7 +156,7 @@ const Availability = (props: any) => {
           
           <h1>Add <span className="text">Availability</span></h1>
           {/* get meeting name from database */}
-          <h2>{eventName}</h2>
+          <h2>Meeting: {eventName}</h2>
           
           <form onSubmit={ onSubmit }>
            

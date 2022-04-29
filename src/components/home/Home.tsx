@@ -70,6 +70,8 @@ const Home:React.FC = () => {
   const [ inputtedEmails, setInputtedEmails ] = useState<string[]>([]);
   // if no emails entered
   const [ noEmails, setNoEmails ] = useState<boolean>(false);
+  // number of attendees
+  const [ numOfAttendees, setNumOfAttendees ] = useState<number[]>([1]);
   // welcome modal
   const [ welcomeModalIsOpen, setWelcomeModalIsOpen ] = useState<boolean>(false);
   // schedule meeting modal open or closed
@@ -106,6 +108,28 @@ const Home:React.FC = () => {
     setSchedModalIsOpen(false);
   }
 
+  // when emails are added or removed
+  const handleEmailChange = (_emails:string[]) => {
+    setInputtedEmails(_emails);
+
+
+    let attendees = [1];
+ 
+
+    if(_emails.length > 0){
+      setNoEmails(false);
+
+      for (let i= 0; i < _emails.length; i++){
+        attendees.push(i + 2)
+      }
+      setNumOfAttendees(attendees);
+
+    }else {
+      // if no emails in email array
+      setNoEmails(true);
+      setNumOfAttendees(attendees);
+    }
+  }
 
   // close success module and navigate to availability page
   const closeSuccessModal = () => {
@@ -173,7 +197,12 @@ const Home:React.FC = () => {
 
   return(
     <div className="home">
-      <Sidebar />
+      {
+        inputtedEmails.length > 0
+        ? <Sidebar userNames={inputtedEmails} numOfAttendees={numOfAttendees} results={false}/>
+        :  <Sidebar numOfAttendees={numOfAttendees} results={false}/>
+      }
+     
       <div className="homeIntro">
         <Modal
           className={"welcomeModal"}
@@ -270,8 +299,7 @@ const Home:React.FC = () => {
                   placeholder="Add an Email"
                   className={noEmails ?"error" :"success"}
                   emails={inputtedEmails}
-                  onChange={(_emails:string[]) => {setInputtedEmails(_emails);
-                  setNoEmails(false)}}
+                  onChange={(_emails:string[]) => {handleEmailChange(_emails)}}
                   validateEmail={ email => { return isEmail(email)}} //return Boolean
                   getLabel={(
                     email: string,
