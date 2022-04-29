@@ -1,16 +1,15 @@
 const meetDateRoute = require('express').Router()
 const { useResolvedPath } = require('react-router-dom');
+const { formatWithOptions } = require('util');
 const MeetDateModel = require('../models/MeetDateModel');
 const UserModel = require('../models/UserModel');
+const AvailbilityModel = require('../models/AvailabilityObjectModel');
 const mailer = require('../utils/mailer');
 
 // POST route that creates a meeting date
 meetDateRoute.route('/add').post(function (req, res) {
   let meetDateModel = new MeetDateModel(req.body);
-  let weekArray = [[],[],[],[],[],[],[]];
-  meetDateModel.dateArray = weekArray;
   meetDateModel.save()
-
     .then(dateSaved => {
         // mailer.sendMail();
         return res.status(200).json({'dateSaved': 'Date in added successfully'});
@@ -31,46 +30,41 @@ meetDateRoute.route("/availability/:meetingNumber").get(async function (req, res
 // POST route that creates a user object when they add their name and availability & updates the meeting object with the user object
 meetDateRoute.route("/availability/:meetingNumber").post(async function (req, res){
     const meetingNumber = req.params.meetingNumber
-    let meeting = await MeetDateModel.findOne({ meetingNumber: meetingNumber })
     let user = new UserModel(req.body)
-    for (let i = 0; i < meeting.dateArray.length; i++) {
-        meeting.dateArray[i].push(user.availability[i])
-        // meeting.updateOne({ meetingNumber: meetingNumber }, { $push: {dateArray: user.availability[i]} })
-
+    let userName = user["userName"]
+    
+    
+    for (let i = 0; i < user.availability.length ; i++) {
         
-    }
-    meeting.save()
-    console.log("meeting.dataArray", meeting.dateArray)
-    // meeting.save()
-    
-    // let mainMeeting = await MeetDateModel.updateOne({ meetingNumber: meetingNumber }, { $push: { users: user } })
-    // for each object in the user availability array depening on the id add it to dateArray[id]
-    // but insert the data in this format {usernaame:xxxxx, availability:{}}
-    
-    // const data = await MeetDateModel.find({ meetingNumber: meetingNumber }).lean()
-    // const usersArray = data[0]['users']
-    // const mainUser = data[0]['users'][0]
-    // const foundUser = await UserModel.findById(mainUser)
-    // // const userAvailabilityArray = foundUser['availability']
-    // // for each object[id] check if it its in datArray[?] and if it is insert the object there and if not create that array and insert the object there
-    // const userAvailabilityArray = {
-    //     'userName': foundUser['userName'],
-    //     'availability': req.body.availability
-    // }
+        let availability = user["availability"][i]
+        let availID = user["availability"][i]["id"]
+        let availabilityObject = new AvailbilityModel({userName: userName, availability: availability})
 
-    
-    // get all user objects and check ids and then push into specififc array spot based on the id
- 
-    // user.save()
-    //   .then(userSaved => {
-    //     //   console.log(foundUser)
-    //       meeting.save()
-    //       return res.status(200).json({'userSaved': 'User in added successfully'});
+        if (availID == 0  ) {
+            let meeting = await MeetDateModel.updateOne({ meetingNumber: meetingNumber }, {$push: {"availabilityArray.sunday": availabilityObject}})
+        } else if (availID == 1) {
+            let meeting = await MeetDateModel.updateOne({ meetingNumber: meetingNumber }, {$push: {"availabilityArray.monday": availabilityObject}})
+        } else if (availID == 2) {
+            let meeting = await MeetDateModel.updateOne({ meetingNumber: meetingNumber }, {$push: {"availabilityArray.tuesday": availabilityObject}})
+        } else if (availID == 3) {
+            let meeting = await MeetDateModel.updateOne({ meetingNumber: meetingNumber }, {$push: {"availabilityArray.wednesday": availabilityObject}})
+        } else if (availID == 4) {
+            let meeting = await MeetDateModel.updateOne({ meetingNumber: meetingNumber }, {$push: {"availabilityArray.thursday": availabilityObject}})
+        } else if (availID == 5) {
+            let meeting = await MeetDateModel.updateOne({ meetingNumber: meetingNumber }, {$push: {"availabilityArray.friday": availabilityObject}})
+        } else if (availID == 6) {
+            let meeting = await MeetDateModel.updateOne({ meetingNumber: meetingNumber }, {$push: {"availabilityArray.saturday": availabilityObject}})
+        } 
+        availabilityObject.save()
+    }
+    user.save()
+      .then(userSaved => {
+        return res.status(200).json({'userSaved': 'User in added successfully'});
           
-    //   })
-    //   .catch(err => {
-    //       return res.status(400).send("unable to save to database");
-    //   })
+      })
+      .catch(err => {
+          return res.status(400).send("unable to save to database");
+      })
 })
 
 // GET route that gets the meeting object which is found through the :meetingNum parameter but then returns the users availability inside the users array of the meeting object

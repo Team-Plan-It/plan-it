@@ -8,7 +8,15 @@ let MeetDateModel = new Schema({
     timezone: { type: String },
     emails: [{ type: String }],
     meetingNumber: { type: String },
-    dateArray: [{type:Object}],
+    availabilityArray: {
+        monday: [{ type: Object }],
+        tuesday: [{ type: Object }],
+        wednesday: [{ type: Object }],
+        thursday: [{ type: Object }],
+        friday: [{ type: Object }],
+        saturday: [{ type: Object }],
+        sunday: [{ type: Object }]
+    },
     users: [{ type: Schema.Types.ObjectId, ref: 'User' }],
 },{
     collection: 'meetdates'
