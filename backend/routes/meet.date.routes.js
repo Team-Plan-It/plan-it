@@ -11,7 +11,11 @@ meetDateRoute.route('/add').post(function (req, res) {
   let meetDateModel = new MeetDateModel(req.body);
   meetDateModel.save()
     .then(dateSaved => {
-        // mailer.sendMail();
+        // for (let i=0; i<req.body.emails.length; i++) {
+        //     console.log(req.body.emails[i]);
+        //     mailer.sendMail();
+        // }
+        
         return res.status(200).json({'dateSaved': 'Date in added successfully'});
     })
     .catch(err => {
@@ -72,16 +76,7 @@ meetDateRoute.route("/results/:meetingNumber").get(async function (req, res) {
     const meetingNumber = req.params.meetingNumber;
     const data = await MeetDateModel.find({ meetingNumber: meetingNumber }).lean()
 
-    //for loop going through each user and returning the availability
-    // for (let i = 0; i < data[0]['users'].length; i++) {
-    //     const usersArray = data[0]['users'][i]
-    //     // return console.log(usersArray)
-    // }
-    const usersArray = data[0]['users']
-    const mainUser = data[0]['users'][0]
-    const foundUser = await UserModel.findById(mainUser)
-    const userAvailabilityArray = foundUser['availability']
-    return res.send(foundUser)
+    return res.send(data)
 
 })
 

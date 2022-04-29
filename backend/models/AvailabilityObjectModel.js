@@ -5,7 +5,7 @@ let AvailabilityObjectModel = new Schema({
     userName: { type: String },
     availability: [{ type: Object }],
 },{
-    collection: 'aviailabilitydates'
+    collection: 'availabilityDates'
 });
 
 module.exports = mongoose.model('AvailabilityObjectModel', AvailabilityObjectModel);
