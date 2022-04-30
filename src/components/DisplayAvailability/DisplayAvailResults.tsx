@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
 import axios from "axios";
+import React, { useState, useEffect } from "react";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { DayPilot, DayPilotCalendar } from "@daypilot/daypilot-lite-react";
@@ -23,9 +23,10 @@ type Availability = {
     text: string;
   }
 type UserInfo = {
-  userName: string;
-  timeZone: string;
-  availability: Availability[];
+  userName?: string;
+  timeZone?: string;
+  availability?: Availability[];
+  id?: string;
 } 
 
 type DayEvent = {
@@ -37,6 +38,27 @@ type EventObj = {
   user: string; 
   start: number;
   end: number;
+}
+interface AvailabilityArray{
+  sunday: UserInfo[];
+  monday: UserInfo[];
+  tuesday: UserInfo[];
+  wednesday: UserInfo[];
+  thursday: UserInfo[];
+  friday: UserInfo[];
+  saturday: UserInfo[];
+}
+
+interface MeetingInfo {
+  id: string;
+  eventName: string;
+  date: string;
+  length: string;
+  meetingNumber: string;
+  timezone: string;
+  emails: string[];
+  users:UserInfo[];
+  availabilityArray: AvailabilityArray;
 }
 
 
@@ -60,15 +82,17 @@ const DisplayAvailResults = () => {
   // meeting number/id
   const [ meetingNumber, setMeetingNumber ] = useState<string>();
   // user names
-  const [ userNames, setUserNames ] = useState<string[]>();
+  const [ userNames, setUserNames ] = useState<(string | undefined)[]>();
   // user info array
   const [ userInfoData, setUserInfoData ] = useState<UserInfo[]>()
   // if an event has been created
   const [ eventCreated, setEventCreated ] = useState<boolean>(false);
   // array of all events created
   const [ arrayOfEvents, setArrayOfEvents ] = useState<any[]>();
-
-
+  // the data object
+  // const [ dataObj, setDataObj ] = useState<MeetingInfo>();
+  // calendar month
+  const [ month, setMonth ] = useState<string>();
 
 
   // arrays of each users events
@@ -81,63 +105,64 @@ const DisplayAvailResults = () => {
 
 
 
-  // ** add axios call to get meeting data **
-  axios.get(`http://localhost:4000/dates/results/${meetingNumID}`)
-        .then(data => {
-          console.log(data)
-        //  Passing the meeting number through the URL to the Availability page
-        })
+  // axios call in async function
+  const getData = async () => {
+    const response = await axios.get(`http://localhost:4000/dates/results/${meetingNumID}`);
+   
+      const data = response.data[0];
+      console.log(data.eventName)
+      // setDataObj(data)
+      const { eventName, length, date, timezone, emails, meetingNumber, users} = data!;
 
+      // save data in state
+      setEventName(eventName);
+      setMeetingLength(length);
+      setSelectedDate(date);
+      setCoordTimeZone(timezone);
+      setMeetingNumber(meetingNumber);
+      setUserInfoData(users);
 
-  // deconstruct data from meetingData
-  useEffect(() => {
-    const { eventName, length, date, timeZone, emails, meetingNumber, users} = meetingData;
+      // populate userNameArray 
+      const userNamesArray:(string | undefined)[] = users.map((user:UserInfo) => {
+          return user.userName;
+      });
+      setUserNames(userNamesArray);
 
-    // populate userNameArray 
-    const userNamesArray = users.map(user => {
-      return user.userName;
-    });
-
-    // determine number of meeting attendees
-    // includes coordinator
-    let arrayOfNumOfUsers = [1];
-    if(emails.length > 0){
-      for (let i= 0; i < emails.length; i++){
-        arrayOfNumOfUsers.push(i + 2)
+      // determine number of meeting attendees
+      // includes coordinator
+      let arrayOfNumOfUsers = [1];
+      if(emails.length > 0){
+        for (let i= 0; i < emails.length; i++){
+          arrayOfNumOfUsers.push(i + 2)
+        }
+        setNumOfAttendees(arrayOfNumOfUsers);
       }
-      setNumOfAttendees(arrayOfNumOfUsers);
+
+      // get month as string from event date
+      const month = new Date(date).toLocaleString('default', {month: "long"});
+      setMonth(month);
+
+     
+      // createEventList(users);
+ 
     }
-      
-    
 
-    
-    // save data in state
-    setEventName(eventName);
-    setMeetingLength(length);
-    setSelectedDate(date);
-    setCoordTimeZone(timeZone);
-    setMeetingNumber(meetingNumber);
-    setUserNames(userNamesArray);
-    setUserInfoData(users);
-    
-    // get month as string from event date
-    if(date){
-    
-     const month = new Date(date).toLocaleString('default', {month: "long"});
-     console.log(month)
-   }
-  }, []);
-
-  // separate users and create events based on the availability data
   useEffect(() => {
-     const colorArray:string[] = ["#ff3db1", "#ff6b00", "#ffe500", "#49c491", "#4198f7", "#b03ce7"];
+     getData();
+    
+  }, [])
 
-      let eventArray:any[] = [];
 
-      if(!eventCreated && userInfoData){
+  
 
-        userInfoData!.forEach((user, index) => {
-         
+  const createEventList = (userObj:UserInfo[]) => {
+    const colorArray:string[] = ["#ff3db1", "#ff6b00", "#ffe500", "#49c491", "#4198f7", "#b03ce7"];
+
+    let eventArray:any[] = [];
+
+
+     userObj!.forEach((user, index) => {
+          console.log(user)
              // assign a color for each user 
              let color:string = colorArray[index];
   
@@ -149,13 +174,15 @@ const DisplayAvailResults = () => {
                   setUser1eventArray(user)
   
                    // loop through the availability for the user
-                  user1array.availability.forEach(availBlock => {
+                  user1array.availability!.forEach(availBlock => {
+
+                    console.log(user1array.userName!.charAt(0))
                     //  create a new event for each availability block
                     let newEvent:any[] = new DayPilot.Event({
                       start: availBlock.start,
                       end: availBlock.end,
                       id: "user1",
-                      text: user1array.userName.charAt(0),
+                      text: user1array.userName!.charAt(0),
                       toolTip: user1array.userName,
                       backColor: user1color,
                       fontColor: "#ffffff",
@@ -175,13 +202,13 @@ const DisplayAvailResults = () => {
                   setUser2eventArray(user);
 
                   // loop through the availability for the user
-                  user2array.availability.forEach(availBlock => {
+                  user2array.availability!.forEach(availBlock => {
                     //  create a new event for each availability block
                     let newEvent:any[] = new DayPilot.Event({
                       start: availBlock.start,
                       end: availBlock.end,
                       id: "user2",
-                      text: user2array.userName.charAt(0),
+                      text: user2array.userName!.charAt(0),
                       toolTip: user2array.userName,
                       backColor: user2color,
                       fontColor: "#ffffff",
@@ -201,13 +228,13 @@ const DisplayAvailResults = () => {
                   setUser3eventArray(user);
   
                   // loop through the availability for the user
-                  user3array.availability.forEach(availBlock => {
+                  user3array.availability!.forEach(availBlock => {
                     //  create a new event for each availability block
                     let newEvent:any[] = new DayPilot.Event({
                       start: availBlock.start,
                       end: availBlock.end,
                       id: "user3",
-                      text: user3array.userName.charAt(0),
+                      text: user3array.userName!.charAt(0),
                       toolTip: user3array.userName,
                       backColor: user3color,
                       fontColor: "#000000",
@@ -227,13 +254,13 @@ const DisplayAvailResults = () => {
                   setUser4eventArray(user);
   
                   // loop through the availability for the user
-                  user4array.availability.forEach(availBlock => {
+                  user4array.availability!.forEach(availBlock => {
                     //  create a new event for each availability block
                     let newEvent:any[] = new DayPilot.Event({
                       start: availBlock.start,
                       end: availBlock.end,
                       id: "user4",
-                      text: user4array.userName.charAt(0),
+                      text: user4array.userName!.charAt(0),
                       toolTip: user4array.userName,
                       backColor: user4color,
                       fontColor: "#ffffff",
@@ -253,13 +280,13 @@ const DisplayAvailResults = () => {
                   setUser5eventArray(user);
 
                   // loop through the availability for the user
-                  user5array.availability.forEach(availBlock => {
+                  user5array.availability!.forEach(availBlock => {
                     //  create a new event for each availability block
                     let newEvent:any[] = new DayPilot.Event({
                       start: availBlock.start,
                       end: availBlock.end,
                       id: "user5",
-                      text: user5array.userName.charAt(0),
+                      text: user5array.userName!.charAt(0),
                       toolTip: user5array.userName,
                       backColor: user5color,
                       fontColor: "#ffffff",
@@ -279,13 +306,13 @@ const DisplayAvailResults = () => {
                   setUser6eventArray(user);
 
                   // loop through the availability for the user
-                  user6array.availability.forEach(availBlock => {
+                  user6array.availability!.forEach(availBlock => {
                     //  create a new event for each availability block
                     let newEvent:any[] = new DayPilot.Event({
                       start: availBlock.start,
                       end: availBlock.end,
                       id: "user6",
-                      text: user6array.userName.charAt(0),
+                      text: user6array.userName!.charAt(0),
                       toolTip: user6array.userName,
                       backColor: user6color,
                       fontColor: "#ffffff",
@@ -300,28 +327,34 @@ const DisplayAvailResults = () => {
                   break;
              }
   
-              if (index === userInfoData!.length -1){
+              if (index === userObj!.length -1){
                 setEventCreated(true)
                 setArrayOfEvents(eventArray)
+                calendar.events.update();
                 console.log("eventCreated should be true")
+              }else {
+                console.log("error")
               }
         })
-      }
-     
-  }, [userInfoData])
+
+      
+
+  }
+
+  
 
  
-  // THIS IS NOT CURRENTLY WORKING AND IS NOT FINISHED
-  // when  user clicks on event
+  // // THIS IS NOT CURRENTLY WORKING AND IS NOT FINISHED
+  // // when  user clicks on event
   const handleEventClick = (args:any)  => {
-              if(args.e.id() === "user1"){
-                console.log("user1 event clicked", args.e.calendar.events.list);
-                const allevents = args.e.calendar.events.list;
-                let user1events = allevents.filter((event:any) => {return event.id === "user1"});
+              // if(args.e.id() === "user1"){
+              //   console.log("user1 event clicked", args.e.calendar.events.list);
+              //   const allevents = args.e.calendar.events.list;
+              //   let user1events = allevents.filter((event:any) => {return event.id === "user1"});
        
-                user1events.forEach((event:any) => {event.cssClass = "hide"})
-                console.log(user1events)
-              }
+              //   user1events.forEach((event:any) => {event.cssClass = "hide"})
+              //   console.log(user1events)
+              // }
             }
 
   
@@ -347,7 +380,10 @@ const DisplayAvailResults = () => {
             }
            
           </div>
-          <DayPilotCalendar 
+          {
+            userInfoData
+            ?
+             <DayPilotCalendar 
             durationBarVisible={false}
             startDate={"2022-05-09T09:00:00"}
             // viewType={"WorkWeek"}
@@ -355,12 +391,17 @@ const DisplayAvailResults = () => {
             headerDateFormat={"ddd dd"}
             heightSpec={"Full"}
             showToolTip={"true"}
-            onEventClick={handleEventClick}
+            // onEventClick={handleEventClick}
             cellHeight={15}
+            autoRefreshEnabled = {true}
+            beforeCellRender={(args: any) => {createEventList(userInfoData)}}
             ref={(component:any | void) => {
               calendar = component && component.control;
             }}
           />
+          :null
+          }
+         
         </div>
       </div>
     </div>
