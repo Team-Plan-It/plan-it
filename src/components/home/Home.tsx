@@ -257,7 +257,7 @@ const Home:React.FC = () => {
           className={"scheduleModal"}
           overlayClassName={"scheduleOverlay"}
         >
-          <h1>Meeting <span>Details</span></h1>
+          <h1>Meeting <span className="text">Details</span></h1>
           <div className="homeInput">
             <form onSubmit={ onSubmit }>
               <section className="formEventDetails">
@@ -295,7 +295,7 @@ const Home:React.FC = () => {
 
 
                 {/* input for email addressess */}
-                <label htmlFor="users">Invite participants</label>
+                <label htmlFor="users">Invite up to 5 other participants</label>
                 <ReactMultiEmail 
                   placeholder="Add an Email"
                   className={noEmails ?"error" :"success"}
@@ -326,15 +326,21 @@ const Home:React.FC = () => {
 
 
                 {/* displays current time zone of user */}
-                <p className="timezoneMessage">Your time shows as <span>{timezone}</span>. This means everyone's times will be converted to {timezone} for you.</p>
+                <p className="timezoneMessage">Your time shows as <span className="text">{timezone}</span>. This means everyone's times will be converted to {timezone} for you.</p>
             </section>
 
             <section className="formEventCalendar">
-              <p>Choose up to 7 days</p>
+              <p>Choose a week</p>
       
               <DayPilotNavigator 
                 selectMode={"week"}
                 startDate={new DayPilot.Date().value}
+                cellHeight={60}
+                cellWidth={60}
+                titleHeight={70}
+                autoFocusOnClick={true}
+                selectionDay={chosenDay}
+                select={chosenDay}
                 onTimeRangeSelected={(args:any) => {
                   console.log(
                     `You selected ${args.day}`

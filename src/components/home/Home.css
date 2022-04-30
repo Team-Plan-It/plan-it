@@ -91,37 +91,43 @@
 }
 
 .scheduleModal {
-  padding-left: 70px;
-  min-width: 700px;
+  min-width: 847px;
 }
 
 .scheduleModal h1 {
   font-size: 1.8em;
+  margin-top: 30px;
 }
 
-.scheduleModal span{
+.scheduleModal .text{
   color: #1657F3;
 }
+
 .homeInput {
   display: flex;
+  margin-top: 40px;
+  width: 100%;
 }
 
 .homeInput form{
   display: flex;
-  flex: 0 1;
+  /* justify-content: space-around; */
+  /* flex: 0 1; */
   width: 100%;
-  min-width: 700px;
+  min-width: 730px;
+  padding: 0 30px;
 }
-.homeInput section {
+/* .homeInput section {
   width: 50%;
   padding: 20px;
-}
+} */
 
 /* details section of form */
 .formEventDetails{
   display: flex;
   flex-direction: column;
   padding: 0 2%;
+  width: 65%;
 }
 
 .homeInput label{
@@ -188,7 +194,9 @@
 }
 
 /* calendar section of form */
-
+.formEventCalendar{
+  width: 50%;
+}
 .navigator_default_main {
   border-left: 1px solid #fff;
   border-right: 1px solid #fff;
@@ -206,30 +214,32 @@
   box-sizing: border-box;
 }
 
-.navigatore_default_line {
+.navigator_default_line {
   border-bottom: 1px solid #fff;
 }
 
 /* month header */
-.navigatore_default_title,
-.navigatore_default_titleleft,
-.navigatore_default_titleright {
+.navigator_default_title,
+.navigator_default_titleleft,
+.navigator_default_titleright {
   border-top: 1px solid #fff;
+  border-bottom: 1px solid #fff;
   color: #383c40;
   background: rgb(255, 255, 255);
+  font-size: 1.2rem;
 }
 
-.navigatore_default_title {
+.navigator_default_title {
   text-align: center;
 }
 
-.navigatore_default_titleleft,
-.navigatore_default_titleright {
+.navigator_default_titleleft,
+.navigator_default_titleright {
   text-align: center;
 }
 
 /* day headers */
-.navigatore_default_dayheader {
+.navigator_default_dayheader {
   color: #383c40;
   background: #ffffff;
   padding: 0px;
@@ -237,26 +247,32 @@
 }
 
 /* day cells */
-.navigatore_default_cell {
+.navigator_default_cell {
   color: #383c40;
   background: #ffffff;
   text-align: center;
 }
 
-.navigatore_default_cell_text {
+.navigator_default_cell_text {
   padding: 0px;
 }
 
 
 .navigator_default_todaybox {
-  border: 1px solid #1657F3;
+  border: 3px solid #1657F3;
   border-radius: 10px;
+  /* background-color: #16f316; */
 }
 
 .navigator_default_select .navigator_default_cell_box{
-  background-color: #4198F7;
-  border-radius: 10px;
+  background-color: #F5F5F5;
+  /* border-radius: 10px; */
 
+}
+.navigator_default_select.navigator_default_weekend{
+  background-color: #1657F3;
+  color: #FFFFFF;
+  border-radius: 10px;
 }
 
 .navigator_default_title,
@@ -268,7 +284,7 @@
 /* button to submit meeting info */
 .meetingSubmitBtn {
   position: relative;
-  right: -70px;
+  right: -278px;
   margin-top: 30px;
 
 }
