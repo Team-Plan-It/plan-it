@@ -9,12 +9,14 @@ const mailer = require('../utils/mailer');
 // POST route that creates a meeting date
 meetDateRoute.route('/add').post(function (req, res) {
   let meetDateModel = new MeetDateModel(req.body);
+  let meetingNumber = req.body.meetingNumber;
   meetDateModel.save()
     .then(dateSaved => {
         // for (let i=0; i<req.body.emails.length; i++) {
-        //     console.log(req.body.emails[i]);
-        //     mailer.sendMail();
+        //     let email = req.body.emails[i];
+        //     mailer.sendMail(email, meetingNumber);
         // }
+
         
         return res.status(200).json({'dateSaved': 'Date in added successfully'});
     })
