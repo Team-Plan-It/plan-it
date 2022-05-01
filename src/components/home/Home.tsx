@@ -15,9 +15,11 @@ import Sidebar from "../Sidebar/Sidebar";
 
 //assets
 import AirplaneIcon from "../../assets/paperAirplane.js";
+import airplane from "../../assets/paperAirplane.png";
 import AvailabilityIcon from "../../assets/availability.js";
 import MeetingIcon from "../../assets/meetingDetails.js";
 import OverlapIcon from "../../assets/overlap.js";
+import blueTextLogo from "../../assets/blueLetterLogo.png";
 
 // styles
 import 'react-multi-email/style.css';
@@ -70,6 +72,8 @@ const Home:React.FC = () => {
   const [ inputtedEmails, setInputtedEmails ] = useState<string[]>([]);
   // if no emails entered
   const [ noEmails, setNoEmails ] = useState<boolean>(false);
+  // max num of emails
+  const [ maxNumOfEmails, setMaxNumOfEmails ] = useState<boolean>(false);
   // number of attendees
   const [ numOfAttendees, setNumOfAttendees ] = useState<number[]>([1]);
   // welcome modal
@@ -110,13 +114,14 @@ const Home:React.FC = () => {
 
   // when emails are added or removed
   const handleEmailChange = (_emails:string[]) => {
-    setInputtedEmails(_emails);
-
-
+    
+    
     let attendees = [1];
- 
-
-    if(_emails.length > 0){
+    
+    
+    if(_emails.length > 0 && numOfAttendees.length < 6 && !maxNumOfEmails){
+      setInputtedEmails(_emails);
+      console.log()
       setNoEmails(false);
 
       for (let i= 0; i < _emails.length; i++){
@@ -124,12 +129,17 @@ const Home:React.FC = () => {
       }
       setNumOfAttendees(attendees);
 
-    }else {
+      if(inputtedEmails.length === 4){
+        setMaxNumOfEmails(true);
+      }
+
+    }else if(_emails.length === 0 && numOfAttendees.length <= 6){
       // if no emails in email array
       setNoEmails(true);
       setNumOfAttendees(attendees);
     }
   }
+  
 
   // close success module and navigate to availability page
   const closeSuccessModal = () => {
@@ -148,7 +158,8 @@ const Home:React.FC = () => {
              meetingNumID: meetingNumID,
              eventName: data['data'][0]['eventName'],
              date: data['data'][0]['date'],
-             coordTimeZone: timezone           }
+             coordTimeZone: timezone,
+             attendees: numOfAttendees          }
           });
         })
       }
@@ -214,7 +225,8 @@ const Home:React.FC = () => {
           contentLabel="Welcome page"
           style={{content: {WebkitOverflowScrolling: 'touch',}}}
         >
-          <h1>Welcome to Plan-it, ......</h1>
+          <img src={blueTextLogo} alt="plan-it paper airplane logo with blue text"/>
+          <h1>Welcome, ready to save some mental capacity?</h1>
           <h2>How it works</h2>
           <ul>
             <li>
@@ -257,7 +269,7 @@ const Home:React.FC = () => {
           className={"scheduleModal"}
           overlayClassName={"scheduleOverlay"}
         >
-          <h1>Meeting <span>Details</span></h1>
+          <h1>Meeting <span className="text">Details</span></h1>
           <div className="homeInput">
             <form onSubmit={ onSubmit }>
               <section className="formEventDetails">
@@ -295,46 +307,59 @@ const Home:React.FC = () => {
 
 
                 {/* input for email addressess */}
-                <label htmlFor="users">Invite participants</label>
-                <ReactMultiEmail 
-                  placeholder="Add an Email"
-                  className={noEmails ?"error" :"success"}
-                  emails={inputtedEmails}
-                  onChange={(_emails:string[]) => {handleEmailChange(_emails)}}
-                  validateEmail={ email => { return isEmail(email)}} //return Boolean
-                  getLabel={(
-                    email: string,
-                    index: number,
-                    removeEmail: (index: number) => void, 
-                  ) => {
-                    return(
-                      <div data-tag key={index}>
-                        {email}
-                        <span data-tag-handle onClick={() => removeEmail(index)}>
-                          x
-                        </span>
-                      </div>
-                    )
-                  }}
-                />
-                {/* error message if no emails entered */}
-                {
-                  noEmails
-                  ?<p className="errorMessage">Please enter an email address</p>
-                  :null
-                }   
+                  <label htmlFor="users">Invite up to 5 other participants</label>
+                  <ReactMultiEmail 
+                    placeholder="Add an Email"
+                    className={noEmails ?"error" :"success"}
+                    emails={inputtedEmails}
+                    onChange={(_emails:string[]) => {handleEmailChange(_emails)}}
+                    validateEmail={ email => { return isEmail(email)}} //return Boolean
+                    getLabel={(
+                      email: string,
+                      index: number,
+                      removeEmail: (index: number) => void, 
+                    ) => {
+                      return(
+                        <div data-tag key={index}>
+                          {email}
+                          <span data-tag-handle onClick={() => removeEmail(index)}>
+                            x
+                          </span>
+                        </div>
+                      )
+                    }}
+                  />
+  
+                  {/* error message if no emails entered */}
+                  {
+                    noEmails
+                    ?<p className="errorMessage">Please enter an email address</p>
+                    :null
+                  }   
+                
+                
+                {maxNumOfEmails
+                ?<p className="errorMessage">You have reached the maximum number of invitees. If you enter more addresses, only the first 5 emails will be sent the invite link</p>
+                :null
+                }
 
 
                 {/* displays current time zone of user */}
-                <p className="timezoneMessage">Your time shows as <span>{timezone}</span>. This means everyone's times will be converted to {timezone} for you.</p>
+                <p className="timezoneMessage">Your time shows as <span className="text">{timezone}</span>. This means everyone's times will be converted to {timezone} for you.</p>
             </section>
 
             <section className="formEventCalendar">
-              <p>Choose up to 7 days</p>
+              <p>Choose a week</p>
       
               <DayPilotNavigator 
                 selectMode={"week"}
                 startDate={new DayPilot.Date().value}
+                cellHeight={60}
+                cellWidth={60}
+                titleHeight={70}
+                autoFocusOnClick={true}
+                selectionDay={chosenDay}
+                select={chosenDay}
                 onTimeRangeSelected={(args:any) => {
                   console.log(
                     `You selected ${args.day}`
@@ -394,7 +419,8 @@ const Home:React.FC = () => {
           <div className="successMessages">
             <h2>Link was <span>Successfully Sent</span></h2>
             <div className="imageContainer">
-                <AirplaneIcon />
+                {/* <AirplaneIcon /> */}
+                <img src={airplane} alt="image of blue paper airplane against light blue clouds" />
             </div>
             <button onClick={closeSuccessModal}>Add availability</button>
           </div>
