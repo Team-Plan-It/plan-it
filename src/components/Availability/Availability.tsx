@@ -38,6 +38,7 @@ const Availability = (props: any) => {
   const eventName = availabilityNavigation.state['eventName'];
   const eventDate = availabilityNavigation.state['date'];
   const coordTimeZone = availabilityNavigation.state['coordTimeZone'];
+  const attendees = availabilityNavigation.state['attendees'];
 
   // get month as string from event date
   const month = new Date(eventDate).toLocaleString('default', {month: "long"});
@@ -150,7 +151,7 @@ const Availability = (props: any) => {
 
   return(
     <div className="availability">
-        <Sidebar results={false}/>
+        <Sidebar numOfAttendees={attendees} results={false}/>
         <Modal 
           className={"availabilityModal"}
           overlayClassName={"availabilityOverlay"}
