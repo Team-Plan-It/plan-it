@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
-
+import WhiteLetterLogo from "../../assets/whiteLetterLogo";
 import "./Sidebar.css";
 
 // types
@@ -115,7 +115,7 @@ const Sidebar:React.FC<NameProps> = ({ userNames, numOfAttendees, results }) => 
   
   return(
         <div className="sidebar">
-          <p className='logo'>Logo</p>
+          <WhiteLetterLogo />
 
             <div className="displayNames">
            {/*  
