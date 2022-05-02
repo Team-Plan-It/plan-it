@@ -65,6 +65,7 @@ interface MeetingInfo {
 
 const DisplayAvailResults = () => {
   let calendar = DayPilot.Calendar;
+  // calendar.init();
   const availabilityNavigation: any = useLocation();
   const meetingNumID = availabilityNavigation.state['meetingNumID'];
   
@@ -89,8 +90,6 @@ const DisplayAvailResults = () => {
   const [ eventCreated, setEventCreated ] = useState<boolean>(false);
   // array of all events created
   const [ arrayOfEvents, setArrayOfEvents ] = useState<any[]>();
-  // the data object
-  // const [ dataObj, setDataObj ] = useState<MeetingInfo>();
   // calendar month
   const [ month, setMonth ] = useState<string>();
 
@@ -114,6 +113,8 @@ const DisplayAvailResults = () => {
       // setDataObj(data)
       const { eventName, length, date, timezone, emails, meetingNumber, users} = data!;
 
+      // set event created to false
+      setEventCreated(false)
       // save data in state
       setEventName(eventName);
       setMeetingLength(length);
@@ -142,8 +143,20 @@ const DisplayAvailResults = () => {
       const month = new Date(date).toLocaleString('default', {month: "long"});
       setMonth(month);
 
-     
-      // createEventList(users);
+     console.log("about to call createEventList")
+    //  setTimeout(() => {
+       createEventList(users);
+      //  if(userInfoData){
+      //    createEventList();
+   
+      //  }else{
+      //    console.log("userInfoData was not true")
+      //  }
+       
+    //  }, 2000);
+
+    // console.log("about to call createEventList")
+  
  
     }
 
@@ -152,16 +165,32 @@ const DisplayAvailResults = () => {
     
   }, [])
 
+  // useEffect(() => {
+
+  //    console.log("about to call createEventList")
+  
+  //      if(userInfoData){
+  //        createEventList();
+
+  //      }
+       
+ 
+  // }, [userInfoData])
+
 
   
 
-  const createEventList = (userObj:UserInfo[]) => {
+  const createEventList = (userData:UserInfo[]) => {
     const colorArray:string[] = ["#ff3db1", "#ff6b00", "#ffe500", "#49c491", "#4198f7", "#b03ce7"];
 
     let eventArray:any[] = [];
 
-
-     userObj!.forEach((user, index) => {
+    console.log("in createEventList")
+    console.log(`eventCreate is ${eventCreated}`)
+    console.log(`userInfoData is ${userInfoData}`)
+    if(!eventCreated){
+      //  if(!eventCreated && userInfoData){
+     userData!.forEach((user, index) => {
           console.log(user)
              // assign a color for each user 
              let color:string = colorArray[index];
@@ -248,7 +277,7 @@ const DisplayAvailResults = () => {
                   })
                   break;
                 case 3:
-                  let user4array = user;
+                  let user4array = user; 
                   let user4color = color;
 
                   setUser4eventArray(user);
@@ -327,7 +356,7 @@ const DisplayAvailResults = () => {
                   break;
              }
   
-              if (index === userObj!.length -1){
+              if (index === userData!.length -1){
                 setEventCreated(true)
                 setArrayOfEvents(eventArray)
                 calendar.events.update();
@@ -337,7 +366,7 @@ const DisplayAvailResults = () => {
               }
         })
 
-      
+    }
 
   }
 
@@ -374,15 +403,18 @@ const DisplayAvailResults = () => {
    
         <div className="resultsCalendar">
           <div className="calendarHeader">
+            <>  
             {selectedDate
             ? <p>{new Date(selectedDate).toLocaleString('default', {month: "long"})}, {new Date(selectedDate).getFullYear()} </p>
             :null
-            }
+          }
            
+      
+          </>
           </div>
-          {
-            userInfoData
-            ?
+          <div className="calendar" id="calendar">
+
+          </div>
              <DayPilotCalendar 
             durationBarVisible={false}
             startDate={"2022-05-09T09:00:00"}
@@ -391,16 +423,16 @@ const DisplayAvailResults = () => {
             headerDateFormat={"ddd dd"}
             heightSpec={"Full"}
             showToolTip={"true"}
+            id={"calendar"}
             // onEventClick={handleEventClick}
             cellHeight={15}
             autoRefreshEnabled = {true}
-            beforeCellRender={(args: any) => {createEventList(userInfoData)}}
+            // beforeCellRender={(args: any) => {createEventList()}}
             ref={(component:any | void) => {
               calendar = component && component.control;
             }}
           />
-          :null
-          }
+       
          
         </div>
       </div>
