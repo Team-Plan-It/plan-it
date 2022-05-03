@@ -44,11 +44,14 @@ const Availability = (props: any) => {
   const month = new Date(eventDate).toLocaleString('default', {month: "long"});
   const year = new Date(eventDate).getFullYear();
 
+ 
+
   let navigate = useNavigate();
 
   // initialize useForm
   const { register, handleSubmit, setValue, formState: { errors}, reset } = useForm<FormData>();
 
+  // init modal
    Modal.setAppElement('#root');
 
   // initialize state
@@ -56,6 +59,8 @@ const Availability = (props: any) => {
   const [ eventArray, setEventArray ] = useState<AvailabilityArray>([]);
   // timezone of invitee/person using this page
   const [ timezone, setTimezone ] = useState<string>();
+  // timeZoneOffset
+  const [ timeZoneOffset, setTimeZoneOffset ] = useState<number>();
   // availability modal open
   const [ availabilityModalIsOpen, setAvailabilityModalIsOpen ] = useState<boolean>(false);
 
@@ -64,6 +69,12 @@ const Availability = (props: any) => {
   useEffect(() => {
     const eventTimeZone = new Date().toLocaleTimeString(undefined, {timeZoneName: "short"}).split(" ")[2];
     setTimezone(eventTimeZone);
+
+    // get timezoneoffest
+    // const timeZoneOffset = -180;
+    const timeZoneOffset = new Date().getTimezoneOffset();
+    console.log("timezoneOFfset=",timeZoneOffset);
+    setTimeZoneOffset(timeZoneOffset);
   }, [])
 
   // open modal
@@ -134,7 +145,28 @@ const Availability = (props: any) => {
 
   // makes axios call when user submits availability form
   const onSubmit = handleSubmit<FormData>(data => {
-    console.log(data);
+    // console.log(data);
+  
+    // convert times to UTC0
+    let availToChange = data.availability;
+    availToChange.forEach((availBlock) => {
+      // for each object, get start and end value
+      let currentStart = availBlock.start;
+      let currentEnd = availBlock.end;
+      // add the timeZoneOffset in minutes to currentTime
+      let newStart =  currentStart.addMinutes(timeZoneOffset);
+      let newEnd = currentEnd.addMinutes(timeZoneOffset);
+      // save new value as start and end time
+      availBlock.start = newStart;
+      availBlock.end = newEnd;
+
+
+      console.log(currentStart, currentEnd)
+      console.log(availBlock.start, availBlock.end)
+    })
+    console.log(data)
+
+
 
     // axios POST
     axios.post(`http://localhost:4000/dates/availability/${meetingNumID}`, data)
