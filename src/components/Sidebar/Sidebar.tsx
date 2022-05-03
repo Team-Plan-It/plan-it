@@ -19,7 +19,7 @@ const Sidebar:React.FC<NameProps> = ({ userNames, numOfAttendees, results }) => 
   // init state
   const [ attendeeNames, setAttendeeNames ] = useState<(AttendeeInfo | undefined)[]>();
 
-  const colorArray:string[] = ["#ff3db1", "#ff6b00", "#ffe500", "#49c491", "#4198f7", "#b03ce7"];
+  // const colorArray:string[] = ["#ff3db1", "#ff6b00", "#ffe500", "#49c491", "#4198f7", "#b03ce7"];
 
   // create an array that holds user name or string with number for users that haven't entered availability yet
   // 0 if userNames.length === 1 ?userName[0] :"Coordinator"
@@ -103,12 +103,11 @@ const Sidebar:React.FC<NameProps> = ({ userNames, numOfAttendees, results }) => 
             complete = true;
           }           
           return {name: name, complete: complete}
-  
       }
     })
-    setAttendeeNames(namesToDisplay);
+    setAttendeeNames(namesToDisplay!);
   
-  }, [userNames, numOfAttendees])
+  }, [userNames, numOfAttendees, results])
  
   
 
