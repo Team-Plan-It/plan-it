@@ -7,9 +7,9 @@ import { useLocation } from "react-router-dom";
 
 
 //components
-import meetingData from "../../testEventsMeetingInfo";
+// import meetingData from "../../testEventsMeetingInfo";
 import Sidebar from "../Sidebar/Sidebar";
-import Overlap from "./overlap";
+// import Overlap from "./overlap";
 
 //styles
 import "./DisplayAvailability.css";
@@ -31,16 +31,16 @@ type UserInfo = {
   id?: string;
 } 
 
-type DayEvent = {
-  user: string;
-  availability: Availability;
-}
+// type DayEvent = {
+//   user: string;
+//   availability: Availability;
+// }
 
-type EventObj = {
-  user: string; 
-  start: number;
-  end: number;
-}
+// type EventObj = {
+//   user: string; 
+//   start: number;
+//   end: number;
+// }
 interface AvailabilityArray{
   sunday?: UserInfo[];
   monday?: UserInfo[];
@@ -51,17 +51,17 @@ interface AvailabilityArray{
   saturday?: UserInfo[];
 }
 
-interface MeetingInfo {
-  id: string;
-  eventName: string;
-  date: string;
-  length: string;
-  meetingNumber: string;
-  timezone: string;
-  emails: string[];
-  users:UserInfo[];
-  availabilityArray: AvailabilityArray;
-}
+// interface MeetingInfo {
+//   id: string;
+//   eventName: string;
+//   date: string;
+//   length: string;
+//   meetingNumber: string;
+//   timezone: string;
+//   emails: string[];
+//   users:UserInfo[];
+//   availabilityArray: AvailabilityArray;
+// }
 
 
 
@@ -93,11 +93,15 @@ const DisplayAvailResults = () => {
   // array of all events created
   const [ arrayOfEvents, setArrayOfEvents ] = useState<any[]>();
   // calendar month
-  const [ month, setMonth ] = useState<string>();
+  const [ calendarMonth, setCalendarMonth ] = useState<string>();
+  // calendar year
+  const [ calendarYear , setCalendarYear ] = useState<number>();
   // loading
   const [ isLoading, setIsLoading ] = useState<boolean>(true);
   // availability by date
   const [ availabilityByDay, setAvailabilityByDay ] = useState<AvailabilityArray>();
+    // timeZoneOffset
+  const [ timeZoneOffset, setTimeZoneOffset ] = useState<number>();
 
 
   // arrays of each users events
@@ -109,9 +113,16 @@ const DisplayAvailResults = () => {
   const [ user6eventArray, setUser6eventArray ] = useState<UserInfo>();
 
 
-    useEffect(() => {
-      console.log("inside useEffect")
-     getData();
+  // on page load
+  useEffect(() => {
+    console.log("inside useEffect")
+    getData();
+
+    // get timezoneoffest
+    // const timeZoneOffset = -180;
+    const timeZoneOffset = new Date().getTimezoneOffset();
+    console.log("timezoneOFfset=",timeZoneOffset);
+    setTimeZoneOffset(timeZoneOffset);
     
   }, [])
 
@@ -162,7 +173,10 @@ const DisplayAvailResults = () => {
             
             // get month as string from event date
             const month = new Date(date).toLocaleString('default', {month: "long"});
-            setMonth(month);
+            setCalendarMonth(month);
+            //get year
+            const year = new Date(date).getFullYear();
+            setCalendarYear(year);
             
             // console.log("about to call createEventList")
             // createEventList(users);
@@ -188,10 +202,10 @@ const DisplayAvailResults = () => {
          createEventList(userInfoData);
      
         calendar.update();
-        console.log(calendar.events.list)
+        // console.log(calendar.events.list)
        }else{
-         console.log("userInfoData undefined")
-         console.log("eventCreate: ", eventCreated)
+        //  console.log("userInfoData undefined")
+        //  console.log("eventCreate: ", eventCreated)
        }
     
   }, [userInfoData])
@@ -206,12 +220,12 @@ const DisplayAvailResults = () => {
     let eventArray:any[] = [];
 
     console.log("in createEventList")
-    console.log(`eventCreate is ${eventCreated}`)
-    console.log(`userInfoData is ${userInfoData}`)
+    // console.log(`eventCreate is ${eventCreated}`)
+    // console.log(`userInfoData is ${userInfoData}`)
     if(!eventCreated){
       //  if(!eventCreated && userInfoData){
      userData!.forEach((user, index) => {
-          console.log(user)
+          // console.log(user)
              // assign a color for each user 
              let color:string = colorArray[index];
   
@@ -225,12 +239,19 @@ const DisplayAvailResults = () => {
                   
                    // loop through the availability for the user
                   user1array.availability!.forEach((availBlock, index) => {
-                    console.log("index:", index)
-                    console.log(user1array.userName!.charAt(0))
+                    // console.log("index:", index)
+                    // console.log(user1array.userName!.charAt(0))
+                    // for each object, get start and end value
+                    let currentStart = new DayPilot.Date(availBlock.start);
+                    let currentEnd = new DayPilot.Date(availBlock.end);
+                    // subtract the timeZoneOffset in minutes to currentTime
+                    let newStart =  currentStart.addMinutes(-timeZoneOffset!);
+                    let newEnd = currentEnd.addMinutes(-timeZoneOffset!);
+                    // console.log("current start:", currentStart, "new start:",newStart)
                     //  create a new event for each availability block
                     let newEvent:any[] = new DayPilot.Event({
-                      start: availBlock.start,
-                      end: availBlock.end,
+                      start: newStart,
+                      end: newEnd,
                       id: "user1",
                       text: user1array.userName!.charAt(0),
                       toolTip: user1array.userName,
@@ -259,10 +280,16 @@ const DisplayAvailResults = () => {
 
                   // loop through the availability for the user
                   user2array.availability!.forEach(availBlock => {
+                    // for each object, get start and end value
+                    let currentStart = new DayPilot.Date(availBlock.start);
+                    let currentEnd = new DayPilot.Date(availBlock.end);
+                    // subtract the timeZoneOffset in minutes to currentTime
+                    let newStart =  currentStart.addMinutes(-timeZoneOffset!);
+                    let newEnd = currentEnd.addMinutes(-timeZoneOffset!);
                     //  create a new event for each availability block
                     let newEvent:any[] = new DayPilot.Event({
-                      start: availBlock.start,
-                      end: availBlock.end,
+                      start: newStart,
+                      end: newEnd,
                       id: "user2",
                       text: user2array.userName!.charAt(0),
                       toolTip: user2array.userName,
@@ -285,10 +312,16 @@ const DisplayAvailResults = () => {
   
                   // loop through the availability for the user
                   user3array.availability!.forEach(availBlock => {
+                    // for each object, get start and end value
+                    let currentStart = new DayPilot.Date(availBlock.start);
+                    let currentEnd = new DayPilot.Date(availBlock.end);
+                    // subtract the timeZoneOffset in minutes to currentTime
+                    let newStart =  currentStart.addMinutes(-timeZoneOffset!);
+                    let newEnd = currentEnd.addMinutes(-timeZoneOffset!);                    
                     //  create a new event for each availability block
                     let newEvent:any[] = new DayPilot.Event({
-                      start: availBlock.start,
-                      end: availBlock.end,
+                      start: newStart,
+                      end: newEnd,
                       id: "user3",
                       text: user3array.userName!.charAt(0),
                       toolTip: user3array.userName,
@@ -311,10 +344,16 @@ const DisplayAvailResults = () => {
   
                   // loop through the availability for the user
                   user4array.availability!.forEach(availBlock => {
+                    // for each object, get start and end value
+                    let currentStart = new DayPilot.Date(availBlock.start);
+                    let currentEnd = new DayPilot.Date(availBlock.end);
+                    // subtract the timeZoneOffset in minutes to currentTime
+                    let newStart =  currentStart.addMinutes(-timeZoneOffset!);
+                    let newEnd = currentEnd.addMinutes(-timeZoneOffset!);                    
                     //  create a new event for each availability block
                     let newEvent:any[] = new DayPilot.Event({
-                      start: availBlock.start,
-                      end: availBlock.end,
+                      start: newStart,
+                      end: newEnd,
                       id: "user4",
                       text: user4array.userName!.charAt(0),
                       toolTip: user4array.userName,
@@ -337,10 +376,16 @@ const DisplayAvailResults = () => {
 
                   // loop through the availability for the user
                   user5array.availability!.forEach(availBlock => {
+                    // for each object, get start and end value
+                    let currentStart = new DayPilot.Date(availBlock.start);
+                    let currentEnd = new DayPilot.Date(availBlock.end);
+                    // subtract the timeZoneOffset in minutes to currentTime
+                    let newStart =  currentStart.addMinutes(-timeZoneOffset!);
+                    let newEnd = currentEnd.addMinutes(-timeZoneOffset!);                    
                     //  create a new event for each availability block
                     let newEvent:any[] = new DayPilot.Event({
-                      start: availBlock.start,
-                      end: availBlock.end,
+                      start: newStart,
+                      end: newEnd,
                       id: "user5",
                       text: user5array.userName!.charAt(0),
                       toolTip: user5array.userName,
@@ -363,10 +408,16 @@ const DisplayAvailResults = () => {
 
                   // loop through the availability for the user
                   user6array.availability!.forEach(availBlock => {
+                    // for each object, get start and end value
+                    let currentStart = new DayPilot.Date(availBlock.start);
+                    let currentEnd = new DayPilot.Date(availBlock.end);
+                    // subtract the timeZoneOffset in minutes to currentTime
+                    let newStart =  currentStart.addMinutes(-timeZoneOffset!);
+                    let newEnd = currentEnd.addMinutes(-timeZoneOffset!);                    
                     //  create a new event for each availability block
                     let newEvent:any[] = new DayPilot.Event({
-                      start: availBlock.start,
-                      end: availBlock.end,
+                      start: newStart,
+                      end: newEnd,
                       id: "user6",
                       text: user6array.userName!.charAt(0),
                       toolTip: user6array.userName,
@@ -384,7 +435,7 @@ const DisplayAvailResults = () => {
              }
   
               if (index === userData!.length -1){
-                console.log("index is the length of the userData array")
+                // console.log("index is the length of the userData array")
                 setEventCreated(true)
                 setArrayOfEvents(eventArray)
                 calendar.events.update();
@@ -432,8 +483,8 @@ const DisplayAvailResults = () => {
         <div className="resultsCalendar">
           <div className="calendarHeader">
             <>  
-            {selectedDate
-            ? <p>{new Date(selectedDate).toLocaleString('default', {month: "long"})}, {new Date(selectedDate).getFullYear()} </p>
+            {calendarYear && calendarMonth
+            ? <p>{calendarMonth}, {calendarYear} </p>
             :null
           }
            
