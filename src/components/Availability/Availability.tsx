@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import Modal from "react-modal";
 import axios from "axios";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { DayPilot, DayPilotCalendar } from "@daypilot/daypilot-lite-react";
@@ -34,7 +34,7 @@ const Availability = (props: any) => {
   //Params passsed throught naviagtion
   // on page load, get meeting info from data
   const availabilityNavigation: any = useLocation();
-  const meetingNumID = availabilityNavigation.state['meetingNumID'];
+  const meetingNumID = useParams();
   const eventName = availabilityNavigation.state['eventName'];
   const eventDate = availabilityNavigation.state['date'];
   const coordTimeZone = availabilityNavigation.state['coordTimeZone'];
@@ -87,6 +87,7 @@ const Availability = (props: any) => {
   // creates an event when the user clicks on a time block
   const handleTimeSelected = (args:any) => {
     console.log('event created');
+    console.log(meetingNumID['id']);
     // the two parameters of the event time block in string format
     // eg. "2022-04-05T09:00:00"
     const start = args.start;
