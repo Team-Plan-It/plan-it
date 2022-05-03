@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { DayPilot, DayPilotCalendar } from "@daypilot/daypilot-lite-react";
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 
 //components
@@ -68,8 +68,7 @@ interface AvailabilityArray{
 const DisplayAvailResults = () => {
   let calendar = DayPilot.Calendar;
   // calendar.init();
-  const availabilityNavigation: any = useLocation();
-  const meetingNumID = availabilityNavigation.state['meetingNumID'];
+  const meetingNumID = useParams().id;
   
   //initialize state
   // event name

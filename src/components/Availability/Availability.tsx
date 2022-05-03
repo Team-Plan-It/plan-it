@@ -34,7 +34,8 @@ const Availability = (props: any) => {
   //Params passsed throught naviagtion
   // on page load, get meeting info from data
   const availabilityNavigation: any = useLocation();
-  const meetingNumID = useParams();
+  const meetingNumID = useParams().id;
+  
   const eventName = availabilityNavigation.state['eventName'];
   const eventDate = availabilityNavigation.state['date'];
   const coordTimeZone = availabilityNavigation.state['coordTimeZone'];
@@ -98,7 +99,7 @@ const Availability = (props: any) => {
   // creates an event when the user clicks on a time block
   const handleTimeSelected = (args:any) => {
     console.log('event created');
-    console.log(meetingNumID['id']);
+    // console.log(meetingNumID['id']);
     // the two parameters of the event time block in string format
     // eg. "2022-04-05T09:00:00"
     const start = args.start;
