@@ -76,13 +76,21 @@ const Availability = (props: any) => {
   // number of invitees
   const [ numOfAttendees, setNumOfAttendees ] = useState<number[]>();
 
+  if (process.env.NODE_ENV === 'development') {
+    axios.defaults.baseURL = process.env.REACT_APP_BASE_URL_LOCAL;
+    // console.log(axios.defaults.baseURL)            
+  } else if (process.env.NODE_ENV === 'production') {
+    axios.defaults.baseURL = process.env.REACT_APP_BASE_DOMAIN_PROD;   
+  }  
 
   // get timezone of user
   useEffect(() => {
     // async function for axios call
     const getData = async() => {
       try{
-        const response = await axios.get(`http://localhost:4000/dates/results/${meetingNumID}`);
+        
+        const url = `/results/${meetingNumID}`;
+        const response = await axios.get(url);
 
         if(response !== undefined){
 
@@ -227,7 +235,14 @@ const Availability = (props: any) => {
 
 
     // axios POST
-    axios.post(`http://localhost:4000/dates/availability/${meetingNumID}`, data)
+    // if (process.env.NODE_ENV === 'development') {
+    //   axios.defaults.baseURL = process.env.REACT_APP_BASE_URL_LOCAL;
+    //   console.log(axios.defaults.baseURL)            
+    // } else if (process.env.NODE_ENV === 'production') {
+    //   axios.defaults.baseURL = process.env.REACT_APP_BASE_DOMAIN_PROD;   
+    // }
+    const url = `/availability/${meetingNumID}`;
+    axios.post(url, data)
     .then(() => {
       navigate(`/results/${meetingNumID}`, { 
         state: {

@@ -1,5 +1,3 @@
-const mongoose = require('mongoose')
-const bodyParser = require('body-parser')
 const cors = require('cors')
 const express = require('express')
 const meetDateRoute = require('./routes/meet.date.routes')
@@ -21,5 +19,4 @@ app.use('/dates', meetDateRoute);
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
 console.log('Listening on port ' + PORT);
-// console.log(__dirname)
 });

@@ -111,6 +111,13 @@ const DisplayAvailResults = () => {
   const [ user5eventArray, setUser5eventArray ] = useState<UserInfo>();
   const [ user6eventArray, setUser6eventArray ] = useState<UserInfo>();
 
+  if (process.env.NODE_ENV === 'development') {
+    axios.defaults.baseURL = process.env.REACT_APP_BASE_URL_LOCAL;
+    console.log('axios.defaults.baseURLd')            
+  } else if (process.env.NODE_ENV === 'production') {
+    axios.defaults.baseURL = process.env.REACT_APP_BASE_DOMAIN_PROD;   
+  }
+
 
   // on page load
   useEffect(() => {
@@ -127,9 +134,18 @@ const DisplayAvailResults = () => {
 
   // axios call in async function
   const getData = async () => {
+  
+      // const url = `/results/${meetingNumID}`;
     try{
       console.log("isLoading: ", isLoading)
-        const response = await axios.get(`http://localhost:4000/dates/results/${meetingNumID}`);
+        // if (process.env.NODE_ENV === 'development') {
+        //   axios.defaults.baseURL = process.env.REACT_APP_BASE_URL_LOCAL;
+        //   console.log(axios.defaults.baseURL)            
+        // } else if (process.env.NODE_ENV === 'production') {
+        //   axios.defaults.baseURL = process.env.REACT_APP_BASE_DOMAIN_PROD;   
+        // }
+        const url = `/results/${meetingNumID}`;
+        const response = await axios.get(url);
         
           console.log("in try of getData function with axios call")
           console.log(response)
