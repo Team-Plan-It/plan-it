@@ -196,7 +196,7 @@ const DisplayAvailResults = () => {
             // console.log("about to call createEventList")
             // createEventList(users);
           }else{
-            console.log("response undefined")
+            console.log("response undefined for results")
           }
         
 
