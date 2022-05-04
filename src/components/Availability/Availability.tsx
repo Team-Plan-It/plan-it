@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import Modal from "react-modal";
 import axios from "axios";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import {  useNavigate, useParams  } from "react-router-dom";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { DayPilot, DayPilotCalendar } from "@daypilot/daypilot-lite-react";
@@ -33,19 +33,18 @@ const Availability = (props: any) => {
 
   //Params passsed throught naviagtion
   // on page load, get meeting info from data
-  const availabilityNavigation: any = useLocation();
+  // const availabilityNavigation: any = useLocation();
+  // const meetingNumID = availabilityNavigation.state['meetingNumID'];
+  // const eventName = availabilityNavigation.state['eventName'];
+  // const eventDate = availabilityNavigation.state['date'];
+  // const coordTimeZone = availabilityNavigation.state['coordTimeZone'];
+  // const attendees = availabilityNavigation.state['attendees'];
+
+
+
+  // get meetingID from useParams of url
   const meetingNumID = useParams().id;
   
-  const eventName = availabilityNavigation.state['eventName'];
-  const eventDate = availabilityNavigation.state['date'];
-  const coordTimeZone = availabilityNavigation.state['coordTimeZone'];
-  const attendees = availabilityNavigation.state['attendees'];
-
-  // get month as string from event date
-  const month = new Date(eventDate).toLocaleString('default', {month: "long"});
-  const year = new Date(eventDate).getFullYear();
-
- 
 
   let navigate = useNavigate();
 
@@ -64,24 +63,82 @@ const Availability = (props: any) => {
   const [ timeZoneOffset, setTimeZoneOffset ] = useState<number>();
   // availability modal open
   const [ availabilityModalIsOpen, setAvailabilityModalIsOpen ] = useState<boolean>(false);
+  // event name
+  const [ eventName, setEventName ] = useState<string>();
+  // date selected by coordinator
+  const [ selectedDate, setSelectedDate ] = useState<string>();
+   // time zone of coordinator
+  const [ coordTimeZone, setCoordTimeZone ] = useState<string>();
+  // calendar month
+  const [ calendarMonth, setCalendarMonth ] = useState<string>();
+  // calendar year
+  const [ calendarYear , setCalendarYear ] = useState<number>();
+  // number of invitees
+  const [ numOfAttendees, setNumOfAttendees ] = useState<number[]>();
 
 
   // get timezone of user
   useEffect(() => {
-    const eventTimeZone = new Date().toLocaleTimeString(undefined, {timeZoneName: "short"}).split(" ")[2];
-    setTimezone(eventTimeZone);
+    // async function for axios call
+    const getData = async() => {
+      try{
+        const response = await axios.get(`http://localhost:4000/dates/results/${meetingNumID}`);
 
-    // get timezoneoffest
-    // const timeZoneOffset = -180;
-    const timeZoneOffset = new Date().getTimezoneOffset();
-    console.log("timezoneOFfset=",timeZoneOffset);
-    setTimeZoneOffset(timeZoneOffset);
+        if(response !== undefined){
+
+          //deconstruct data from response
+          const { eventName, date, timezone, emails } = response.data[0];
+
+          // save data in state
+          setEventName(eventName);
+          setSelectedDate(date);
+          setCoordTimeZone(timezone);
+
+          // get month as string from event date
+          const month = new Date(date).toLocaleString('default', {month: "long"});
+          setCalendarMonth(month);
+          //get year
+          const year = new Date(date).getFullYear();
+          setCalendarYear(year);
+
+          // get current timeZone
+          const eventTimeZone = new Date().toLocaleTimeString(undefined, {timeZoneName: "short"}).split(" ")[2];
+          setTimezone(eventTimeZone);
+
+          // get timezoneoffest
+          // const timeZoneOffset = -180;
+          const timeZoneOffset = new Date().getTimezoneOffset();
+          console.log("timezoneOFfset=",timeZoneOffset);
+          setTimeZoneOffset(timeZoneOffset);
+
+          // determine number of meeting attendees
+          // includes coordinator
+          let arrayOfNumOfUsers = [1];
+          if(emails.length > 0){
+            for (let i= 0; i < emails.length; i++){
+              arrayOfNumOfUsers.push(i + 2)
+            }
+            setNumOfAttendees(arrayOfNumOfUsers);
+          }
+        }
+      }
+      catch(error){
+        if(error instanceof Error){
+          console.log("error message: ", error.message)
+        }
+      }
+    }
+    // open modal
+    setAvailabilityModalIsOpen(true);
+    // make axios call to get data
+    getData();
+    
   }, [])
 
   // open modal
-  useEffect(() => {
-    setAvailabilityModalIsOpen(true);
-  })
+  // useEffect(() => {
+  //   setAvailabilityModalIsOpen(true);
+  // })
 
   // function to put time in hours/minutes in am/pm format
   const timeFormatCalc = (time:any) => {
@@ -144,7 +201,7 @@ const Availability = (props: any) => {
 
 
 
-  // makes axios call when user submits availability form
+  // makes axios post call when user submits availability form
   const onSubmit = handleSubmit<FormData>(data => {
     // console.log(data);
   
@@ -185,7 +242,7 @@ const Availability = (props: any) => {
 
   return(
     <div className="availability">
-        <Sidebar numOfAttendees={attendees} results={false}/>
+        <Sidebar numOfAttendees={numOfAttendees} results={false}/>
         <Modal 
           className={"availabilityModal"}
           overlayClassName={"availabilityOverlay"}
@@ -197,7 +254,7 @@ const Availability = (props: any) => {
           >
           
           <h1>Add <span className="text">Availability</span></h1>
-          {/* get meeting name from database */}
+      
           <h2>Meeting: {eventName}</h2>
           
           <form onSubmit={ onSubmit }>
@@ -221,12 +278,12 @@ const Availability = (props: any) => {
 
               <div className="calendarContainer">
                 <div className="calendarHeader">
-                  <p>{month}, {year}</p>
+                  <p>{calendarMonth}, {calendarYear}</p>
                 </div>
                 <DayPilotCalendar 
                   viewType={"Week"}
                   headerDateFormat={"ddd dd"}
-                  startDate={eventDate}
+                  startDate={selectedDate}
                   onTimeRangeSelected={handleTimeSelected}
                   onEventClick={handleEventClicked}
                   durationBarVisible = {false}
