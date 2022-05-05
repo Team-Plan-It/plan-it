@@ -10,6 +10,7 @@ import { DayPilot, DayPilotCalendar } from "@daypilot/daypilot-lite-react";
 
 // components
 import Sidebar from "../Sidebar/Sidebar";
+import blueTextLogo from "../../assets/blueLetterLogo.png";
 
 //styles
 import "./Availability.css";
@@ -25,6 +26,7 @@ type FormData = {
   userName: UserName;
   availability: AvailabilityArray;
   timezone: Timezone;
+  
 }
 
 
@@ -66,6 +68,10 @@ const Availability = (props: any) => {
   const [ calendarYear , setCalendarYear ] = useState<number>();
   // number of invitees
   const [ numOfAttendees, setNumOfAttendees ] = useState<number[]>();
+  // modal that opens if user enters no availability
+  const [ noAvailIsOpen, setNoAvailIsOpen ] = useState<boolean>(false);
+  // all data to be sent to axios post
+  const [ allData, setAllData ] = useState<FormData>();
 
 
   // get timezone of user
@@ -187,6 +193,22 @@ const Availability = (props: any) => {
     setEventArray(dp.events.list);
   }
 
+  const handleNoAvailClose = () => {
+    // user has no availability to submit
+    console.log(allData);
+    console.log("user has no availability to enter")
+
+       // axios POST
+    axios.post(`http://localhost:4000/dates/availability/${meetingNumID}`, allData)
+    .then(() => {
+      navigate(`/results/${meetingNumID}`, { 
+        state: {
+          meetingNumID: meetingNumID
+        }
+       });
+    })
+  }
+
 
 
 
@@ -194,7 +216,13 @@ const Availability = (props: any) => {
   // makes axios post call when user submits availability form
   const onSubmit = handleSubmit<FormData>(data => {
     // console.log(data);
-  
+    
+    if(data.availability.length === 0){
+      setAllData(data);
+      setNoAvailIsOpen(true);
+    }else{
+
+    
     // convert times to UTC0
     let availToChange = data.availability;
     availToChange.forEach((availBlock) => {
@@ -215,7 +243,7 @@ const Availability = (props: any) => {
     console.log(data)
 
 
-
+   
     // axios POST
     axios.post(`http://localhost:4000/dates/availability/${meetingNumID}`, data)
     .then(() => {
@@ -228,6 +256,7 @@ const Availability = (props: any) => {
 
     //reset form fields
     reset();
+    }
   })
 
   return(
@@ -312,6 +341,26 @@ const Availability = (props: any) => {
            
           </form>
 
+        </Modal>
+
+      {/* no avialability entered modal */}
+        <Modal
+          className={"noAvailModal"}
+          overlayClassName={"noAvailOvrlay"}
+          isOpen={noAvailIsOpen}
+          shouldCloseOnOverlayClick={false}
+          onRequestClose={handleNoAvailClose}
+          contentLabel="No Availability entered page"
+          style={{content: {WebkitOverflowScrolling: 'touch',}}}
+        >
+          <img src={blueTextLogo} alt="plan-it paper airplane logo with blue text"/>
+          <h1>Oops! You did not enter any availability.</h1>
+          <h2>Would you like to go back and enter your availability?</h2>
+         
+          <div className="buttons">
+            <button className="backToAvail" onClick={() => setNoAvailIsOpen(false)}>Yes! Take me back.</button>
+            <button className="noAvailability" onClick={() => handleNoAvailClose()}>No. I have no time that week.</button>
+          </div>
         </Modal>
 
     

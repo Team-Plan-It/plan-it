@@ -15,7 +15,8 @@
 
 
 
-.availabilityModal {
+.availabilityModal,
+.noAvailModal {
   position: absolute;
   display: flex;
   flex-direction: column;
@@ -207,6 +208,24 @@
   position: relative;
   right: -5px;
   margin-top: 30px;
+}
+
+/* modal for when user enters so availability */
+.noAvailModal{
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 70px 20px 50px 20px;
+}
+
+.noAvailModal .buttons{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.noAvailModal button{
+  margin: 0 30px;
+  font-size: 1rem;
 }
 
 /* media queries */
