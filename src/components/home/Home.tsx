@@ -8,7 +8,7 @@ import axios from "axios";
 import { ReactMultiEmail, isEmail } from 'react-multi-email';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import { DayPilot, DayPilotNavigator } from "@daypilot/daypilot-lite-react";
+import { DayPilot, DayPilotNavigator, DayPilotCalendar } from "@daypilot/daypilot-lite-react";
 
 //components
 import Sidebar from "../Sidebar/Sidebar";
@@ -56,6 +56,8 @@ const Home:React.FC = () => {
   // initialize useForm
   const { register, handleSubmit, setValue, formState: { errors}, reset } = useForm<FormData>();
 
+  let calendar = DayPilot.Calendar;
+  let today = new Date();
 
   let navigate = useNavigate();
 
@@ -213,10 +215,32 @@ const Home:React.FC = () => {
       {
         inputtedEmails.length > 0
         ? <Sidebar userNames={inputtedEmails} numOfAttendees={numOfAttendees} results={false}/>
-        :  <Sidebar numOfAttendees={numOfAttendees} results={false}/>
+        :  <Sidebar  results={false}/>
       }
      
       <div className="homeIntro">
+        <div className="background">
+
+            {/* <h2 className="bgIntro">Team Meeting</h2>
+            <p className="bgIntro">You are viewing the calendar in your time zone: <span className="text bold">EST</span></p> */}
+            <DayPilotCalendar 
+                durationBarVisible={false}
+                startDate={today}
+                // viewType={"WorkWeek"}
+                viewType = {"Week"}
+                headerDateFormat={"ddd dd"}
+                heightSpec={"Full"}
+                showToolTip={"true"}
+                cellHeight={15}
+                columnWidth={100}
+                width={"98%"}
+                timeRangeSelectedHandling={"Disabled"}
+                ref={(component:any | void) => {
+                  calendar = component && component.control;
+                }} 
+              />
+        </div>
+       
         <Modal
           className={"welcomeModal"}
           overlayClassName={"welcomeOverlay"}
@@ -310,45 +334,47 @@ const Home:React.FC = () => {
 
 
                 {/* input for email addressess */}
-                  <label htmlFor="users">Invite up to 5 other participants</label>
-                  <ReactMultiEmail 
-                    placeholder="Add an Email"
-                    className={noEmails ?"error" :"success"}
-                    emails={inputtedEmails}
-                    onChange={(_emails:string[]) => {handleEmailChange(_emails)}}
-                    validateEmail={ email => { return isEmail(email)}} //return Boolean
-                    getLabel={(
-                      email: string,
-                      index: number,
-                      removeEmail: (index: number) => void, 
-                    ) => {
-                      return(
-                        <div data-tag key={index}>
-                          {email}
-                          <span data-tag-handle onClick={() => removeEmail(index)}>
-                            x
-                          </span>
-                        </div>
-                      )
-                    }}
-                  />
-  
-                  {/* error message if no emails entered */}
-                  {
-                    noEmails
-                    ?<p className="errorMessage">Please enter an email address</p>
-                    :null
-                  }   
-                
-                
-                {maxNumOfEmails
-                ?<p className="errorMessage">You have reached the maximum number of invitees. If you enter more addresses, only the first 5 emails will be sent the invite link</p>
-                :null
-                }
+                  <label htmlFor="users">Invite up to 5 other participants
+                    <ReactMultiEmail 
+                      placeholder="Add an Email"
+                  
+                      className={noEmails ?"error" :"success"}
+                      emails={inputtedEmails}
+                      onChange={(_emails:string[]) => {handleEmailChange(_emails)}}
+                      validateEmail={ email => { return isEmail(email)}} //return Boolean
+                      getLabel={(
+                        email: string,
+                        index: number,
+                        removeEmail: (index: number) => void, 
+                      ) => {
+                        return(
+                          <div data-tag key={index}>
+                            {email}
+                            <span data-tag-handle onClick={() => removeEmail(index)}>
+                              x
+                            </span>
+                          </div>
+                        )
+                      }}
+                    />
+    
+                    {/* error message if no emails entered */}
+                    {
+                      noEmails
+                      ?<p className="errorMessage">Please enter an email address</p>
+                      :null
+                    }   
+                  
+                  
+                  {maxNumOfEmails
+                  ?<p className="errorMessage">You have reached the maximum number of invitees. If you enter more addresses, only the first 5 emails will be sent the invite link</p>
+                  :null
+                  }
+                  </label>
 
 
                 {/* displays current time zone of user */}
-                <p className="timezoneMessage">Your time shows as <span className="text bold">{timezone}</span>. This means everyone's times will be converted to {timezone} for you.</p>
+                <p className="timezoneMessage"><span className="bold">Your time shows as</span> <span className="text bold">{timezone}</span>. This means everyone's times will be converted to {timezone} for you.</p>
             </section>
 
             <section className="formEventCalendar">

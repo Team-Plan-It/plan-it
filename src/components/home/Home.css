@@ -1,5 +1,19 @@
 /* Home styles */
+.home{
+  display: flex;
+  filter: blur(4px);
+}
 
+.background {
+  overflow: hidden;
+  height: 100vh - 25px;
+  padding-top: 25px;
+}
+
+.bgIntro {
+  margin-left: 50px;
+  margin-top: 40px;
+}
 
 /* general modal styles */
 .ReactModal__Overlay {
@@ -9,16 +23,17 @@
   right: 0;
   bottom: 0;
   background-color: #00000040;
+ 
 }
 
 
 .welcomeModal, .scheduleModal, 
 .successModal {
   position: absolute;
-  top: 20px;
-  left: 300px;
-  right: 30px;
-  bottom: 20px;
+  top: 85px;
+  left: 175px;
+  right: 125px;
+  bottom: 75px;
   border: 1px solid #ccc;
   background: #fff;
   overflow: auto;
@@ -33,7 +48,7 @@
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  min-width: 690px;
+  min-width: 725px;
 }
 
 
@@ -43,8 +58,9 @@
 }
 
 .welcomeModal h2 {
-  margin-top: -30px;
+  margin-top: -20px;
   font-size: 1.8em;
+  font-weight: 600;
 }
 
 .welcomeModal h3 {
@@ -60,6 +76,9 @@
 
 .welcomeModal ul {
   display: flex;
+  width: 100%;
+  justify-content: space-evenly;
+  max-width: 1150px;
 }
 
 .welcomeModal li {
@@ -68,6 +87,7 @@
   margin: 0 25px;
   padding: 1rem;
   text-align: center;
+  min-width: 146px;
 }
 
 .welcomeModal .imageContainer {
@@ -113,15 +133,20 @@
 
 .homeInput {
   display: flex;
+  justify-content: center;
+  align-items: baseline;
   margin-top: 40px;
   width: 100%;
 }
 
 .homeInput form{
   display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
   width: 100%;
   min-width: 730px;
-  padding: 0 6%;
+  max-width: 1200px;
+  padding: 0 8%;
 }
 
 
@@ -129,8 +154,8 @@
 .formEventDetails{
   display: flex;
   flex-direction: column;
-  padding: 0 4%;
-  width: 65%;
+  padding: 0 2% 0 4%;
+  /* width: 65%; */
 }
 
 .formEventDetails .bold{
@@ -204,7 +229,7 @@
 
 /* calendar section of form */
 .formEventCalendar{
-  width: 50%;
+  /* width: 50%; */
   padding-right: 4%;
 }
 .navigator_default_main {
@@ -325,6 +350,12 @@ div.navigator_default_select.navigator_default_weekend .navigator_default_cell_b
   .welcomeModal h3 {
     height: 55px;
     margin-bottom: 15px;
+  }
+
+}
+@media only screen and (max-width: 1000px){
+  .welcomeModal{
+    left: 100px;
   }
 
 }
