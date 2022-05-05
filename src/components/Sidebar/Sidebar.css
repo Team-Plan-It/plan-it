@@ -1,12 +1,13 @@
 .sidebar {
   /* position: relative; */
   width: 274px;
-  height: 100vh;
+  min-height: 100vh;
   background-color: #1A181B;
   color: #ffffff;
   font-size: 1rem;
+  min-width: 274px;
 }
-
+  
 .sidebar svg {
   padding-left: 35px;
   padding-top: 30px;

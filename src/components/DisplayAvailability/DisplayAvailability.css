@@ -6,7 +6,7 @@
 .resultsMain {
   display: flex;
   flex-direction: column;
-  flex-basis: 45em;
+  /* flex-basis: 45em; */
   /* margin-left: 278px;
   margin-right: 5px; */
 }
@@ -17,10 +17,14 @@
 .resultsIntro h1{
   font-size: 2.25rem;
   line-height: 45px;
+  padding: 20px 0px;
 }
 
 .resultsIntro p{
   font-size: 1rem;
+}
+.resultsIntro .bold{
+  font-weight: 600;
 }
 
 
@@ -34,10 +38,11 @@
   color: #1657F3;
 }
 
-.results .calendar_default_event_inner{
-  width: 20px;
-  padding: 3px;
+.results .calendar_default_main {
+  min-width: 1200px;
+
 }
+
 
 .results .calendar_default_cell {
   height: 10px;
@@ -49,13 +54,32 @@
 
 .results .calendar_default_colheader_inner {
   display: flex;
-  align-items: flex-start;
-  padding-left: 4px;
+  justify-content: flex-start;
+  padding-left: 5px;
   border-right: none;
+  border-left: none;
+  /* min-width: 130px; */
 }
 
-.target {
-  width: 10%;
- 
+.results .calendar_default_cell_inner {
+  border-left: 1px solid grey;
+  min-width: 130px;
+  /* max-width: 170px; */
 }
+
+/* events styling  */
+.results .calendar_default_event_inner{
+  width: 25px;
+  padding: 3px 9px;
+  font-weight: 600;
+  margin-left: 10px;
+}
+
+
+/* .target {
+  width: 14%;
+  margin-left: 10px;
+} */
+
+
 

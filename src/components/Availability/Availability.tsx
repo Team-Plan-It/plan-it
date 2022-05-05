@@ -273,11 +273,11 @@ const Availability = (props: any) => {
 
            
               <p>Please add your availability</p>
-              <p>Click and drag to add your availability. Please note that you are inputting your availability in your local time <span className="text">{timezone}</span> and it will be converted to the coordinator's time zone <span className="text">{coordTimeZone}</span>.</p>
+              <p>Click and drag to add your availability. Please note that you are inputting your availability in your local time <span className="text bold">{timezone}</span> and it will be converted to the coordinator's time zone <span className="text bold">{coordTimeZone}</span>.</p>
 
               <div className="calendarContainer">
                 <div className="calendarHeader">
-                  <p>{calendarMonth}, {calendarYear}</p>
+                  <p>{calendarMonth} {calendarYear}</p>
                 </div>
                 <DayPilotCalendar 
                   viewType={"Week"}

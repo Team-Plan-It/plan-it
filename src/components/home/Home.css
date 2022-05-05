@@ -50,7 +50,7 @@
 .welcomeModal h3 {
   font-size: 1em;
   height: 35px;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 .welcomeModal p{
@@ -83,9 +83,13 @@
   color: #1657F3;
 }
 
+/* get started button */
+.scheduleModalOpen {
+  margin-top: -20px;
+}
 
 
-/* scheduling modal styles */
+/* scheduling modal - Meeting details styles */
 .scheduleModal,
 .successMessages {
   display: flex;
@@ -94,7 +98,7 @@
 }
 
 .scheduleModal {
-  min-width: 847px;
+  min-width: 890px;
 }
 
 .scheduleModal h1 {
@@ -105,6 +109,7 @@
 .scheduleModal .text{
   color: #1657F3;
 }
+
 
 .homeInput {
   display: flex;
@@ -118,10 +123,7 @@
   min-width: 730px;
   padding: 0 6%;
 }
-/* .homeInput section {
-  width: 50%;
-  padding: 20px;
-} */
+
 
 /* details section of form */
 .formEventDetails{
@@ -129,6 +131,10 @@
   flex-direction: column;
   padding: 0 4%;
   width: 65%;
+}
+
+.formEventDetails .bold{
+  font-weight: 600;
 }
 
 .homeInput label{
@@ -150,6 +156,8 @@
   box-sizing: border-box;
   border-radius: 6px;
 }
+
+
 
 .homeInput .error {
   border: 1px solid #ff0000;
@@ -176,7 +184,7 @@
 
 .react-multi-email>[data-tag] {
   color: #FFFFFF;
-  background-color: #4198F7;
+  background-color: #1657F3;
   border-radius: 24px;
   line-height: 20px;
 }
@@ -208,6 +216,9 @@
   border-radius: 15px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   margin-top: 10px;
+  padding-left: 25px;
+  padding-right: 25px;
+  width: 445px;
 }
 
 .navigator_default_main *,
@@ -230,6 +241,7 @@
   text-align: center;
   background-color: #FFFFFF;
   font-size: 1.2rem;
+  font-weight: 400;
 }
 
 
@@ -256,7 +268,8 @@
 
 
 .navigator_default_todaybox {
-  border: 3px solid #1657F3;
+  /* border: 1px solid #1657F3; */
+  border: 1px solid lightgray;
   border-radius: 10px;
 }
 
@@ -267,13 +280,14 @@
 }
 .navigator_default_select .navigator_default_cell_text{
   color: #1657F3;
+  font-weight: 600;
 }
 
 .navigator_default_select.navigator_default_weekend .navigator_default_cell_text {
   background-color: #1657F3;
   color: #FFFFFF;
   border-radius: 10px;
-
+  font-weight: 600;
 }
 
 div.navigator_default_select.navigator_default_weekend .navigator_default_cell_box{
@@ -282,10 +296,10 @@ div.navigator_default_select.navigator_default_weekend .navigator_default_cell_b
 }
 
 
-/* button to submit meeting info */
+/* button to submit meeting info - generate link */
 .meetingSubmitBtn {
   position: relative;
-  right: -278px;
+  right: -334px;
   margin-top: 30px;
 
 }

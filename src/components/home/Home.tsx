@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
-import mailer from "../../utils/mailer";
+// import mailer from "../../utils/mailer";
 import axios from "axios";
 import { ReactMultiEmail, isEmail } from 'react-multi-email';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -14,7 +14,7 @@ import { DayPilot, DayPilotNavigator } from "@daypilot/daypilot-lite-react";
 import Sidebar from "../Sidebar/Sidebar";
 
 //assets
-import AirplaneIcon from "../../assets/paperAirplane.js";
+// import AirplaneIcon from "../../assets/paperAirplane.js";
 import airplane from "../../assets/paperAirplane.png";
 import AvailabilityIcon from "../../assets/availability.js";
 import MeetingIcon from "../../assets/meetingDetails.js";
@@ -23,6 +23,7 @@ import blueTextLogo from "../../assets/blueLetterLogo.png";
 
 // styles
 import 'react-multi-email/style.css';
+// eslint-disable-next-line
 import "../../dayPilotNavigator.css";
 import "./Home.css";
 
@@ -35,9 +36,9 @@ type UserTimeZone = string;
 type Email = string;
 type meetingNumber = string;
 
-type FormValues = {
-  NameOfEvent: string; 
-}
+// type FormValues = {
+//   NameOfEvent: string; 
+// }
 
 
 
@@ -53,7 +54,7 @@ type FormData = {
 
 const Home:React.FC = () => {
   // initialize useForm
-  const { register, handleSubmit, setValue, formState: { errors}, reset, control } = useForm<FormData>();
+  const { register, handleSubmit, setValue, formState: { errors}, reset } = useForm<FormData>();
 
 
   let navigate = useNavigate();
@@ -289,19 +290,21 @@ const Home:React.FC = () => {
                 
                 {/* input for length of meeting */}
                 <label htmlFor="length">How long will your event be?</label>
-                <select 
-                  className={errors.length ?"error" :"success"}
-                  aria-invalid={errors.length ?"true" :"false"}
-                  {...register("length", {required: "Length is required" })}
-                  id="timeSelect">
-                    <option value="">Select</option>
-                    <option value="15">15 minutes</option>
-                    <option value="30">30 minutes</option>
-                    <option value="45">45 minutes</option>
-                    <option value="60">1 hour</option>
-                    <option value="90">1 hour 30 minutes</option>
-                    <option value="120">2 hours</option>
-                </select>
+              
+                  <select 
+                    className={errors.length ?"error" :"success"}
+                    aria-invalid={errors.length ?"true" :"false"}
+                    {...register("length", {required: "Length is required" })}
+                    id="timeSelect">
+                      <option value="">Select</option>
+                      <option value="15">15 minutes</option>
+                      <option value="30">30 minutes</option>
+                      <option value="45">45 minutes</option>
+                      <option value="60">1 hour</option>
+                      <option value="90">1 hour 30 minutes</option>
+                      <option value="120">2 hours</option>
+                  </select>
+ 
                 {/* error message if no time selected */}
                 <ErrorMessage errors={errors} name="length" as="p" className="errorMessage"/>
 
@@ -345,7 +348,7 @@ const Home:React.FC = () => {
 
 
                 {/* displays current time zone of user */}
-                <p className="timezoneMessage">Your time shows as <span className="text">{timezone}</span>. This means everyone's times will be converted to {timezone} for you.</p>
+                <p className="timezoneMessage">Your time shows as <span className="text bold">{timezone}</span>. This means everyone's times will be converted to {timezone} for you.</p>
             </section>
 
             <section className="formEventCalendar">
@@ -420,7 +423,7 @@ const Home:React.FC = () => {
             <h2>Link was <span>Successfully Sent</span></h2>
             <div className="imageContainer">
                 {/* <AirplaneIcon /> */}
-                <img src={airplane} alt="image of blue paper airplane against light blue clouds" />
+                <img src={airplane} alt="blue paper airplane against light blue clouds" />
             </div>
             <button onClick={closeSuccessModal}>Add availability</button>
           </div>

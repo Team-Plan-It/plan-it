@@ -13,6 +13,7 @@ import Sidebar from "../Sidebar/Sidebar";
 
 //styles
 import "./DisplayAvailability.css";
+import TimeZone from "../TimeZone/TimeZone";
 
 
 
@@ -101,6 +102,8 @@ const DisplayAvailResults = () => {
   const [ availabilityByDay, setAvailabilityByDay ] = useState<AvailabilityArray>();
     // timeZoneOffset
   const [ timeZoneOffset, setTimeZoneOffset ] = useState<number>();
+   // timezone of invitee/person using this page
+  const [ currentTimeZone, setCurrentTimeZone ] = useState<string>();
 
 
   // arrays of each users events
@@ -122,6 +125,10 @@ const DisplayAvailResults = () => {
     const timeZoneOffset = new Date().getTimezoneOffset();
     console.log("timezoneOFfset=",timeZoneOffset);
     setTimeZoneOffset(timeZoneOffset);
+
+    // get current timeZone
+    const eventTimeZone = new Date().toLocaleTimeString(undefined, {timeZoneName: "short"}).split(" ")[2];
+    setCurrentTimeZone(eventTimeZone);
     
   }, [])
 
@@ -252,7 +259,7 @@ const DisplayAvailResults = () => {
                       start: newStart,
                       end: newEnd,
                       id: "user1",
-                      text: user1array.userName!.charAt(0),
+                      text: user1array.userName!.charAt(0).toUpperCase(),
                       toolTip: user1array.userName,
                       backColor: user1color,
                       fontColor: "#ffffff",
@@ -290,7 +297,7 @@ const DisplayAvailResults = () => {
                       start: newStart,
                       end: newEnd,
                       id: "user2",
-                      text: user2array.userName!.charAt(0),
+                      text: user2array.userName!.charAt(0).toUpperCase(),
                       toolTip: user2array.userName,
                       backColor: user2color,
                       fontColor: "#ffffff",
@@ -322,7 +329,7 @@ const DisplayAvailResults = () => {
                       start: newStart,
                       end: newEnd,
                       id: "user3",
-                      text: user3array.userName!.charAt(0),
+                      text: user3array.userName!.charAt(0).toUpperCase(),
                       toolTip: user3array.userName,
                       backColor: user3color,
                       fontColor: "#000000",
@@ -354,7 +361,7 @@ const DisplayAvailResults = () => {
                       start: newStart,
                       end: newEnd,
                       id: "user4",
-                      text: user4array.userName!.charAt(0),
+                      text: user4array.userName!.charAt(0).toUpperCase(),
                       toolTip: user4array.userName,
                       backColor: user4color,
                       fontColor: "#ffffff",
@@ -386,7 +393,7 @@ const DisplayAvailResults = () => {
                       start: newStart,
                       end: newEnd,
                       id: "user5",
-                      text: user5array.userName!.charAt(0),
+                      text: user5array.userName!.charAt(0).toUpperCase(),
                       toolTip: user5array.userName,
                       backColor: user5color,
                       fontColor: "#ffffff",
@@ -418,7 +425,7 @@ const DisplayAvailResults = () => {
                       start: newStart,
                       end: newEnd,
                       id: "user6",
-                      text: user6array.userName!.charAt(0),
+                      text: user6array.userName!.charAt(0).toUpperCase(),
                       toolTip: user6array.userName,
                       backColor: user6color,
                       fontColor: "#ffffff",
@@ -476,14 +483,14 @@ const DisplayAvailResults = () => {
         <div className="resultsIntro">
           {/* get meeting name from database */}
           <h1>{eventName}</h1>
-          <p>Everyone is viewing the calendar in the coordinator's time zone: <span className="text">{coordTimeZone}</span></p>
+          <p>You are viewing the calendar in your time zone: <span className="text bold">{currentTimeZone}</span></p>
         </div>
    
         <div className="resultsCalendar">
           <div className="calendarHeader">
             <>  
             {calendarYear && calendarMonth
-            ? <p>{calendarMonth}, {calendarYear} </p>
+            ? <p>{calendarMonth} {calendarYear} </p>
             :null
           }
            
@@ -506,7 +513,11 @@ const DisplayAvailResults = () => {
                       id={"calendar"}
                       // onEventClick={handleEventClick}
                       cellHeight={15}
+                      columnWidth={100}
+                      width={"98%"}
                       // autoRefreshEnabled = {true}
+                      // useEventBoxes={"Never"}
+                      // scrollLabelsVisible = {true}
                       timeRangeSelectedHandling={"Disabled"}
                       // onBeforeEventRender={(args: any) => {
                       //   console.log(args)

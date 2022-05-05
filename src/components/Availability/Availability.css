@@ -7,10 +7,7 @@
   background-color: #00000040;
 }
 
-/* .ReactModal__Content--after-open::-webkit-scrollbar-thumb{
-  border-radius: 10px;
-  color: purple;
-} */
+
 
 .availabilityModal {
   position: absolute;
@@ -52,9 +49,15 @@
 .ReactModal__Content>form:nth-child(3)>p:nth-child(3) {
   margin-top: 30px;
 }
+
 /* span in text */
 .availabilityModal .text{
   color: #1657F3;
+}
+
+/* timezone - bold && blue */
+.availabilityModal .text.bold {
+  font-weight: 600;
 }
 
 .availabilityModal form{
@@ -75,26 +78,15 @@
 /* calendar header */
 .calendarHeader {
   text-align: center;
-  width: 100%;
-}
-/* .calendarHeader ul {
-  display: flex;
-  justify-content: flex-start;
-  width: 100%;
-  
+  /* width: 100%; */
 }
 
-.calendarHeader li {
-  border-right: 1px solid #C8C8C8;
+.calendarHeader p{
+  font-weight: 300;
+  font-size: 1.3rem;
+
 }
 
-.calendarHeader>ul:nth-child(2)>li:nth-child(7) {
-  border-right: none;
-}
-.blank {
-  width: 30px;
-
-} */
 
 /* calendar styles */
 .calendar_default_main {
@@ -127,16 +119,30 @@
 
 .calendar_default_cell_inner {
   background-color: #FFFFFF;
-  
+  border-radius: 3px solid rgb(155, 155, 155);
 }
 
-.calendar_default_colheader_inner{
-  flex-direction: column;
+.calendar_default_colheader_inner,
+.calendar_default_colheader,
+.calendar_default_corner_inner,
+.calendar_default_corner{
+  /* min-height: 50px; */
+  font-weight: 400;
+  font-size: .9rem;
 }
 
-/* .calendar_default_main>div:nth-child(1)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(2)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(7)>div:nth-child(1)>div:nth-child(1){
-  border-right: none;
-} */
+.calendarContainer .calendar_default_colheader_inner,
+.calendarContainer .calendar_default_colheader,
+.calendarContainer .calendar_default_corner_inner,
+.calendarContainer .calendar_default_corner{
+  min-height: 50px;
+}
+
+.calendarContainer .calendar_default_main {
+  margin-top: 0;
+}
+
+
 
 /* events */
 .calendar_default_event_inner {
@@ -159,4 +165,17 @@
   position: relative;
   right: -5px;
   margin-top: 30px;
+}
+
+/* media queries */
+@media only screen and (max-height: 975px) {
+  .availabilityModal h1 {
+    margin-top: 940px;
+  }
+}
+
+@media only screen and (max-height: 820px) {
+  .availabilityModal h1 {
+    margin-top: 1025px;
+  }
 }
