@@ -68,11 +68,21 @@
 }
 
 /* events styling  */
-.results .calendar_default_event_inner{
+/* .results .calendar_default_event_inner{
   width: 25px;
-  padding: 3px 9px;
+  padding: 6px 0 0 6px ;
   font-weight: 600;
   margin-left: 10px;
+} */
+/* events with square ends  */
+.results .calendar_default_event_inner {
+  width: 25px;
+  padding: 6px 0 0 6px;
+  font-weight: 600;
+  margin-left: 10px;
+  border-radius: 0;
+  /* background: linear-gradient(0deg, rgba(0, 0, 255, 0.5) 0 70%, blue 30% 100%);
+  background: linear-gradient(0deg, grey 0 70%, blue 30% 100%); */
 }
 
 

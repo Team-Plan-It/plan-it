@@ -144,9 +144,9 @@ const Home:React.FC = () => {
   }
   
 
-  // close success module and navigate to availability page
+  // close success modal and navigate to availability page
   const closeSuccessModal = () => {
-    setSuccessModalIsOpen(false);
+    // setSuccessModalIsOpen(false);
     
     // get meeting id from state
     // use event id as params for navigate/:id
@@ -318,7 +318,7 @@ const Home:React.FC = () => {
                   <select 
                     className={errors.length ?"error" :"success"}
                     aria-invalid={errors.length ?"true" :"false"}
-                    {...register("length", {required: "Length is required" })}
+                    {...register("length", {required: `Length is required` })}
                     id="timeSelect">
                       <option value="">Select</option>
                       <option value="15">15 minutes</option>
@@ -330,7 +330,9 @@ const Home:React.FC = () => {
                   </select>
  
                 {/* error message if no time selected */}
+               
                 <ErrorMessage errors={errors} name="length" as="p" className="errorMessage"/>
+                  
 
 
                 {/* input for email addressess */}
@@ -338,7 +340,7 @@ const Home:React.FC = () => {
                     <ReactMultiEmail 
                       placeholder="Add an Email"
                   
-                      className={noEmails ?"error" :"success"}
+                      className={noEmails ?"error" :"success emails"}
                       emails={inputtedEmails}
                       onChange={(_emails:string[]) => {handleEmailChange(_emails)}}
                       validateEmail={ email => { return isEmail(email)}} //return Boolean
@@ -367,14 +369,22 @@ const Home:React.FC = () => {
                   
                   
                   {maxNumOfEmails
-                  ?<p className="errorMessage">You have reached the maximum number of invitees. If you enter more addresses, only the first 5 emails will be sent the invite link</p>
+                  ?
+                    <div className="errorMessage maxEmails">
+                      <div>
+                      <p>Maximum number of invitees reached</p>
+                      <p>If you enter more email addresses, only the first 5 emails will be sent the link</p>
+                      </div>
+                    </div>
+                 
                   :null
                   }
                   </label>
 
 
                 {/* displays current time zone of user */}
-                <p className="timezoneMessage"><span className="bold">Your time shows as</span> <span className="text bold">{timezone}</span>. This means everyone's times will be converted to {timezone} for you.</p>
+                <p className="timezoneMessage"><span className="bold">Your time shows as</span> <span className="text bold">{timezone}</span>.</p>
+                <p className="timezoneMessage"> This means everyone's times will be converted to {timezone} for you.</p>
             </section>
 
             <section className="formEventCalendar">

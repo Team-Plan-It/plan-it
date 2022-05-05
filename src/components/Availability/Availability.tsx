@@ -31,22 +31,13 @@ type FormData = {
 
 const Availability = (props: any) => {
 
-  //Params passsed throught naviagtion
-  // on page load, get meeting info from data
-  // const availabilityNavigation: any = useLocation();
-  // const meetingNumID = availabilityNavigation.state['meetingNumID'];
-  // const eventName = availabilityNavigation.state['eventName'];
-  // const eventDate = availabilityNavigation.state['date'];
-  // const coordTimeZone = availabilityNavigation.state['coordTimeZone'];
-  // const attendees = availabilityNavigation.state['attendees'];
-
-
 
   // get meetingID from useParams of url
   const meetingNumID = useParams().id;
   
-
   let navigate = useNavigate();
+
+  let calendar = DayPilot.Calendar;
 
   // initialize useForm
   const { register, handleSubmit, setValue, formState: { errors}, reset } = useForm<FormData>();
@@ -242,6 +233,25 @@ const Availability = (props: any) => {
   return(
     <div className="availability">
         <Sidebar numOfAttendees={numOfAttendees} results={false}/>
+        <div className="background">
+            <h2 className="bgIntro">{eventName}</h2>
+            <DayPilotCalendar 
+                durationBarVisible={false}
+                startDate={selectedDate}
+                // viewType={"WorkWeek"}
+                viewType = {"Week"}
+                headerDateFormat={"ddd dd"}
+                heightSpec={"Full"}
+                showToolTip={"true"}
+                cellHeight={16}
+                columnWidth={100}
+                width={"98%"}
+                timeRangeSelectedHandling={"Disabled"}
+                ref={(component:any | void) => {
+                  calendar = component && component.control;
+                }} 
+              />
+        </div>
         <Modal 
           className={"availabilityModal"}
           overlayClassName={"availabilityOverlay"}
@@ -254,7 +264,7 @@ const Availability = (props: any) => {
           
           <h1>Add <span className="text">Availability</span></h1>
       
-          <h2>Meeting: {eventName}</h2>
+          <h2>{eventName}</h2>
           
           <form onSubmit={ onSubmit }>
            

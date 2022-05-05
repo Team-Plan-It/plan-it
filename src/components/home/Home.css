@@ -119,11 +119,12 @@
 
 .scheduleModal {
   min-width: 890px;
+  padding: 4% 4% 0 4%;
 }
 
 .scheduleModal h1 {
   font-size: 1.8em;
-  margin-top: 30px;
+  margin-top: 1%;
 }
 
 .scheduleModal .text{
@@ -154,8 +155,8 @@
 .formEventDetails{
   display: flex;
   flex-direction: column;
-  padding: 0 2% 0 4%;
-  /* width: 65%; */
+  padding: 0 4%;
+ 
 }
 
 .formEventDetails .bold{
@@ -182,29 +183,66 @@
   border-radius: 6px;
 }
 
+.formEventDetails input.success:focus,
+.react-multi-email.focused{
+  border: 1px solid #1657F3;
+  outline: none;
+}
 
 
+/* error messages styling */
 .homeInput .error {
   border: 1px solid #ff0000;
+}
 
-}
 .homeInput .errorMessage {
-  color: #ff0000;
-  padding-top: 5px;
+  display: flex;
+  align-items: center;
+  color: #000000;
   font-size: .8rem;
+  border-radius: 5px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  height: 35px;
+  margin-top: 10px;
+  padding-right: 5px;
 }
+
 
 .homeInput .errorMessage::before {
-  display: inline;
-  content: "⚠ ";
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  content: "   ⚠   ";
+  color: #ff0000;
+  font-weight: 600;
+  font-size: 1rem;
+  border-right: 10px solid white;
+  border-radius: 5px;
+  white-space: pre;
+  background-color: #FFDCE4;
+  width: 35px;
+  height: 35px;
 }
 
+.homeInput .errorMessage.maxEmails,
+.homeInput .errorMessage.maxEmails:before{
+  height: 70px;
+}
+
+.homeInput .errorMessage.maxEmails >p:nth-child(1) {
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+
+/* email styles */
 .react-multi-email {
-  font-size: .8em;
+  font-size: 1rem;
   padding: 0 5px;
-  /* margin-bottom: 40px; */
   max-width: 345px;
+}
+
+.react-multi-email.empty>span[data-placeholder]{
+  color: darkgrey;
 }
 
 .react-multi-email>[data-tag] {
@@ -218,20 +256,22 @@
   color: #FFFFFFFF;
 }
 
-.homeInput p{
-  font-size: .8em;
+
+/* time zone message */
+.timezoneMessage {
+  font-size: 1rem;
   max-width: 345px;
 }
 
-.timezoneMessage {
+p.timezoneMessage:nth-child(0){
   margin-top: 30px;
 }
 
 /* calendar section of form */
 .formEventCalendar{
-  /* width: 50%; */
   padding-right: 4%;
 }
+
 .navigator_default_main {
   border-left: 1px solid #fff;
   border-right: 1px solid #fff;
