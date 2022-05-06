@@ -229,9 +229,9 @@
   height: 70px;
 }
 
-.homeInput .errorMessage.maxEmails >p:nth-child(1) {
+.homeInput .errorMessage > div:nth-child(1) >p:nth-child(1) {
   font-weight: 600;
-  font-size: 1.2rem;
+  /* font-size: 1.2rem; */
 }
 
 /* email styles */
@@ -263,7 +263,7 @@
   max-width: 345px;
 }
 
-p.timezoneMessage:nth-child(0){
+p.timezoneMessage:nth-of-type(1){
   margin-top: 30px;
 }
 

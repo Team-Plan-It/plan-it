@@ -56,8 +56,11 @@ const Home:React.FC = () => {
   // initialize useForm
   const { register, handleSubmit, setValue, formState: { errors}, reset } = useForm<FormData>();
 
-  let calendar = DayPilot.Calendar;
-  let today = new Date();
+  let calendar = new DayPilot.Calendar("calendar");
+
+  let dpNav =  new DayPilot.Navigator("dpNav");
+ 
+  let today = new DayPilot.Date();
 
   let navigate = useNavigate();
 
@@ -198,7 +201,7 @@ const Home:React.FC = () => {
       .catch(error => console.log(error));
       // reset form fields
       reset();
-      setChosenDay(new DayPilot.Date().value);
+      // setChosenDay(new DayPilot.Date().value);
       setNoDate(false);
       setSchedModalIsOpen(false); // closes scheduling modal
       setSuccessModalIsOpen(true); // opens success modal
@@ -392,19 +395,38 @@ const Home:React.FC = () => {
       
               <DayPilotNavigator 
                 selectMode={"week"}
-                startDate={new DayPilot.Date().value}
+                startDate={today}
                 cellHeight={60}
                 cellWidth={60}
                 titleHeight={70}
                 autoFocusOnClick={true}
                 selectionDay={chosenDay}
+                onVisibleRangeChanged={(args:any) =>{console.log(args)} }
                 select={chosenDay}
+                rowsPerMonth={"Auto"}
+                ref={(component:any | void) => {
+                  dpNav = component && component.control}}
                 onTimeRangeSelected={(args:any) => {
-                  console.log(
-                    `You selected ${args.day}`
-                    );
+                  
+                  // check that a date was entered and that it didn't default to the first day of the month
+                  let todayDate = new Date();
+                  todayDate.setHours(0,0,0,0);
+                  todayDate.toUTCString();
+                  let firstDay = new DayPilot.Date(todayDate).firstDayOfMonth();
+
+                
+                
+                  if(args.day === firstDay){
+                    console.log("they are the same")
+                  }else{
+                    setNoDate(false);
+                    console.log(args.day.value, "was selected");
                     setChosenDay(args.day.value);
+                  }
+                  
                 }}
+                
+              
               />
 
               {/* error message if no date selected */}
