@@ -210,11 +210,12 @@
   margin-top: 30px;
 }
 
-/* modal for when user enters so availability */
+/* modal for when user enters no availability */
 .noAvailModal{
   justify-content: space-evenly;
   align-items: center;
-  padding: 70px 20px 50px 20px;
+  padding: 70px 50px 50px 50px;
+  text-align: center;
 }
 
 .noAvailModal .buttons{

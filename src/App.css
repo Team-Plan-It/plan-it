@@ -59,7 +59,7 @@ label, select, input, option {
 
 input:focus,
 select:focus{
-  border: 1px solid #1657F3;
+  border: 2px solid #1657F3;
 }
 
 option {

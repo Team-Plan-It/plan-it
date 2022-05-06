@@ -227,6 +227,7 @@ const Home:React.FC = () => {
             {/* <h2 className="bgIntro">Team Meeting</h2>
             <p className="bgIntro">You are viewing the calendar in your time zone: <span className="text bold">EST</span></p> */}
             <DayPilotCalendar 
+                aria-hidden={true}
                 durationBarVisible={false}
                 startDate={today}
                 // viewType={"WorkWeek"}
@@ -297,13 +298,14 @@ const Home:React.FC = () => {
           className={"scheduleModal"}
           overlayClassName={"scheduleOverlay"}
         >
-          <h1>Meeting <span className="text">Details</span></h1>
+          <h2>Meeting <span className="text">Details</span></h2>
           <div className="homeInput">
             <form onSubmit={ onSubmit }>
               <section className="formEventDetails">
                 {/* input for name of meeting */}
                 <label htmlFor="eventName"> Name of event </label>
                 <input 
+                  id="eventName"
                   placeholder= {"Enter name here..." }
                   className={errors.eventName ?"error" :"success"}
                   aria-label="Enter name here"
@@ -319,10 +321,11 @@ const Home:React.FC = () => {
                 <label htmlFor="length">How long will your event be?</label>
               
                   <select 
+                    id="length"
                     className={errors.length ?"error" :"success"}
                     aria-invalid={errors.length ?"true" :"false"}
                     {...register("length", {required: `Length is required` })}
-                    id="timeSelect">
+                    >
                       <option value="">Select</option>
                       <option value="15">15 minutes</option>
                       <option value="30">30 minutes</option>
@@ -339,10 +342,9 @@ const Home:React.FC = () => {
 
 
                 {/* input for email addressess */}
-                  <label htmlFor="users">Invite up to 5 other participants
+                  <label >Invite up to 5 other participants
                     <ReactMultiEmail 
-                      placeholder="Add an Email"
-                  
+                      placeholder="Add an Email..."
                       className={noEmails ?"error" :"success emails"}
                       emails={inputtedEmails}
                       onChange={(_emails:string[]) => {handleEmailChange(_emails)}}

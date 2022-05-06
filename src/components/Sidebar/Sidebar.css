@@ -23,6 +23,10 @@
 }
 
 /* when user has a name and has completed availability */
+.circle.fill{
+  color: #000000;
+}
+
 .user1 .circle.fill{
   background-color: #ff3db1;
   border: 3px solid #ff3db1;
@@ -36,7 +40,6 @@
 .user3 .circle.fill{
   background-color: #ffe500;
   border: 3px solid #ffe500;
-  color: #1A181B;
 }
 
 .user4 .circle.fill{
@@ -88,6 +91,7 @@
   text-align: center;
   border-radius: 50%;
   margin-right: 15px;
+  font-weight: 500;
 }
 
 .users {

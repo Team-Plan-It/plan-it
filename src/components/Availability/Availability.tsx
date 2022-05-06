@@ -265,6 +265,7 @@ const Availability = (props: any) => {
         <div className="background">
             <h2 className="bgIntro">{eventName}</h2>
             <DayPilotCalendar 
+                aria-hidden={true}
                 durationBarVisible={false}
                 startDate={selectedDate}
                 // viewType={"WorkWeek"}
@@ -299,6 +300,7 @@ const Availability = (props: any) => {
            
               <label htmlFor="userName">Name</label>
               <input 
+                id="userName"
                 type="text" 
                 className={errors.userName ?"error" :"success"}
                 placeholder={"Input text"}
@@ -354,7 +356,7 @@ const Availability = (props: any) => {
           style={{content: {WebkitOverflowScrolling: 'touch',}}}
         >
           <img src={blueTextLogo} alt="plan-it paper airplane logo with blue text"/>
-          <h1>Oops! You did not enter any availability.</h1>
+          <h1>Oops! You did not enter your availability for the week.</h1>
           <h2>Would you like to go back and enter your availability?</h2>
          
           <div className="buttons">
