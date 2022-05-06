@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { DayPilot, DayPilotCalendar } from "@daypilot/daypilot-lite-react";
@@ -70,6 +71,8 @@ const DisplayAvailResults = () => {
   let calendar = DayPilot.Calendar;
   // calendar.init();
   const meetingNumID = useParams().id;
+
+  let navigate = useNavigate();
   
   //initialize state
   // event name
@@ -262,7 +265,7 @@ const DisplayAvailResults = () => {
                       text: user1array.userName!.charAt(0).toUpperCase(),
                       toolTip: user1array.userName,
                       backColor: user1color,
-                      fontColor: "#ffffff",
+                      fontColor: "#000000",
                       className:"target",
                       ref:"user1"
                      });
@@ -300,7 +303,7 @@ const DisplayAvailResults = () => {
                       text: user2array.userName!.charAt(0).toUpperCase(),
                       toolTip: user2array.userName,
                       backColor: user2color,
-                      fontColor: "#ffffff",
+                      fontColor: "#000000",
                       className:"target",
                       ref:"user2"
                      });
@@ -364,7 +367,7 @@ const DisplayAvailResults = () => {
                       text: user4array.userName!.charAt(0).toUpperCase(),
                       toolTip: user4array.userName,
                       backColor: user4color,
-                      fontColor: "#ffffff",
+                      fontColor: "#000000",
                       className:"target",
                       ref:"user4"
                      });
@@ -396,7 +399,7 @@ const DisplayAvailResults = () => {
                       text: user5array.userName!.charAt(0).toUpperCase(),
                       toolTip: user5array.userName,
                       backColor: user5color,
-                      fontColor: "#ffffff",
+                      fontColor: "#000000",
                       className:"target",
                       ref:"user5"
                      });
@@ -428,7 +431,7 @@ const DisplayAvailResults = () => {
                       text: user6array.userName!.charAt(0).toUpperCase(),
                       toolTip: user6array.userName,
                       backColor: user6color,
-                      fontColor: "#ffffff",
+                      fontColor: "#000000",
                       className:"target",
                       ref:"user6"
                      });
@@ -484,6 +487,7 @@ const DisplayAvailResults = () => {
           {/* get meeting name from database */}
           <h1>{eventName}</h1>
           <p>You are viewing the calendar in your time zone: <span className="text bold">{currentTimeZone}</span></p>
+          <button onClick={() => navigate("/")}>+ Add New Event</button>
         </div>
    
         <div className="resultsCalendar">
