@@ -9,14 +9,12 @@ const mailer = require('../utils/mailer');
 // POST route that creates a meeting date
 meetDateRoute.route('/add').post(function (req, res) {
   let meetDateModel = new MeetDateModel(req.body);
-  let meetingNumber = req.body.meetingNumber;
   meetDateModel.save()
     .then(dateSaved => {
         // for (let i=0; i<req.body.emails.length; i++) {
-        //     let email = req.body.emails[i];
-        //     mailer.sendMail(email, meetingNumber);
+        //     console.log(req.body.emails[i]);
+        //     mailer.sendMail();
         // }
-
         
         return res.status(200).json({'dateSaved': 'Date in added successfully'});
     })
@@ -83,4 +81,81 @@ meetDateRoute.route("/results/:meetingNumber").get(async function (req, res) {
 
 })
 
+meetDateRoute.route("/overlapping/:meetingNumber").get( async function (req, res) {
+    const meetingNumber = req.params.meetingNumber;
+    const data = await MeetDateModel.find({ meetingNumber: meetingNumber }).lean()
+    const importantArray = data[0].availabilityArray
+
+
+    
+    const createTimeSlots = () => {
+
+        let timeArrayAmPm = [];
+        let amPmTime = "";
+
+        for(let i = 0; i < 48; i++){
+            let counter = 0;
+            if ( i === 0 ){
+                amPmTime = "12:00 am - 12:30 am"
+            } else {
+                if (i % 2 !== 0) {
+                    counter++;
+                }
+    
+            if(i < 24){
+                amPmTime =
+                i % 2 === 0 ? `${(i - counter) / 2}:00 am` : `${(i - counter) / 2}:30 am`;
+            }else{
+                amPmTime =
+                i % 2 === 0 ? `${(i - counter) / 2}:00 pm` : `${(i - counter) / 2}:30 pm`;
+            }
+            }
+            timeArrayAmPm.push({ time: amPmTime,  array: [] });
+            }
+            return timeArrayAmPm;
+    }
+
+    let day0array = createTimeSlots();
+    let day1array = createTimeSlots();
+    let day2array = createTimeSlots();
+    let day3array = createTimeSlots();
+    let day4array = createTimeSlots();
+    let day5array = createTimeSlots();
+    let day6array = createTimeSlots();
+
+    const addUserToDayArray = (dayArray, event) => {
+       
+        // get start and end for each event as Date object
+        // need to be turned into a date object
+        let startObj = new Date(event.availability[0].start);
+        let endObj = new Date(event.availability[0].end);
+        let start = 
+           startObj.getHours() * 2 + 
+           (startObj.getMinutes() === 0 ?0 :1);
+         let end =
+           endObj.getHours() * 2 +
+           (endObj.getMinutes() === 0 ? 0 : 1);
+         // add user to day1results for the timeblock start and end
+         for(let i=start; i < end; i++){
+           dayArray[i].array.push({user: event.userName, start: start, end: end})
+         }
+         console.log(startObj)
+         console.log(endObj)
+         return dayArray;
+      }
+
+    if (importantArray.sunday.length > 0){
+    importantArray.sunday.forEach(timeblock => {
+        let sundayResults = addUserToDayArray(day0array, timeblock)
+        console.log(sundayResults)
+    })
+    }
+    
+
+        // create day arrays and push the time array into the day array
+    return res.send(data);
+        
+})
+
 module.exports = meetDateRoute;
+

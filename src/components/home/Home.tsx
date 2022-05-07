@@ -87,12 +87,12 @@ const Home:React.FC = () => {
   // the meeting number
   const [ meetingNumID, setMeetingNumID ] = useState<string>();
   
-  if (process.env.NODE_ENV === 'development') {
-        axios.defaults.baseURL = process.env.REACT_APP_BASE_URL_LOCAL;
-        console.log(axios.defaults.baseURL)            
-  } else if (process.env.NODE_ENV === 'production') {
-        axios.defaults.baseURL = process.env.REACT_APP_BASE_DOMAIN_PROD;   
-  }
+  // if (process.env.NODE_ENV === 'development') {
+  //       axios.defaults.baseURL = process.env.REACT_APP_BASE_URL_LOCAL;
+  //       console.log(axios.defaults.baseURL)            
+  // } else if (process.env.NODE_ENV === 'production') {
+  //       axios.defaults.baseURL = process.env.REACT_APP_BASE_DOMAIN_PROD;   
+  // }
 
 
 
@@ -172,19 +172,8 @@ const Home:React.FC = () => {
       let rndNumString = rndNum.toString();
       data.meetingNumber = rndNumString;
       setMeetingNumID(rndNumString);
-      let firstEmail = data.emails[0];
-      console.log(firstEmail);
-     //  mailer.sendMail(firstEmail)
-      // if (process.env.NODE_ENV === 'development') {
-      //   axios.defaults.baseURL = process.env.REACT_APP_BASE_URL_LOCAL;
-      //   console.log(axios.defaults.baseURL)            
-      // } else if (process.env.NODE_ENV === 'production') {
-      //   axios.defaults.baseURL = process.env.REACT_APP_BASE_DOMAIN_PROD;   
-      // }
-
       // axios POST request that adds the meeting to the database
-      const url = `/add`;
-      axios.post(url, data)
+      axios.post("http://localhost:4000/dates/add", data)
         .then(res => {
           // console.log(data)
           console.log('Successfully added meeting to database')
