@@ -85,8 +85,6 @@ meetDateRoute.route("/overlapping/:meetingNumber").get( async function (req, res
     const meetingNumber = req.params.meetingNumber;
     const data = await MeetDateModel.find({ meetingNumber: meetingNumber }).lean()
     const importantArray = data[0].availabilityArray
-
-
     
     const createTimeSlots = () => {
 
@@ -137,7 +135,7 @@ meetDateRoute.route("/overlapping/:meetingNumber").get( async function (req, res
            (endObj.getMinutes() === 0 ? 0 : 1);
          // add user to day1results for the timeblock start and end
          for(let i=start; i < end; i++){
-           dayArray[i].array.push({user: event.userName, start: start, end: end})
+           dayArray[i].array.push({user: event.userName, start: start, end: end, startObj: startObj, endObj: endObj})
          }
          console.log(startObj)
          console.log(endObj)
@@ -145,15 +143,51 @@ meetDateRoute.route("/overlapping/:meetingNumber").get( async function (req, res
       }
 
     if (importantArray.sunday.length > 0){
-    importantArray.sunday.forEach(timeblock => {
-        let sundayResults = addUserToDayArray(day0array, timeblock)
-        console.log(sundayResults)
+        importantArray.sunday.forEach(timeblock => {
+            let sundayResults = addUserToDayArray(day0array, timeblock)
+            // console.log(sundayResults)
     })
+    }
+    if (importantArray.monday.length > 0){
+        importantArray.monday.forEach(timeblock => {
+          let mondayResults = addUserToDayArray(day1array, timeblock)
+        //   console.log(mondayResults)
+        })
+      }
+    if (importantArray.tuesday.length > 0){
+        importantArray.tuesday.forEach(timeblock => {
+          let tuesdayResults = addUserToDayArray(day2array, timeblock)
+        //   console.log(tuesdayResults)
+        })
+      }
+    if (importantArray.wednesday.length > 0){
+        importantArray.wednesday.forEach(timeblock => {
+          let wednesdayResults = addUserToDayArray(day3array, timeblock)
+        //   console.log(wednesdayResults)
+        })
+      }
+    if (importantArray.thursday.length > 0){
+        importantArray.thursday.forEach(timeblock => {
+          let thursdayResults = addUserToDayArray(day4array, timeblock)
+        //   console.log(thursdayResults)
+        })
+      }
+    if (importantArray.friday.length > 0){
+        importantArray.friday.forEach(timeblock => {
+          let fridayResults = addUserToDayArray(day5array, timeblock)
+        //   console.log(fridayResults)
+        })
+      }
+    if (importantArray.saturday.length > 0){
+        importantArray.saturday.forEach(timeblock => {
+          let saturdayResults = addUserToDayArray(day6array, timeblock)
+        //   console.log(saturdayResults)
+        })
     }
     
 
         // create day arrays and push the time array into the day array
-    return res.send(data);
+    return res.send({day0array, day1array, day2array, day3array, day4array, day5array, day6array});
         
 })
 
