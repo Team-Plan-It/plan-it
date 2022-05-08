@@ -10,6 +10,7 @@ import { DayPilot, DayPilotCalendar } from "@daypilot/daypilot-lite-react";
 
 // components
 import Sidebar from "../Sidebar/Sidebar";
+import blueTextLogo from "../../assets/blueLetterLogo.png";
 
 //styles
 import "./Availability.css";
@@ -25,28 +26,20 @@ type FormData = {
   userName: UserName;
   availability: AvailabilityArray;
   timezone: Timezone;
+  
 }
 
 
 
 const Availability = (props: any) => {
 
-  //Params passsed throught naviagtion
-  // on page load, get meeting info from data
-  // const availabilityNavigation: any = useLocation();
-  // const meetingNumID = availabilityNavigation.state['meetingNumID'];
-  // const eventName = availabilityNavigation.state['eventName'];
-  // const eventDate = availabilityNavigation.state['date'];
-  // const coordTimeZone = availabilityNavigation.state['coordTimeZone'];
-  // const attendees = availabilityNavigation.state['attendees'];
-
-
 
   // get meetingID from useParams of url
   const meetingNumID = useParams().id;
   
-
   let navigate = useNavigate();
+
+  let calendar = DayPilot.Calendar;
 
   // initialize useForm
   const { register, handleSubmit, setValue, formState: { errors}, reset } = useForm<FormData>();
@@ -75,6 +68,10 @@ const Availability = (props: any) => {
   const [ calendarYear , setCalendarYear ] = useState<number>();
   // number of invitees
   const [ numOfAttendees, setNumOfAttendees ] = useState<number[]>();
+  // modal that opens if user enters no availability
+  const [ noAvailIsOpen, setNoAvailIsOpen ] = useState<boolean>(false);
+  // all data to be sent to axios post
+  const [ allData, setAllData ] = useState<FormData>();
 
   // get timezone of user
   useEffect(() => {
@@ -196,6 +193,22 @@ const Availability = (props: any) => {
     setEventArray(dp.events.list);
   }
 
+  const handleNoAvailClose = () => {
+    // user has no availability to submit
+    console.log(allData);
+    console.log("user has no availability to enter")
+
+       // axios POST
+    axios.post(`http://localhost:4000/dates/availability/${meetingNumID}`, allData)
+    .then(() => {
+      navigate(`/results/${meetingNumID}`, { 
+        state: {
+          meetingNumID: meetingNumID
+        }
+       });
+    })
+  }
+
 
 
 
@@ -203,7 +216,13 @@ const Availability = (props: any) => {
   // makes axios post call when user submits availability form
   const onSubmit = handleSubmit<FormData>(data => {
     // console.log(data);
-  
+    
+    if(data.availability.length === 0){
+      setAllData(data);
+      setNoAvailIsOpen(true);
+    }else{
+
+    
     // convert times to UTC0
     let availToChange = data.availability;
     availToChange.forEach((availBlock) => {
@@ -235,11 +254,32 @@ const Availability = (props: any) => {
 
     //reset form fields
     reset();
+    }
   })
 
   return(
     <div className="availability">
         <Sidebar numOfAttendees={numOfAttendees} results={false}/>
+        <div className="background">
+            <h2 className="bgIntro">{eventName}</h2>
+            <DayPilotCalendar 
+                aria-hidden={true}
+                durationBarVisible={false}
+                startDate={selectedDate}
+                // viewType={"WorkWeek"}
+                viewType = {"Week"}
+                headerDateFormat={"ddd dd"}
+                heightSpec={"Full"}
+                showToolTip={"true"}
+                cellHeight={16}
+                columnWidth={100}
+                width={"98%"}
+                timeRangeSelectedHandling={"Disabled"}
+                ref={(component:any | void) => {
+                  calendar = component && component.control;
+                }} 
+              />
+        </div>
         <Modal 
           className={"availabilityModal"}
           overlayClassName={"availabilityOverlay"}
@@ -252,12 +292,13 @@ const Availability = (props: any) => {
           
           <h1>Add <span className="text">Availability</span></h1>
       
-          <h2>Meeting: {eventName}</h2>
+          <h2>{eventName}</h2>
           
           <form onSubmit={ onSubmit }>
            
               <label htmlFor="userName">Name</label>
               <input 
+                id="userName"
                 type="text" 
                 className={errors.userName ?"error" :"success"}
                 placeholder={"Input text"}
@@ -271,11 +312,11 @@ const Availability = (props: any) => {
 
            
               <p>Please add your availability</p>
-              <p>Click and drag to add your availability. Please note that you are inputting your availability in your local time <span className="text">{timezone}</span> and it will be converted to the coordinator's time zone <span className="text">{coordTimeZone}</span>.</p>
+              <p>Click and drag to add your availability. Please note that you are inputting your availability in your local time <span className="text bold">{timezone}</span> and it will be converted to the coordinator's time zone <span className="text bold">{coordTimeZone}</span>.</p>
 
               <div className="calendarContainer">
                 <div className="calendarHeader">
-                  <p>{calendarMonth}, {calendarYear}</p>
+                  <p>{calendarMonth} {calendarYear}</p>
                 </div>
                 <DayPilotCalendar 
                   viewType={"Week"}
@@ -300,6 +341,26 @@ const Availability = (props: any) => {
            
           </form>
 
+        </Modal>
+
+      {/* no avialability entered modal */}
+        <Modal
+          className={"noAvailModal"}
+          overlayClassName={"noAvailOvrlay"}
+          isOpen={noAvailIsOpen}
+          shouldCloseOnOverlayClick={false}
+          onRequestClose={handleNoAvailClose}
+          contentLabel="No Availability entered page"
+          style={{content: {WebkitOverflowScrolling: 'touch',}}}
+        >
+          <img src={blueTextLogo} alt="plan-it paper airplane logo with blue text"/>
+          <h1>Oops! You did not enter your availability for the week.</h1>
+          <h2>Would you like to go back and enter your availability?</h2>
+         
+          <div className="buttons">
+            <button className="backToAvail" onClick={() => setNoAvailIsOpen(false)}>Yes! Take me back.</button>
+            <button className="noAvailability" onClick={() => handleNoAvailClose()}>No. I have no time that week.</button>
+          </div>
         </Modal>
 
     

@@ -42,6 +42,11 @@ button {
   background-color: #1657F3;
   border-radius: 8px;
   padding: 8px 20px;
+  transition: 0.3s;
+}
+
+button:hover{
+  background-color: #0B43CC;
 }
 
 label, select, input, option {
@@ -51,6 +56,12 @@ label, select, input, option {
   font-weight: 300;
   padding: 5px;
 }
+
+input:focus,
+select:focus{
+  border: 2px solid #1657F3;
+}
+
 option {
   font-size: 1em;
 }

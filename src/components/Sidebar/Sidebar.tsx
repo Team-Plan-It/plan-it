@@ -130,7 +130,7 @@ const Sidebar:React.FC<NameProps> = ({ userNames, numOfAttendees, results }) => 
                   attendeeNames.map((attendee, index) => {
                     return(
                       <li key={index} className={`user${index + 1}`}>
-                        <div className={`circle ${attendee!.complete ?"fill" :"noFill"}`}>{attendee!.name.charAt(0)}</div>
+                        <div className={`circle ${attendee!.complete ?"fill" :"noFill"}`}>{attendee!.name.charAt(0).toUpperCase()}</div>
                         <p className="users">{attendee!.name}</p>
                       </li>
                     )

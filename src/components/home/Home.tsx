@@ -3,20 +3,20 @@ import { useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
-import mailer from "../../utils/mailer";
+
 // require('dotenv').config()
 import axios from "axios";
 
 import { ReactMultiEmail, isEmail } from 'react-multi-email';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import { DayPilot, DayPilotNavigator } from "@daypilot/daypilot-lite-react";
+import { DayPilot, DayPilotNavigator, DayPilotCalendar } from "@daypilot/daypilot-lite-react";
 
 //components
 import Sidebar from "../Sidebar/Sidebar";
 
 //assets
-import AirplaneIcon from "../../assets/paperAirplane.js";
+// import AirplaneIcon from "../../assets/paperAirplane.js";
 import airplane from "../../assets/paperAirplane.png";
 import AvailabilityIcon from "../../assets/availability.js";
 import MeetingIcon from "../../assets/meetingDetails.js";
@@ -25,6 +25,7 @@ import blueTextLogo from "../../assets/blueLetterLogo.png";
 
 // styles
 import 'react-multi-email/style.css';
+// eslint-disable-next-line
 import "../../dayPilotNavigator.css";
 import "./Home.css";
 
@@ -37,9 +38,9 @@ type UserTimeZone = string;
 type Email = string;
 type meetingNumber = string;
 
-type FormValues = {
-  NameOfEvent: string; 
-}
+// type FormValues = {
+//   NameOfEvent: string; 
+// }
 
 
 
@@ -55,8 +56,13 @@ type FormData = {
 
 const Home:React.FC = () => {
   // initialize useForm
-  const { register, handleSubmit, setValue, formState: { errors}, reset, control } = useForm<FormData>();
+  const { register, handleSubmit, setValue, formState: { errors}, reset } = useForm<FormData>();
 
+  let calendar = new DayPilot.Calendar("calendar");
+
+  let dpNav =  new DayPilot.Navigator("dpNav");
+ 
+  let today = new DayPilot.Date();
 
   let navigate = useNavigate();
 
@@ -152,7 +158,6 @@ const Home:React.FC = () => {
   const closeSuccessModal = () => {
     setSuccessModalIsOpen(false);
     navigate(`/availability/${meetingNumID}`);
-
   }
   // function that gets ranodm number for meeting
   // Might change this to be more on the backend
@@ -181,7 +186,7 @@ const Home:React.FC = () => {
         .catch(error => console.log(error));
       // reset form fields
       reset();
-      setChosenDay(new DayPilot.Date().value);
+      // setChosenDay(new DayPilot.Date().value);
       setNoDate(false);
       setSchedModalIsOpen(false); // closes scheduling modal
       setSuccessModalIsOpen(true); // opens success modal
@@ -198,10 +203,33 @@ const Home:React.FC = () => {
       {
         inputtedEmails.length > 0
         ? <Sidebar userNames={inputtedEmails} numOfAttendees={numOfAttendees} results={false}/>
-        :  <Sidebar numOfAttendees={numOfAttendees} results={false}/>
+        :  <Sidebar  results={false}/>
       }
      
       <div className="homeIntro">
+        <div className="background">
+
+            {/* <h2 className="bgIntro">Team Meeting</h2>
+            <p className="bgIntro">You are viewing the calendar in your time zone: <span className="text bold">EST</span></p> */}
+            <DayPilotCalendar 
+                aria-hidden={true}
+                durationBarVisible={false}
+                startDate={today}
+                // viewType={"WorkWeek"}
+                viewType = {"Week"}
+                headerDateFormat={"ddd dd"}
+                heightSpec={"Full"}
+                showToolTip={"true"}
+                cellHeight={15}
+                columnWidth={100}
+                width={"98%"}
+                timeRangeSelectedHandling={"Disabled"}
+                ref={(component:any | void) => {
+                  calendar = component && component.control;
+                }} 
+              />
+        </div>
+       
         <Modal
           className={"welcomeModal"}
           overlayClassName={"welcomeOverlay"}
@@ -255,13 +283,14 @@ const Home:React.FC = () => {
           className={"scheduleModal"}
           overlayClassName={"scheduleOverlay"}
         >
-          <h1>Meeting <span className="text">Details</span></h1>
+          <h2>Meeting <span className="text">Details</span></h2>
           <div className="homeInput">
             <form onSubmit={ onSubmit }>
               <section className="formEventDetails">
                 {/* input for name of meeting */}
                 <label htmlFor="eventName"> Name of event </label>
                 <input 
+                  id="eventName"
                   placeholder= {"Enter name here..." }
                   className={errors.eventName ?"error" :"success"}
                   aria-label="Enter name here"
@@ -275,63 +304,77 @@ const Home:React.FC = () => {
                 
                 {/* input for length of meeting */}
                 <label htmlFor="length">How long will your event be?</label>
-                <select 
-                  className={errors.length ?"error" :"success"}
-                  aria-invalid={errors.length ?"true" :"false"}
-                  {...register("length", {required: "Length is required" })}
-                  id="timeSelect">
-                    <option value="">Select</option>
-                    <option value="15">15 minutes</option>
-                    <option value="30">30 minutes</option>
-                    <option value="45">45 minutes</option>
-                    <option value="60">1 hour</option>
-                    <option value="90">1 hour 30 minutes</option>
-                    <option value="120">2 hours</option>
-                </select>
+              
+                  <select 
+                    id="length"
+                    className={errors.length ?"error" :"success"}
+                    aria-invalid={errors.length ?"true" :"false"}
+                    {...register("length", {required: `Length is required` })}
+                    >
+                      <option value="">Select</option>
+                      <option value="15">15 minutes</option>
+                      <option value="30">30 minutes</option>
+                      <option value="45">45 minutes</option>
+                      <option value="60">1 hour</option>
+                      <option value="90">1 hour 30 minutes</option>
+                      <option value="120">2 hours</option>
+                  </select>
+ 
                 {/* error message if no time selected */}
+               
                 <ErrorMessage errors={errors} name="length" as="p" className="errorMessage"/>
+                  
 
 
                 {/* input for email addressess */}
-                  <label htmlFor="users">Invite up to 5 other participants</label>
-                  <ReactMultiEmail 
-                    placeholder="Add an Email"
-                    className={noEmails ?"error" :"success"}
-                    emails={inputtedEmails}
-                    onChange={(_emails:string[]) => {handleEmailChange(_emails)}}
-                    validateEmail={ email => { return isEmail(email)}} //return Boolean
-                    getLabel={(
-                      email: string,
-                      index: number,
-                      removeEmail: (index: number) => void, 
-                    ) => {
-                      return(
-                        <div data-tag key={index}>
-                          {email}
-                          <span data-tag-handle onClick={() => removeEmail(index)}>
-                            x
-                          </span>
-                        </div>
-                      )
-                    }}
-                  />
-  
-                  {/* error message if no emails entered */}
-                  {
-                    noEmails
-                    ?<p className="errorMessage">Please enter an email address</p>
-                    :null
-                  }   
-                
-                
-                {maxNumOfEmails
-                ?<p className="errorMessage">You have reached the maximum number of invitees. If you enter more addresses, only the first 5 emails will be sent the invite link</p>
-                :null
-                }
+                  <label >Invite up to 5 other participants
+                    <ReactMultiEmail 
+                      placeholder="Add an Email..."
+                      className={noEmails ?"error" :"success emails"}
+                      emails={inputtedEmails}
+                      onChange={(_emails:string[]) => {handleEmailChange(_emails)}}
+                      validateEmail={ email => { return isEmail(email)}} //return Boolean
+                      getLabel={(
+                        email: string,
+                        index: number,
+                        removeEmail: (index: number) => void, 
+                      ) => {
+                        return(
+                          <div data-tag key={index}>
+                            {email}
+                            <span data-tag-handle onClick={() => removeEmail(index)}>
+                              x
+                            </span>
+                          </div>
+                        )
+                      }}
+                    />
+    
+                    {/* error message if no emails entered */}
+                    {
+                      noEmails
+                      ?<p className="errorMessage">Please enter an email address</p>
+                      :null
+                    }   
+                  
+                  
+                  {maxNumOfEmails
+                  ?
+                    <div className="errorMessage maxEmails">
+                      <div>
+                      <p>Maximum number of invitees reached</p>
+                      <p>If you enter more email addresses, only the first 5 emails will be sent the link</p>
+                      </div>
+                    </div>
+                 
+                  :null
+                  }
+                  </label>
 
 
                 {/* displays current time zone of user */}
-                <p className="timezoneMessage">Your time shows as <span className="text">{timezone}</span>. This means everyone's times will be converted to {timezone} for you.</p>
+                <p className="timezoneMessage"><span className="bold">Your time shows as</span> <span className="text bold">{timezone}</span>.</p>
+                <p className="timezoneMessage"> This means everyone's times will be converted to {timezone} for you.</p>
             </section>
 
             <section className="formEventCalendar">
@@ -339,19 +382,38 @@ const Home:React.FC = () => {
       
               <DayPilotNavigator 
                 selectMode={"week"}
-                startDate={new DayPilot.Date().value}
+                startDate={today}
                 cellHeight={60}
                 cellWidth={60}
                 titleHeight={70}
                 autoFocusOnClick={true}
                 selectionDay={chosenDay}
+                onVisibleRangeChanged={(args:any) =>{console.log(args)} }
                 select={chosenDay}
+                rowsPerMonth={"Auto"}
+                ref={(component:any | void) => {
+                  dpNav = component && component.control}}
                 onTimeRangeSelected={(args:any) => {
-                  console.log(
-                    `You selected ${args.day}`
-                    );
+                  
+                  // check that a date was entered and that it didn't default to the first day of the month
+                  let todayDate = new Date();
+                  todayDate.setHours(0,0,0,0);
+                  todayDate.toUTCString();
+                  let firstDay = new DayPilot.Date(todayDate).firstDayOfMonth();
+
+                
+                
+                  if(args.day === firstDay){
+                    console.log("they are the same")
+                  }else{
+                    setNoDate(false);
+                    console.log(args.day.value, "was selected");
                     setChosenDay(args.day.value);
+                  }
+                  
                 }}
+                
+              
               />
 
               {/* error message if no date selected */}
@@ -406,7 +468,7 @@ const Home:React.FC = () => {
             <h2>Link was <span>Successfully Sent</span></h2>
             <div className="imageContainer">
                 {/* <AirplaneIcon /> */}
-                <img src={airplane} alt="image of blue paper airplane against light blue clouds" />
+                <img src={airplane} alt="blue paper airplane against light blue clouds" />
             </div>
             <button onClick={closeSuccessModal}>Add availability</button>
           </div>

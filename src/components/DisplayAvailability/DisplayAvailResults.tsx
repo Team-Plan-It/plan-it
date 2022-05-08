@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { DayPilot, DayPilotCalendar } from "@daypilot/daypilot-lite-react";
@@ -9,10 +10,13 @@ import { useParams } from "react-router-dom";
 //components
 // import meetingData from "../../testEventsMeetingInfo";
 import Sidebar from "../Sidebar/Sidebar";
+import rightArrow from "../../assets/right-arrow.png"
+import leftArrow from "../../assets/left-arrow.png"
 // import Overlap from "./overlap";
 
 //styles
 import "./DisplayAvailability.css";
+import TimeZone from "../TimeZone/TimeZone";
 
 
 
@@ -69,6 +73,8 @@ const DisplayAvailResults = () => {
   let calendar = DayPilot.Calendar;
   // calendar.init();
   const meetingNumID = useParams().id;
+
+  let navigate = useNavigate();
   
   //initialize state
   // event name
@@ -101,6 +107,10 @@ const DisplayAvailResults = () => {
   const [ availabilityByDay, setAvailabilityByDay ] = useState<AvailabilityArray>();
     // timeZoneOffset
   const [ timeZoneOffset, setTimeZoneOffset ] = useState<number>();
+   // timezone of invitee/person using this page
+  const [ currentTimeZone, setCurrentTimeZone ] = useState<string>();
+  // show or hide weekends of results calendar
+  const [ showWeekends, setShowWeekends ] = useState<boolean>(true);
 
 
   // arrays of each users events
@@ -121,6 +131,10 @@ const DisplayAvailResults = () => {
     const timeZoneOffset = new Date().getTimezoneOffset();
     console.log("timezoneOFfset=",timeZoneOffset);
     setTimeZoneOffset(timeZoneOffset);
+
+    // get current timeZone
+    const eventTimeZone = new Date().toLocaleTimeString(undefined, {timeZoneName: "short"}).split(" ")[2];
+    setCurrentTimeZone(eventTimeZone);
     
   }, [])
 
@@ -201,7 +215,7 @@ const DisplayAvailResults = () => {
   
        if(userInfoData && !eventCreated){
          createEventList(userInfoData);
-     
+        // createOverlapEvent();
         calendar.update();
         // console.log(calendar.events.list)
        }else{
@@ -210,6 +224,29 @@ const DisplayAvailResults = () => {
        }
     
   }, [userInfoData])
+
+  // const createOverlapEvent = () => {
+  //   let newEvent:any[] = new DayPilot.Event({
+  //     start: "2022-05-09T01:30:00",
+  //     end: "2022-05-09T03:00:00",
+  //     id: "overlap",
+  //     text: "All available",
+  //     toolTip: "All available",
+  //     // backColor: user1color,
+  //     fontColor: "#000000",
+  //     cssClass:"overlap",
+  //     moveDisabled:true,
+  //     ref:"overlap"
+  //     });
+  //     console.log("overlap event was created", newEvent)
+  //   //  add the new event to the events list
+  //   if (calendar){
+  //     calendar.events.add(newEvent);
+  //     console.log("calendar should be initialized")
+  //   }else{
+  //     console.log("calendar not initialized")
+  //   }
+  // }
 
   
 
@@ -228,12 +265,12 @@ const DisplayAvailResults = () => {
      userData!.forEach((user, index) => {
           // console.log(user)
              // assign a color for each user 
-             let color:string = colorArray[index];
+            //  let color:string = colorArray[index];
   
              switch(index){
                case 0:
                   let user1array = user;
-                  let user1color = color;
+                  // let user1color = color;
 
                   setUser1eventArray(user)
   
@@ -254,11 +291,11 @@ const DisplayAvailResults = () => {
                       start: newStart,
                       end: newEnd,
                       id: "user1",
-                      text: user1array.userName!.charAt(0),
+                      text: user1array.userName!.charAt(0).toUpperCase(),
                       toolTip: user1array.userName,
-                      backColor: user1color,
-                      fontColor: "#ffffff",
-                      className:"target",
+                      // backColor: user1color,
+                      fontColor: "#000000",
+                      cssClass:"user1",
                       ref:"user1"
                      });
                      console.log("new event was created", newEvent)
@@ -275,7 +312,7 @@ const DisplayAvailResults = () => {
                   break;
                 case 1:
                   let user2array = user;
-                  let user2color = color;
+                  // let user2color = color;
 
                   setUser2eventArray(user);
 
@@ -292,11 +329,11 @@ const DisplayAvailResults = () => {
                       start: newStart,
                       end: newEnd,
                       id: "user2",
-                      text: user2array.userName!.charAt(0),
+                      text: user2array.userName!.charAt(0).toUpperCase(),
                       toolTip: user2array.userName,
-                      backColor: user2color,
-                      fontColor: "#ffffff",
-                      className:"target",
+                      // backColor: user2color,
+                      fontColor: "#000000",
+                      cssClass:"user2",
                       ref:"user2"
                      });
                     //  add the new event to the events list
@@ -307,7 +344,7 @@ const DisplayAvailResults = () => {
                   break;
                 case 2:
                   let user3array = user;
-                  let user3color = color;
+                  // let user3color = color;
 
                   setUser3eventArray(user);
   
@@ -324,11 +361,11 @@ const DisplayAvailResults = () => {
                       start: newStart,
                       end: newEnd,
                       id: "user3",
-                      text: user3array.userName!.charAt(0),
+                      text: user3array.userName!.charAt(0).toUpperCase(),
                       toolTip: user3array.userName,
-                      backColor: user3color,
+                      // backColor: user3color,
                       fontColor: "#000000",
-                      className:"target",
+                      cssClass:"user3",
                       ref:"user3"
                      });
                     //  add the new event to the events list
@@ -339,7 +376,7 @@ const DisplayAvailResults = () => {
                   break;
                 case 3:
                   let user4array = user; 
-                  let user4color = color;
+                  // let user4color = color;
 
                   setUser4eventArray(user);
   
@@ -356,11 +393,11 @@ const DisplayAvailResults = () => {
                       start: newStart,
                       end: newEnd,
                       id: "user4",
-                      text: user4array.userName!.charAt(0),
+                      text: user4array.userName!.charAt(0).toUpperCase(),
                       toolTip: user4array.userName,
-                      backColor: user4color,
-                      fontColor: "#ffffff",
-                      className:"target",
+                      // backColor: user4color,
+                      fontColor: "#000000",
+                      cssClass:"user4",
                       ref:"user4"
                      });
                     //  add the new event to the events list
@@ -371,7 +408,7 @@ const DisplayAvailResults = () => {
                   break;
                 case 4:
                   let user5array = user;
-                  let user5color = color;
+                  // let user5color = color;
   
                   setUser5eventArray(user);
 
@@ -388,11 +425,11 @@ const DisplayAvailResults = () => {
                       start: newStart,
                       end: newEnd,
                       id: "user5",
-                      text: user5array.userName!.charAt(0),
+                      text: user5array.userName!.charAt(0).toUpperCase(),
                       toolTip: user5array.userName,
-                      backColor: user5color,
-                      fontColor: "#ffffff",
-                      className:"target",
+                      // backColor: user5color,
+                      fontColor: "#000000",
+                      cssClass:"user5",
                       ref:"user5"
                      });
                     //  add the new event to the events list
@@ -403,7 +440,7 @@ const DisplayAvailResults = () => {
                   break;
                 case 5:
                   let user6array = user;
-                  let user6color = color;
+                  // let user6color = color;
   
                   setUser6eventArray(user);
 
@@ -420,11 +457,11 @@ const DisplayAvailResults = () => {
                       start: newStart,
                       end: newEnd,
                       id: "user6",
-                      text: user6array.userName!.charAt(0),
+                      text: user6array.userName!.charAt(0).toUpperCase(),
                       toolTip: user6array.userName,
-                      backColor: user6color,
-                      fontColor: "#ffffff",
-                      className:"target",
+                      // backColor: `linear-gradient(0deg, #D3D3D3 0 70%, #b03ce7 30% 100%);`,
+                      fontColor: "#000000",
+                      cssClass:"user6",
                       ref:"user6"
                      });
                     //  add the new event to the events list
@@ -445,28 +482,11 @@ const DisplayAvailResults = () => {
                 console.log("error")
               }
         })
-
     }
-
   }
 
   
 
- 
-  // // THIS IS NOT CURRENTLY WORKING AND IS NOT FINISHED
-  // // when  user clicks on event
-  const handleEventClick = (args:any)  => {
-              // if(args.e.id() === "user1"){
-              //   console.log("user1 event clicked", args.e.calendar.events.list);
-              //   const allevents = args.e.calendar.events.list;
-              //   let user1events = allevents.filter((event:any) => {return event.id === "user1"});
-       
-              //   user1events.forEach((event:any) => {event.cssClass = "hide"})
-              //   console.log(user1events)
-              // }
-            }
-
-  
 
 
   return(
@@ -474,22 +494,26 @@ const DisplayAvailResults = () => {
        <Sidebar userNames={userNames} numOfAttendees={numOfAttendees} results={true}/>
     
       <div className="resultsMain">
-
         <div className="resultsIntro">
-          {/* get meeting name from database */}
-          <h1>{eventName}</h1>
-          <p>Everyone is viewing the calendar in the coordinator's time zone: <span className="text">{coordTimeZone}</span></p>
+
+          <div className="resultsIntroText">
+            <h1>{eventName}</h1>
+            <p>You are viewing the calendar in your time zone: <span className="text bold">{currentTimeZone}</span></p>
+          </div>
+          <ul>
+            <li><button onClick={() => navigate("/")}>+ Add New Event</button></li>
+            <li><button className="toggleWeekends" onClick={() => setShowWeekends(!showWeekends)}>{showWeekends ?<>Hide Weekends <span><img src={leftArrow} alt="left arrow" /></span></> :<>Show Weekends <span><img src={rightArrow} alt="right arrow" /></span></>}  </button></li>
+          </ul>
         </div>
    
         <div className="resultsCalendar">
           <div className="calendarHeader">
             <>  
             {calendarYear && calendarMonth
-            ? <p>{calendarMonth}, {calendarYear} </p>
-            :null
+            ? <p>{calendarMonth} {calendarYear} </p>
+            : null
           }
            
-      
           </>
           </div>
           <div className="calendar" id="calendar">
@@ -501,14 +525,22 @@ const DisplayAvailResults = () => {
                       durationBarVisible={false}
                       startDate={selectedDate}
                       // viewType={"WorkWeek"}
-                      viewType = {"Week"}
+                      viewType = {showWeekends ?"Week" :"WorkWeek"}
                       headerDateFormat={"ddd dd"}
                       heightSpec={"Full"}
                       showToolTip={"true"}
                       id={"calendar"}
                       // onEventClick={handleEventClick}
                       cellHeight={15}
+                      // columnWidth={(userNames && userNames!.length! >= 3) ?100 :20}
+                      // columnWidth={25}
+                      width={"98%"}
+                      CssOnly={true}
+                      eventMoveHandling={"Disabled"}
+                      eventResizeHandling={"Diasbled"}
                       // autoRefreshEnabled = {true}
+                      // useEventBoxes={"Never"}
+                      // scrollLabelsVisible = {true}
                       timeRangeSelectedHandling={"Disabled"}
                       // onBeforeEventRender={(args: any) => {
                       //   console.log(args)

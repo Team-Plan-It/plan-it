@@ -4,9 +4,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 // components
 import Home from "./components/home/Home";
 import Availability from './components/Availability/Availability';
-
-
 import DisplayAvailResults from './components/DisplayAvailability/DisplayAvailResults';
+import Error404 from './components/Errors/Error404';
 
 //styles
 import './App.css';
@@ -22,8 +21,8 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/" element={<Home />}/>
             <Route path="/availability/:id" element={ <Availability />}/>
-            {/* ??? customize the results page so it matches meeting id??? */}
             <Route path="/results/:id" element={ <DisplayAvailResults />} />
+            <Route path='/error404' element={<Error404 />}/>
           </Routes>
         </main>
       </div>

@@ -1,3 +1,9 @@
+.availability{
+  display: flex;
+  filter: blur(4px);
+}
+
+
 .ReactModal__Overlay {
   position: fixed;
   top: 0;
@@ -7,37 +13,37 @@
   background-color: #00000040;
 }
 
-/* .ReactModal__Content--after-open::-webkit-scrollbar-thumb{
-  border-radius: 10px;
-  color: purple;
-} */
 
-.availabilityModal {
+
+.availabilityModal,
+.noAvailModal {
   position: absolute;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
-  align-items: center;
+  align-items: flex-start;
   min-width: 595px;
-  top: 20px;
-  left: 300px;
-  right: 30px;
-  bottom: 20px;
+  top: 85px;
+  left: 175px;
+  right: 125px;
+  bottom: 75px;
   border: 1px solid #ccc;
   background: #fff;
   overflow: auto;
   border-radius: 20px;
   outline: none;
-  padding: 30px 20px;
+  padding: 160px 20px 30px 20px;
 }
 
-/* .availabilityModal::-webkit-scrollbar{
-  border-radius: 4px;
-} */
 
 .availabilityModal h1 {
+  align-self: center;
   font-size: 2.25rem;
   margin-top: 840px;
+}
+
+.availabilityModal h2 {
+  padding-left: 30px;
 }
 
 .availabilityModal p {
@@ -49,12 +55,15 @@
   padding-left: 0;
 }
   
-.ReactModal__Content>form:nth-child(3)>p:nth-child(3) {
-  margin-top: 30px;
-}
+
 /* span in text */
 .availabilityModal .text{
   color: #1657F3;
+}
+
+/* timezone - bold && blue */
+.availabilityModal .text.bold {
+  font-weight: 600;
 }
 
 .availabilityModal form{
@@ -72,29 +81,56 @@
   border-radius: 6px;
 }
 
+
+/* error messages styling */
+.availabilityModal .error {
+  border: 1px solid #ff0000;
+}
+
+.availabilityModal .errorMessage {
+  display: flex;
+  align-items: center;
+  color: #000000;
+  font-size: .8rem;
+  border-radius: 5px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  height: 35px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 0;
+  width: 345px;
+}
+
+
+.availabilityModal .errorMessage::before {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  content: "   ⚠   ";
+  color: #ff0000;
+  font-weight: 600;
+  font-size: 1rem;
+  border-right: 10px solid white;
+  border-radius: 5px;
+  white-space: pre;
+  background-color: #FFDCE4;
+  width: 35px;
+  height: 35px;
+}
+
+
 /* calendar header */
 .calendarHeader {
   text-align: center;
-  width: 100%;
-}
-/* .calendarHeader ul {
-  display: flex;
-  justify-content: flex-start;
-  width: 100%;
-  
+  /* width: 100%; */
 }
 
-.calendarHeader li {
-  border-right: 1px solid #C8C8C8;
+.calendarHeader p{
+  font-weight: 300;
+  font-size: 1.3rem;
+
 }
 
-.calendarHeader>ul:nth-child(2)>li:nth-child(7) {
-  border-right: none;
-}
-.blank {
-  width: 30px;
-
-} */
 
 /* calendar styles */
 .calendar_default_main {
@@ -127,16 +163,30 @@
 
 .calendar_default_cell_inner {
   background-color: #FFFFFF;
-  
+  border-radius: 3px solid rgb(155, 155, 155);
 }
 
-.calendar_default_colheader_inner{
-  flex-direction: column;
+.calendar_default_colheader_inner,
+.calendar_default_colheader,
+.calendar_default_corner_inner,
+.calendar_default_corner{
+  /* min-height: 50px; */
+  font-weight: 400;
+  font-size: .9rem;
 }
 
-/* .calendar_default_main>div:nth-child(1)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(2)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(7)>div:nth-child(1)>div:nth-child(1){
-  border-right: none;
-} */
+.calendarContainer .calendar_default_colheader_inner,
+.calendarContainer .calendar_default_colheader,
+.calendarContainer .calendar_default_corner_inner,
+.calendarContainer .calendar_default_corner{
+  min-height: 50px;
+}
+
+.calendarContainer .calendar_default_main {
+  margin-top: 0;
+}
+
+
 
 /* events */
 .calendar_default_event_inner {
@@ -152,11 +202,42 @@
 /* submit availability button */
 .availabilitySubmitBtn {
   align-self: flex-end;
-  font-size: .6em;
   width: 150px;
   padding: 10px;
   margin-top: 20px;
   position: relative;
   right: -5px;
   margin-top: 30px;
+}
+
+/* modal for when user enters no availability */
+.noAvailModal{
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 70px 50px 50px 50px;
+  text-align: center;
+}
+
+.noAvailModal .buttons{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.noAvailModal button{
+  margin: 0 30px;
+  font-size: 1rem;
+}
+
+/* media queries */
+@media only screen and (max-height: 975px) {
+  .availabilityModal h1 {
+    margin-top: 940px;
+  }
+}
+
+@media only screen and (max-height: 820px) {
+  .availabilityModal h1 {
+    margin-top: 1025px;
+  }
 }
