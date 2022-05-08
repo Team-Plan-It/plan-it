@@ -3,8 +3,10 @@ import { useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
-// import mailer from "../../utils/mailer";
+
+// require('dotenv').config()
 import axios from "axios";
+
 import { ReactMultiEmail, isEmail } from 'react-multi-email';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -91,6 +93,12 @@ const Home:React.FC = () => {
   // the meeting number
   const [ meetingNumID, setMeetingNumID ] = useState<string>();
   
+  // if (process.env.NODE_ENV === 'development') {
+  //       axios.defaults.baseURL = process.env.REACT_APP_BASE_URL_LOCAL;
+  //       console.log(axios.defaults.baseURL)            
+  // } else if (process.env.NODE_ENV === 'production') {
+  //       axios.defaults.baseURL = process.env.REACT_APP_BASE_DOMAIN_PROD;   
+  // }
 
 
 
@@ -146,29 +154,10 @@ const Home:React.FC = () => {
     }
   }
   
-
-  // close success modal and navigate to availability page
+  // close success module and navigate to availability page
   const closeSuccessModal = () => {
-    // setSuccessModalIsOpen(false);
-    
-    // get meeting id from state
-    // use event id as params for navigate/:id
-      if(meetingNumID){
-        //do axios get call here to get meeting info also with the meeting number
-        axios.get(`http://localhost:4000/dates/availability/${meetingNumID}`)
-        .then(data => {
-          console.log(data['data'][0]['date'])
-        //  Passing the meeting number through the URL to the Availability page
-          navigate(`/availability/${meetingNumID}`, { 
-           state: {
-             meetingNumID: meetingNumID,
-             eventName: data['data'][0]['eventName'],
-             date: data['data'][0]['date'],
-             coordTimeZone: timezone,
-             attendees: numOfAttendees          }
-          });
-        })
-      }
+    setSuccessModalIsOpen(false);
+    navigate(`/availability/${meetingNumID}`);
   }
   // function that gets ranodm number for meeting
   // Might change this to be more on the backend
@@ -188,17 +177,13 @@ const Home:React.FC = () => {
       let rndNumString = rndNum.toString();
       data.meetingNumber = rndNumString;
       setMeetingNumID(rndNumString);
-      let firstEmail = data.emails[0];
-      console.log(firstEmail);
-     //  mailer.sendMail(firstEmail)
-
       // axios POST request that adds the meeting to the database
       axios.post("http://localhost:4000/dates/add", data)
-      .then(res => {
-        // console.log(data)
-        console.log('Successfully added meeting to database')
-      })
-      .catch(error => console.log(error));
+        .then(res => {
+          // console.log(data)
+          console.log('Successfully added meeting to database')
+        })
+        .catch(error => console.log(error));
       // reset form fields
       reset();
       // setChosenDay(new DayPilot.Date().value);

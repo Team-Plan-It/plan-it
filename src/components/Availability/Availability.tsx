@@ -73,7 +73,6 @@ const Availability = (props: any) => {
   // all data to be sent to axios post
   const [ allData, setAllData ] = useState<FormData>();
 
-
   // get timezone of user
   useEffect(() => {
     // async function for axios call
@@ -153,6 +152,7 @@ const Availability = (props: any) => {
   // creates an event when the user clicks on a time block
   const handleTimeSelected = (args:any) => {
     console.log('event created');
+    // console.log(meetingNumID['id']);
     // the two parameters of the event time block in string format
     // eg. "2022-04-05T09:00:00"
     const start = args.start;
@@ -242,8 +242,6 @@ const Availability = (props: any) => {
     })
     console.log(data)
 
-
-   
     // axios POST
     axios.post(`http://localhost:4000/dates/availability/${meetingNumID}`, data)
     .then(() => {

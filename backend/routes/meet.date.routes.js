@@ -81,4 +81,115 @@ meetDateRoute.route("/results/:meetingNumber").get(async function (req, res) {
 
 })
 
+meetDateRoute.route("/overlapping/:meetingNumber").get( async function (req, res) {
+    const meetingNumber = req.params.meetingNumber;
+    const data = await MeetDateModel.find({ meetingNumber: meetingNumber }).lean()
+    const importantArray = data[0].availabilityArray
+    
+    const createTimeSlots = () => {
+
+        let timeArrayAmPm = [];
+        let amPmTime = "";
+
+        for(let i = 0; i < 48; i++){
+            let counter = 0;
+            if ( i === 0 ){
+                amPmTime = "12:00 am - 12:30 am"
+            } else {
+                if (i % 2 !== 0) {
+                    counter++;
+                }
+    
+            if(i < 24){
+                amPmTime =
+                i % 2 === 0 ? `${(i - counter) / 2}:00 am` : `${(i - counter) / 2}:30 am`;
+            }else{
+                amPmTime =
+                i % 2 === 0 ? `${(i - counter) / 2}:00 pm` : `${(i - counter) / 2}:30 pm`;
+            }
+            }
+            timeArrayAmPm.push({ time: amPmTime,  array: [] });
+            }
+            return timeArrayAmPm;
+    }
+
+    let day0array = createTimeSlots();
+    let day1array = createTimeSlots();
+    let day2array = createTimeSlots();
+    let day3array = createTimeSlots();
+    let day4array = createTimeSlots();
+    let day5array = createTimeSlots();
+    let day6array = createTimeSlots();
+
+    const addUserToDayArray = (dayArray, event) => {
+       
+        // get start and end for each event as Date object
+        // need to be turned into a date object
+        let startObj = new Date(event.availability[0].start);
+        let endObj = new Date(event.availability[0].end);
+        let start = 
+           startObj.getHours() * 2 + 
+           (startObj.getMinutes() === 0 ?0 :1);
+         let end =
+           endObj.getHours() * 2 +
+           (endObj.getMinutes() === 0 ? 0 : 1);
+         // add user to day1results for the timeblock start and end
+         for(let i=start; i < end; i++){
+           dayArray[i].array.push({user: event.userName, start: start, end: end, startObj: startObj, endObj: endObj})
+         }
+         console.log(startObj)
+         console.log(endObj)
+         return dayArray;
+      }
+
+    if (importantArray.sunday.length > 0){
+        importantArray.sunday.forEach(timeblock => {
+            let sundayResults = addUserToDayArray(day0array, timeblock)
+            // console.log(sundayResults)
+    })
+    }
+    if (importantArray.monday.length > 0){
+        importantArray.monday.forEach(timeblock => {
+          let mondayResults = addUserToDayArray(day1array, timeblock)
+        //   console.log(mondayResults)
+        })
+      }
+    if (importantArray.tuesday.length > 0){
+        importantArray.tuesday.forEach(timeblock => {
+          let tuesdayResults = addUserToDayArray(day2array, timeblock)
+        //   console.log(tuesdayResults)
+        })
+      }
+    if (importantArray.wednesday.length > 0){
+        importantArray.wednesday.forEach(timeblock => {
+          let wednesdayResults = addUserToDayArray(day3array, timeblock)
+        //   console.log(wednesdayResults)
+        })
+      }
+    if (importantArray.thursday.length > 0){
+        importantArray.thursday.forEach(timeblock => {
+          let thursdayResults = addUserToDayArray(day4array, timeblock)
+        //   console.log(thursdayResults)
+        })
+      }
+    if (importantArray.friday.length > 0){
+        importantArray.friday.forEach(timeblock => {
+          let fridayResults = addUserToDayArray(day5array, timeblock)
+        //   console.log(fridayResults)
+        })
+      }
+    if (importantArray.saturday.length > 0){
+        importantArray.saturday.forEach(timeblock => {
+          let saturdayResults = addUserToDayArray(day6array, timeblock)
+        //   console.log(saturdayResults)
+        })
+    }
+    
+
+        // create day arrays and push the time array into the day array
+    return res.send({day0array, day1array, day2array, day3array, day4array, day5array, day6array});
+        
+})
+
 module.exports = meetDateRoute;
+
