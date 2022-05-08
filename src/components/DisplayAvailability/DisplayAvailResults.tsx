@@ -111,7 +111,6 @@ const DisplayAvailResults = () => {
   const [ user5eventArray, setUser5eventArray ] = useState<UserInfo>();
   const [ user6eventArray, setUser6eventArray ] = useState<UserInfo>();
 
-
   // on page load
   useEffect(() => {
     console.log("inside useEffect")
@@ -127,13 +126,16 @@ const DisplayAvailResults = () => {
 
   // axios call in async function
   const getData = async () => {
+  
+      // const url = `/results/${meetingNumID}`;
     try{
-      console.log("isLoading: ", isLoading)
+
+        console.log("isLoading: ", isLoading)
         const response = await axios.get(`http://localhost:4000/dates/results/${meetingNumID}`);
         
-          console.log("in try of getData function with axios call")
-          console.log(response)
-         if(response !== undefined){
+        console.log("in try of getData function with axios call")
+        console.log(response)
+        if(response !== undefined){
            setIsLoading(false);
            // const data = response.data[0];
             console.log("isLoading: ", isLoading)
@@ -179,9 +181,9 @@ const DisplayAvailResults = () => {
             
             // console.log("about to call createEventList")
             // createEventList(users);
-          }else{
-            console.log("response undefined")
-          }
+        }else{
+          console.log("response undefined for results")
+        }
         
 
     }catch(error:unknown){
