@@ -86,7 +86,7 @@ const Overlap:React.FC<AllAvail> = ({ dayAvailabilityArray }) => {
     let timeArrayAmPm:{time: string, array:EventObj[]}[] = [];
     let amPmTime:string = "";
 
-    for(let i = 0; 1 < 48; i++){
+    for(let i = 0; i < 48; i++){
       let counter = 0;
       if ( i === 0){
         amPmTime = "12:00 am - 12:30 am"
