@@ -90,17 +90,23 @@ meetDateRoute.route("/overlapping/:meetingNumber").get( async function (req, res
     const createTimeSlots = (dayArray) => {
         // get date from dayArray if length > 0
         let dateString = "";
+        let timeArrayAmPm = [];
         if(dayArray.length > 0){
           let startTime = dayArray[0].availability[0].start;
           const regEx = /(\d{1,4}([.\-/])\d{1,2}([.\-/])\d{1,4})/;
           const datesFromObj = regEx.exec(startTime);
+          // console.log("------HERE------")
+          // console.log(datesFromObj[0])
+          // console.log("------HERE------")
           dateString = datesFromObj[0];
-        }
-
-        let timeArrayAmPm = [];
+          // console.log("------HERE------")
+          // console.log(dateString)
+          // console.log("------HERE------")
         let amPmTime = "";
         let timeString = "";
-
+        // console.log("------HERE------")
+        // console.log(dateString)
+        // console.log("------HERE------")
         for(let i = 0; i < 48; i++){
             let counter = 0;
             if ( i === 0 ){
@@ -139,8 +145,15 @@ meetDateRoute.route("/overlapping/:meetingNumber").get( async function (req, res
                 }
               }
             }
+            // console.log(timeString)
+            console.log("------HERE------")
+            console.log(timeString)
+            console.log("------HERE------")
             timeArrayAmPm.push({ time: amPmTime, timeString: timeString, array: [] });
             }
+        }
+
+        
             return timeArrayAmPm;
     }
 
