@@ -94,6 +94,7 @@ meetDateRoute.route("/overlapping/:meetingNumber").get( async function (req, res
           let startTime = dayArray[0].availability[0].start;
           const regEx = /(\d{1,4}([.\-/])\d{1,2}([.\-/])\d{1,4})/;
           const datesFromObj = regEx.exec(startTime);
+          console.log(datesFromObj[0])
           dateString = datesFromObj[0];
         }
 
@@ -141,6 +142,7 @@ meetDateRoute.route("/overlapping/:meetingNumber").get( async function (req, res
             }
             timeArrayAmPm.push({ time: amPmTime, timeString: timeString, array: [] });
             }
+            // console.log(timeString)
             return timeArrayAmPm;
     }
 
