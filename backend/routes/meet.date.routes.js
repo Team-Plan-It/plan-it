@@ -85,41 +85,85 @@ meetDateRoute.route("/overlapping/:meetingNumber").get( async function (req, res
     const meetingNumber = req.params.meetingNumber;
     const data = await MeetDateModel.find({ meetingNumber: meetingNumber }).lean()
     const importantArray = data[0].availabilityArray
+
     
-    const createTimeSlots = () => {
-
+    const createTimeSlots = (dayArray) => {
+        // get date from dayArray if length > 0
+        let dateString = "";
         let timeArrayAmPm = [];
+        if(dayArray.length > 0){
+          let startTime = dayArray[0].availability[0].start;
+          const regEx = /(\d{1,4}([.\-/])\d{1,2}([.\-/])\d{1,4})/;
+          const datesFromObj = regEx.exec(startTime);
+          // console.log("------HERE------")
+          // console.log(datesFromObj[0])
+          // console.log("------HERE------")
+          dateString = datesFromObj[0];
+          // console.log("------HERE------")
+          // console.log(dateString)
+          // console.log("------HERE------")
         let amPmTime = "";
-
+        let timeString = "";
+        // console.log("------HERE------")
+        // console.log(dateString)
+        // console.log("------HERE------")
         for(let i = 0; i < 48; i++){
             let counter = 0;
             if ( i === 0 ){
-                amPmTime = "12:00 am - 12:30 am"
+                amPmTime = "12:00 am - 12:30 am";
+                timeString = `${dateString}T00:00:00`;
             } else {
                 if (i % 2 !== 0) {
                     counter++;
                 }
+
+                if (i < 9){
+                  timeString = i % 2 === 0 ?`${dateString}T0${(i - counter)/2}:00:00` :`${dateString}T0${(i - counter)/2}:30:00`
+                }else{
+                  timeString = i % 2 === 0 ?`${dateString}T${(i - counter)/2}:00:00` :`${dateString}T${(i - counter)/2}:30:00`
+                }
     
-            if(i < 24){
-                amPmTime =
-                i % 2 === 0 ? `${(i - counter) / 2}:00 am` : `${(i - counter) / 2}:30 am`;
-            }else{
-                amPmTime =
-                i % 2 === 0 ? `${(i - counter) / 2}:00 pm` : `${(i - counter) / 2}:30 pm`;
+              if(i < 24){
+                if (i === 1){
+                  amPmTime = "12:30 am - 1:00 am"
+                }else if (i === 23){
+                  amPmTime = "11:30 am - 12:00 pm"
+                }else{
+                  amPmTime =
+                  i % 2 === 0 ? `${(i - counter) / 2}:00 am - ${(i - counter) / 2}:30 am` : `${(i - counter) / 2}:30 am - ${((i - counter) / 2) + 1}:00 am`;
+                }
+              }else{
+                if (i === 24){
+                  amPmTime = "12:00 pm - 12:30 pm";
+                }else if ( i === 25){
+                  amPmTime = "12:30 pm - 1:00 pm"
+                }else if( i === 47){
+                  amPmTime = "11:30 pm - 12:00 am"
+                }else{
+                  amPmTime =
+                  i % 2 === 0 ? `${((i - counter) / 2) - 12}:00 pm - ${((i - counter) / 2) -12}:30 pm` : `${((i - counter) / 2) - 12}:30 pm - ${(((i - counter) / 2) + 1) -12}:00 pm`;
+                }
+              }
             }
+            // console.log(timeString)
+            // console.log("------HERE------")
+            // console.log(timeString)
+            // console.log("------HERE------")
+            timeArrayAmPm.push({ time: amPmTime, timeString: timeString, array: [] });
             }
-            timeArrayAmPm.push({ time: amPmTime,  array: [] });
-            }
+        }
+
+        
             return timeArrayAmPm;
     }
 
-    let day0array = createTimeSlots();
-    let day1array = createTimeSlots();
-    let day2array = createTimeSlots();
-    let day3array = createTimeSlots();
-    let day4array = createTimeSlots();
-    let day5array = createTimeSlots();
-    let day6array = createTimeSlots();
+    let day0array = createTimeSlots(importantArray.sunday);
+    let day1array = createTimeSlots(importantArray.monday);
+    let day2array = createTimeSlots(importantArray.tuesday);
+    let day3array = createTimeSlots(importantArray.wednesday);
+    let day4array = createTimeSlots(importantArray.thursday);
+    let day5array = createTimeSlots(importantArray.friday);
+    let day6array = createTimeSlots(importantArray.saturday);
 
     const addUserToDayArray = (dayArray, event) => {
        
@@ -137,8 +181,8 @@ meetDateRoute.route("/overlapping/:meetingNumber").get( async function (req, res
          for(let i=start; i < end; i++){
            dayArray[i].array.push({user: event.userName, start: start, end: end, startObj: startObj, endObj: endObj})
          }
-         console.log(startObj)
-         console.log(endObj)
+        //  console.log(startObj)
+        //  console.log(endObj)
          return dayArray;
       }
 
