@@ -537,8 +537,8 @@ const Overlap:React.FC= () => {
   return(
     <>
       {
-        isLoadingMeetingData && isLoadingOverlapData && overlapData && meetingData
-        ?<p>Is loading meeting data....</p>
+        isLoadingMeetingData && isLoadingOverlapData && !overlapData && !meetingData
+        ?<p>Please standby. Loading meeting data....</p>
         :<div className="overlapResults">
           <Sidebar userNames={userNames} numOfAttendees={numOfAttendees} results={true}/>
           <div className="overlapInfo">
@@ -547,23 +547,27 @@ const Overlap:React.FC= () => {
               <p>You are viewing the calendar in your time zone: <span className="text bold">{currentTimeZone}</span></p>
               <button onClick={() => navigate("/")}>+ Add New Event</button>
             </div>
+            <div className="overlapInfoDetails">
+
             {/* if not all invitees have completed their availability */}
             {
               userNames && numOfAttendees && userNames!.length !== numOfAttendees!.length
-                ?<p className="notAllAvail">{userNames!.length} of {numOfAttendees!.length} attendees have filled out their availability</p>
+                ?<h2 className="notAllAvail">{userNames!.length} of {numOfAttendees!.length} attendees have filled out their availability</h2>
 
                 : <>
                   <h2>Time Available for Everyone</h2>
                   <ul className="availableTimes">
                     <li>
+                      
                       {
                         sundayDate && sundayAllAvail && sundayAllAvail.length > 0
-                        ?<p>Sunday, {sundayDate.month} {sundayDate.day}, {sundayDate.year}</p>
+                        ?<h3 className="day">Sunday, {sundayDate.month} {sundayDate.day}, {sundayDate.year}</h3>
                         :null
+                        
                       }
                         
                       {
-                        sundayAllAvail && userNames
+                        sundayAllAvail && sundayAllAvail.length > 0 && userNames
                         ? <>
                               <ul className="dayTimes">
                                 {
@@ -572,17 +576,20 @@ const Overlap:React.FC= () => {
                                       const { startHour, startMinString, startAmPm, endHour, endMinString, endAmPm, lengthOfTimeBlock } = timeResults;
                                       return(
                                         <li key={startHour}>
-                                          <p className="timeP">{startHour}:{startMinString}{startAmPm} - {endHour}:{endMinString}{endAmPm}</p>
-                                          <p className="length">{lengthOfTimeBlock}</p>
-                                          <ul className="userNames">
-                                          {
-                                            userNames.map((name, index) => {
-                                                return(
-                                                  <li key={`${index}${name}`}>{name}</li>
-                                                )
-                                            })
-                                          }
-                                          </ul>
+                                          <p className="timeP">{startHour}:{startMinString} {startAmPm} - {endHour}:{endMinString} {endAmPm}</p>
+                                          <div className="availDisplay">
+                                            <p className="length">Everyone is available for {lengthOfTimeBlock}</p>
+                                            <ul className="userNames">
+                                            {
+                                              userNames.map((name, index) => {
+                                                  return(
+                                                    <li key={`${index}${name}` } className={`user${index + 1}`}>{name!.charAt(0).toUpperCase()}</li>
+                                                  )
+                                              })
+                                            }
+                                            </ul>
+
+                                          </div>
                                         </li>
                                       )
                                   })
@@ -590,16 +597,18 @@ const Overlap:React.FC= () => {
                               </ul>
                           </>
                         : null
+                        // :<p className="noAvail">No availability</p>
                       }
                     </li>
                     <li>
+                      
                        {
                         mondayDate && mondayAllAvail && mondayAllAvail.length > 0
-                        ?<p>Monday, {mondayDate.month} {mondayDate.day}, {mondayDate.year}</p>
+                        ?<h3 className="day">Monday, {mondayDate.month} {mondayDate.day}, {mondayDate.year}</h3>
                         :null
                       }
                       {
-                        mondayAllAvail
+                        mondayAllAvail && mondayAllAvail.length > 0 && userNames
                         ? <>
                               <ul className="dayTimes">
                                 {
@@ -609,19 +618,21 @@ const Overlap:React.FC= () => {
                                       const { startHour, startMinString, startAmPm, endHour, endMinString, endAmPm, lengthOfTimeBlock } = timeResults;
                                       return(
                                         <li key={startHour}>
-                                          <p className="timeP">{startHour}:{startMinString}{startAmPm} - {endHour}:{endMinString}{endAmPm}</p>
-                                          <p className="length">{lengthOfTimeBlock}</p>
-                                          <ul className="userNames">
-                                          {
-                                            userNames
-                                            ? userNames.map((name, index) => {
-                                                return(
-                                                  <li key={`${index}${name}`}>{name}</li>
-                                                )
-                                            })
-                                            :null
-                                          }
-                                          </ul>
+                                          <p className="timeP">{startHour}:{startMinString} {startAmPm} - {endHour}:{endMinString} {endAmPm}</p>
+                                          <div className="availDisplay">
+                                            <p className="length">Everyone is available for {lengthOfTimeBlock}</p>
+                                            <ul className="userNames">
+                                            {
+                                              userNames
+                                              ? userNames.map((name, index) => {
+                                                  return(
+                                                    <li key={`${index}${name}` } className={`user${index + 1}`}>{name!.charAt(0).toUpperCase()}</li>
+                                                  )
+                                              })
+                                              :null
+                                            }
+                                            </ul>
+                                          </div>
                                         </li>
                                       )
                                   })
@@ -629,16 +640,18 @@ const Overlap:React.FC= () => {
                               </ul>
                           </>
                         : null
+                        // :<p className="noAvail">No availability</p>
                       }
                     </li>
                     <li>
+                      
                       {
                         tuesdayDate && tuesdayAllAvail && tuesdayAllAvail.length > 0
-                        ?<p>Tuesday, {tuesdayDate.month} {tuesdayDate.day}, {tuesdayDate.year}</p>
+                        ?<h3 className="day">Tuesday, {tuesdayDate.month} {tuesdayDate.day}, {tuesdayDate.year}</h3>
                         :null
                       }
                       {
-                        tuesdayAllAvail && userNames
+                        tuesdayAllAvail && tuesdayAllAvail.length > 0 && userNames
                         ? <>
                               <ul className="dayTimes">
                                 {
@@ -647,17 +660,19 @@ const Overlap:React.FC= () => {
                                       const { startHour, startMinString, startAmPm, endHour, endMinString, endAmPm, lengthOfTimeBlock } = timeResults;
                                       return(
                                         <li key={startHour}>
-                                          <p className="timeP">{startHour}:{startMinString}{startAmPm} - {endHour}:{endMinString}{endAmPm}</p>
-                                          <p className="length">{lengthOfTimeBlock}</p>
-                                          <ul className="userNames">
-                                          {
-                                            userNames.map((name, index) => {
-                                                return(
-                                                  <li key={`${index}${name}`}>{name}</li>
-                                                )
-                                            })
-                                          }
-                                          </ul>
+                                          <p className="timeP">{startHour}:{startMinString} {startAmPm} - {endHour}:{endMinString} {endAmPm}</p>
+                                          <div className="availDisplay">
+                                            <p className="length">Everyone is available for {lengthOfTimeBlock}</p>
+                                            <ul className="userNames">
+                                            {
+                                              userNames.map((name, index) => {
+                                                  return(
+                                                    <li key={`${index}${name}` } className={`user${index + 1}`}>{name!.charAt(0).toUpperCase()}</li>
+                                                  )
+                                              })
+                                            }
+                                            </ul>
+                                          </div>
                                         </li>
                                       )
                                   })
@@ -665,16 +680,18 @@ const Overlap:React.FC= () => {
                               </ul>
                           </>
                         : null
+                        // :<p className="noAvail">No availability</p>
                       }
                     </li>
                     <li>
+                      
                       {
                         wednesdayDate && wednesdayAllAvail && wednesdayAllAvail.length > 0
-                        ?<p>Wednesday, {wednesdayDate.month} {wednesdayDate.day}, {wednesdayDate.year}</p>
+                        ?<h3 className="day">Wednesday, {wednesdayDate.month} {wednesdayDate.day}, {wednesdayDate.year}</h3>
                         :null
                       }
                       {
-                        wednesdayAllAvail && userNames
+                        wednesdayAllAvail && wednesdayAllAvail.length > 0 && userNames
                         ? <>
                               <ul className="dayTimes">
                                 {
@@ -683,17 +700,19 @@ const Overlap:React.FC= () => {
                                       const { startHour, startMinString, startAmPm, endHour, endMinString, endAmPm, lengthOfTimeBlock } = timeResults;
                                       return(
                                         <li key={startHour}>
-                                          <p className="timeP">{startHour}:{startMinString}{startAmPm} - {endHour}:{endMinString}{endAmPm}</p>
-                                          <p className="length">{lengthOfTimeBlock}</p>
-                                          <ul className="userNames">
-                                          {
-                                            userNames.map((name, index) => {
-                                                return(
-                                                  <li key={`${index}${name}`}>{name}</li>
-                                                )
-                                            })
-                                          }
-                                          </ul>
+                                          <p className="timeP">{startHour}:{startMinString} {startAmPm} - {endHour}:{endMinString} {endAmPm}</p>
+                                          <div className="availDisplay">
+                                            <p className="length">Everyone is available for {lengthOfTimeBlock}</p>
+                                            <ul className="userNames">
+                                            {
+                                              userNames.map((name, index) => {
+                                                  return(
+                                                    <li key={`${index}${name}` } className={`user${index + 1}`}>{name!.charAt(0).toUpperCase()}</li>
+                                                  )
+                                              })
+                                            }
+                                            </ul>
+                                          </div>
                                         </li>
                                       )
                                   })
@@ -701,16 +720,18 @@ const Overlap:React.FC= () => {
                               </ul>
                           </>
                         : null
+                        // :<p className="noAvail">No availability</p>
                       }
                     </li>
                     <li>
+                      
                       {
                         thursdayDate && thursdayAllAvail && thursdayAllAvail.length > 0
-                        ?<p>Thursday, {thursdayDate.month} {thursdayDate.day}, {thursdayDate.year}</p>
+                        ?<h3 className="day">Thursday, {thursdayDate.month} {thursdayDate.day}, {thursdayDate.year}</h3>
                         :null
                       }
                       {
-                        thursdayAllAvail && userNames
+                        thursdayAllAvail && thursdayAllAvail.length > 0 && userNames
                         ? <>
                               <ul className="dayTimes">
                                 {
@@ -719,17 +740,19 @@ const Overlap:React.FC= () => {
                                       const { startHour, startMinString, startAmPm, endHour, endMinString, endAmPm, lengthOfTimeBlock } = timeResults;
                                       return(
                                         <li key={startHour}>
-                                          <p className="timeP">{startHour}:{startMinString}{startAmPm} - {endHour}:{endMinString}{endAmPm}</p>
-                                          <p className="length">{lengthOfTimeBlock}</p>
-                                          <ul className="userNames">
-                                          {
-                                            userNames.map((name, index) => {
-                                                return(
-                                                  <li key={`${index}${name}`}>{name}</li>
-                                                )
-                                            })
-                                          }
-                                          </ul>
+                                          <p className="timeP">{startHour}:{startMinString} {startAmPm} - {endHour}:{endMinString} {endAmPm}</p>
+                                          <div className="availDisplay">
+                                            <p className="length">Everyone is available for {lengthOfTimeBlock}</p>
+                                            <ul className="userNames">
+                                            {
+                                              userNames.map((name, index) => {
+                                                  return(
+                                                    <li key={`${index}${name}` } className={`user${index + 1}`}>{name!.charAt(0).toUpperCase()}</li>
+                                                  )
+                                              })
+                                            }
+                                            </ul>
+                                          </div>
                                         </li>
                                       )
                                   })
@@ -737,16 +760,18 @@ const Overlap:React.FC= () => {
                               </ul>
                           </>
                         : null
+                        // :<p className="noAvail">No availability</p>
                       }
                     </li>
                     <li>
+                      
                        {
                         fridayDate && fridayAllAvail && fridayAllAvail.length > 0
-                        ?<p>Friday, {fridayDate.month} {fridayDate.day}, {fridayDate.year}</p>
+                        ?<h3 className="day">Friday, {fridayDate.month} {fridayDate.day}, {fridayDate.year}</h3>
                         :null
                       }
                       {
-                        fridayAllAvail && userNames
+                        fridayAllAvail && fridayAllAvail.length > 0 && userNames
                         ? <>
                               <ul className="dayTimes">
                                 {
@@ -755,17 +780,19 @@ const Overlap:React.FC= () => {
                                       const { startHour, startMinString, startAmPm, endHour, endMinString, endAmPm, lengthOfTimeBlock } = timeResults;
                                       return(
                                         <li key={startHour}>
-                                          <p className="timeP">{startHour}:{startMinString}{startAmPm} - {endHour}:{endMinString}{endAmPm}</p>
-                                          <p className="length">{lengthOfTimeBlock}</p>
-                                          <ul className="userNames">
-                                          {
-                                            userNames.map((name, index) => {
-                                                return(
-                                                  <li key={`${index}${name}`}>{name}</li>
-                                                )
-                                            })
-                                          }
-                                          </ul>
+                                          <p className="timeP">{startHour}:{startMinString} {startAmPm} - {endHour}:{endMinString} {endAmPm}</p>
+                                          <div className="availDisplay">
+                                            <p className="length">Everyone is available for {lengthOfTimeBlock}</p>
+                                            <ul className="userNames">
+                                            {
+                                              userNames.map((name, index) => {
+                                                  return(
+                                                    <li key={`${index}${name}` } className={`user${index + 1}`}>{name!.charAt(0).toUpperCase()}</li>
+                                                  )
+                                              })
+                                            }
+                                            </ul>
+                                          </div>
                                         </li>
                                       )
                                   })
@@ -773,16 +800,18 @@ const Overlap:React.FC= () => {
                               </ul>
                           </>
                         : null
+                        // :<p className="noAvail">No availability</p>
                       }
                     </li>
                     <li>
+                      
                       {
                         saturdayDate && saturdayAllAvail && saturdayAllAvail.length > 0
-                        ?<p>Saturday, {saturdayDate.month} {saturdayDate.day}, {saturdayDate.year}</p>
+                        ?<h3 className="day">Saturday, {saturdayDate.month} {saturdayDate.day}, {saturdayDate.year}</h3>
                         :null
                       }
                       {
-                        saturdayAllAvail && userNames
+                        saturdayAllAvail && saturdayAllAvail.length > 0 && userNames
                         ? <>
                               <ul className="dayTimes">
                                 {
@@ -791,17 +820,19 @@ const Overlap:React.FC= () => {
                                       const { startHour, startMinString, startAmPm, endHour, endMinString, endAmPm, lengthOfTimeBlock } = timeResults;
                                       return(
                                         <li key={startHour}>
-                                          <p className="timeP">{startHour}:{startMinString}{startAmPm} - {endHour}:{endMinString}{endAmPm}</p>
-                                          <p className="length">{lengthOfTimeBlock}</p>
-                                          <ul className="userNames">
-                                          {
-                                            userNames.map((name, index) => {
-                                                return(
-                                                  <li key={`${index}${name}`}>{name}</li>
-                                                )
-                                            })
-                                          }
-                                          </ul>
+                                          <p className="timeP">{startHour}:{startMinString} {startAmPm} - {endHour}:{endMinString} {endAmPm}</p>
+                                          <div className="availDisplay">
+                                            <p className="length">Everyone is available for {lengthOfTimeBlock}</p>
+                                            <ul className="userNames">
+                                            {
+                                              userNames.map((name, index) => {
+                                                  return(
+                                                    <li key={`${index}${name}` } className={`user${index + 1}`}>{name!.charAt(0).toUpperCase()}</li>
+                                                  )
+                                              })
+                                            }
+                                            </ul>
+                                          </div>
                                         </li>
                                       )
                                   })
@@ -809,6 +840,15 @@ const Overlap:React.FC= () => {
                               </ul>
                           </>
                         : null
+                        // :<p className="noAvail">No availability</p>
+                      }
+                    </li>
+                    <li key={"noAvailList"}>
+                      {
+                        (!sundayAllAvail || sundayAllAvail.length === 0) && (!mondayAllAvail || mondayAllAvail!.length === 0) && (!tuesdayAllAvail || tuesdayAllAvail!.length === 0) && (!wednesdayAllAvail || wednesdayAllAvail!.length === 0) && (!thursdayAllAvail || thursdayAllAvail!.length === 0) && (!fridayAllAvail || fridayAllAvail!.length === 0) && (!saturdayAllAvail || saturdayAllAvail!.length === 0)
+
+                        ?<h3>I'm afraid we could not find a time when everyone was available</h3>
+                        :null
                       }
                     </li>
                   </ul>
@@ -817,12 +857,8 @@ const Overlap:React.FC= () => {
             
             {/* button will navigate to availability results page */}
             <button className="navToResults" onClick={() => navigate(`/results/${meetingNumID}`)}>Show Calendar View</button>
-
+            </div>
           </div>
-        
-        
-        
-        
         </div>
       }
   
