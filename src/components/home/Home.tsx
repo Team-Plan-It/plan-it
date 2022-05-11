@@ -177,6 +177,16 @@ const Home:React.FC = () => {
       let rndNumString = rndNum.toString();
       data.meetingNumber = rndNumString;
       setMeetingNumID(rndNumString);
+
+      // capitalize event name
+      const name = data.eventName;
+      const words = name.split(" ");
+      const capitalWords = words.map(word => {
+        return word[0].toUpperCase() + word.slice(1);
+      });
+      const capitalName = capitalWords.join(" ");
+      data.eventName = capitalName;
+     
       // axios POST request that adds the meeting to the database
       axios.post("http://localhost:4000/dates/add", data)
         .then(res => {
