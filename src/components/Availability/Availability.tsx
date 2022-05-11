@@ -201,7 +201,7 @@ const Availability = (props: any) => {
        // axios POST
     axios.post(`http://localhost:4000/dates/availability/${meetingNumID}`, allData)
     .then(() => {
-      navigate(`/results/${meetingNumID}`, { 
+      navigate(`/overlapping/${meetingNumID}`, { 
         state: {
           meetingNumID: meetingNumID
         }
@@ -245,7 +245,7 @@ const Availability = (props: any) => {
     // axios POST
     axios.post(`http://localhost:4000/dates/availability/${meetingNumID}`, data)
     .then(() => {
-      navigate(`/results/${meetingNumID}`, { 
+      navigate(`/overlapping/${meetingNumID}`, { 
         state: {
           meetingNumID: meetingNumID
         }

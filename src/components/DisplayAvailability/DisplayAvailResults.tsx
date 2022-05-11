@@ -16,8 +16,6 @@ import leftArrow from "../../assets/left-arrow.png"
 
 //styles
 import "./DisplayAvailability.css";
-import TimeZone from "../TimeZone/TimeZone";
-
 
 
 
@@ -28,6 +26,7 @@ type Availability = {
     id: number;
     text: string;
   }
+
 type UserInfo = {
   userName?: string;
   timeZone?: string;
@@ -55,17 +54,17 @@ interface AvailabilityArray{
   saturday?: UserInfo[];
 }
 
-// interface MeetingInfo {
-//   id: string;
-//   eventName: string;
-//   date: string;
-//   length: string;
-//   meetingNumber: string;
-//   timezone: string;
-//   emails: string[];
-//   users:UserInfo[];
-//   availabilityArray: AvailabilityArray;
-// }
+interface MeetingInfo {
+  id: string;
+  eventName: string;
+  date: string;
+  length: string;
+  meetingNumber: string;
+  timezone: string;
+  emails: string[];
+  users:UserInfo[];
+  availabilityArray: AvailabilityArray;
+}
 
 
 
@@ -77,18 +76,20 @@ const DisplayAvailResults = () => {
   let navigate = useNavigate();
   
   //initialize state
+  // meeting data
+  const [ meetingData, setMeetingData ] = useState<MeetingInfo>();
   // event name
-  const [ eventName, setEventName ] = useState<string>();
+  // const [ eventName, setEventName ] = useState<string>();
   // length of meeting
-  const [ meetingLength, setMeetingLength ] = useState<string>();
+  // const [ meetingLength, setMeetingLength ] = useState<string>();
   // date selected by coordinator
   const [ selectedDate, setSelectedDate ] = useState<string>();
   // time zone of coordinator
-  const [ coordTimeZone, setCoordTimeZone ] = useState<string>();
+  // const [ coordTimeZone, setCoordTimeZone ] = useState<string>();
   // number of invitees
   const [ numOfAttendees, setNumOfAttendees ] = useState<number[]>();
   // meeting number/id
-  const [ meetingNumber, setMeetingNumber ] = useState<string>();
+  // const [ meetingNumber, setMeetingNumber ] = useState<string>();
   // user names
   const [ userNames, setUserNames ] = useState<(string | undefined)[]>();
   // user info array
@@ -96,7 +97,7 @@ const DisplayAvailResults = () => {
   // if an event has been created
   const [ eventCreated, setEventCreated ] = useState<boolean>(false);
   // array of all events created
-  const [ arrayOfEvents, setArrayOfEvents ] = useState<any[]>();
+  // const [ arrayOfEvents, setArrayOfEvents ] = useState<any[]>();
   // calendar month
   const [ calendarMonth, setCalendarMonth ] = useState<string>();
   // calendar year
@@ -104,7 +105,7 @@ const DisplayAvailResults = () => {
   // loading
   const [ isLoading, setIsLoading ] = useState<boolean>(true);
   // availability by date
-  const [ availabilityByDay, setAvailabilityByDay ] = useState<AvailabilityArray>();
+  // const [ availabilityByDay, setAvailabilityByDay ] = useState<AvailabilityArray>();
     // timeZoneOffset
   const [ timeZoneOffset, setTimeZoneOffset ] = useState<number>();
    // timezone of invitee/person using this page
@@ -114,12 +115,12 @@ const DisplayAvailResults = () => {
 
 
   // arrays of each users events
-  const [ user1eventArray, setUser1eventArray ] = useState<UserInfo>();
-  const [ user2eventArray, setUser2eventArray ] = useState<UserInfo>();
-  const [ user3eventArray, setUser3eventArray ] = useState<UserInfo>();
-  const [ user4eventArray, setUser4eventArray ] = useState<UserInfo>();
-  const [ user5eventArray, setUser5eventArray ] = useState<UserInfo>();
-  const [ user6eventArray, setUser6eventArray ] = useState<UserInfo>();
+  // const [ user1eventArray, setUser1eventArray ] = useState<UserInfo>();
+  // const [ user2eventArray, setUser2eventArray ] = useState<UserInfo>();
+  // const [ user3eventArray, setUser3eventArray ] = useState<UserInfo>();
+  // const [ user4eventArray, setUser4eventArray ] = useState<UserInfo>();
+  // const [ user5eventArray, setUser5eventArray ] = useState<UserInfo>();
+  // const [ user6eventArray, setUser6eventArray ] = useState<UserInfo>();
 
   // on page load
   useEffect(() => {
@@ -129,7 +130,7 @@ const DisplayAvailResults = () => {
     // get timezoneoffest
     // const timeZoneOffset = -180;
     const timeZoneOffset = new Date().getTimezoneOffset();
-    console.log("timezoneOFfset=",timeZoneOffset);
+    // console.log("timezoneOFfset=",timeZoneOffset);
     setTimeZoneOffset(timeZoneOffset);
 
     // get current timeZone
@@ -148,27 +149,29 @@ const DisplayAvailResults = () => {
         const response = await axios.get(`http://localhost:4000/dates/results/${meetingNumID}`);
         
         console.log("in try of getData function with axios call")
-        console.log(response)
+        // console.log(response)
         if(response !== undefined){
            setIsLoading(false);
            // const data = response.data[0];
-            console.log("isLoading: ", isLoading)
+            // console.log("isLoading: ", isLoading)
            // console.log(response.data[0].eventName)
            
            
            // deconstruct info from data
            const { eventName, length, date, timezone, emails, meetingNumber, users, availabilityArray } = response.data[0]!;
+
            
            // set event created to false
            setEventCreated(false)
            // save data in state
-           setEventName(eventName); 
-           setMeetingLength(length);
+           setMeetingData(response.data[0])
+          //  setEventName(eventName); 
+          //  setMeetingLength(length);
            setSelectedDate(date);
-           setCoordTimeZone(timezone);
-           setMeetingNumber(meetingNumber);
+          //  setCoordTimeZone(timezone);
+          //  setMeetingNumber(meetingNumber);
            setUserInfoData(users);
-           setAvailabilityByDay(availabilityArray);
+          //  setAvailabilityByDay(availabilityArray);
            
            // populate userNameArray 
            const userNamesArray:(string | undefined)[] = users.map((user:UserInfo) => {
@@ -255,7 +258,7 @@ const DisplayAvailResults = () => {
   const createEventList = (userData:UserInfo[]) => {
     const colorArray:string[] = ["#ff3db1", "#ff6b00", "#ffe500", "#49c491", "#4198f7", "#b03ce7"];
 
-    let eventArray:any[] = [];
+    // let eventArray:any[] = [];
 
     console.log("in createEventList")
     // console.log(`eventCreate is ${eventCreated}`)
@@ -272,7 +275,7 @@ const DisplayAvailResults = () => {
                   let user1array = user;
                   // let user1color = color;
 
-                  setUser1eventArray(user)
+                  // setUser1eventArray(user)
   
                   
                    // loop through the availability for the user
@@ -298,7 +301,7 @@ const DisplayAvailResults = () => {
                       cssClass:"user1",
                       ref:"user1"
                      });
-                     console.log("new event was created", newEvent)
+                     console.log("new event was created")
                     //  add the new event to the events list
                     if (calendar){
                       calendar.events.add(newEvent);
@@ -307,14 +310,14 @@ const DisplayAvailResults = () => {
                       console.log("calendar not initialized")
                     }
    
-                     eventArray.push(newEvent);
+                    //  eventArray.push(newEvent);
                   })
                   break;
                 case 1:
                   let user2array = user;
                   // let user2color = color;
 
-                  setUser2eventArray(user);
+                  // setUser2eventArray(user);
 
                   // loop through the availability for the user
                   user2array.availability!.forEach(availBlock => {
@@ -339,14 +342,14 @@ const DisplayAvailResults = () => {
                     //  add the new event to the events list
                      calendar.events.add(newEvent);
   
-                     eventArray.push(newEvent);
+                    //  eventArray.push(newEvent);
                   })
                   break;
                 case 2:
                   let user3array = user;
                   // let user3color = color;
 
-                  setUser3eventArray(user);
+                  // setUser3eventArray(user);
   
                   // loop through the availability for the user
                   user3array.availability!.forEach(availBlock => {
@@ -371,14 +374,14 @@ const DisplayAvailResults = () => {
                     //  add the new event to the events list
                      calendar.events.add(newEvent);
   
-                     eventArray.push(newEvent);
+                    //  eventArray.push(newEvent);
                   })
                   break;
                 case 3:
                   let user4array = user; 
                   // let user4color = color;
 
-                  setUser4eventArray(user);
+                  // setUser4eventArray(user);
   
                   // loop through the availability for the user
                   user4array.availability!.forEach(availBlock => {
@@ -403,14 +406,14 @@ const DisplayAvailResults = () => {
                     //  add the new event to the events list
                      calendar.events.add(newEvent);
   
-                     eventArray.push(newEvent);
+                    //  eventArray.push(newEvent);
                   })
                   break;
                 case 4:
                   let user5array = user;
                   // let user5color = color;
   
-                  setUser5eventArray(user);
+                  // setUser5eventArray(user);
 
                   // loop through the availability for the user
                   user5array.availability!.forEach(availBlock => {
@@ -435,14 +438,14 @@ const DisplayAvailResults = () => {
                     //  add the new event to the events list
                      calendar.events.add(newEvent);
   
-                     eventArray.push(newEvent);
+                    //  eventArray.push(newEvent);
                   })
                   break;
                 case 5:
                   let user6array = user;
                   // let user6color = color;
   
-                  setUser6eventArray(user);
+                  // setUser6eventArray(user);
 
                   // loop through the availability for the user
                   user6array.availability!.forEach(availBlock => {
@@ -467,7 +470,7 @@ const DisplayAvailResults = () => {
                     //  add the new event to the events list
                      calendar.events.add(newEvent);
   
-                     eventArray.push(newEvent);
+                    //  eventArray.push(newEvent);
                   })
                   break;
              }
@@ -475,7 +478,7 @@ const DisplayAvailResults = () => {
               if (index === userData!.length -1){
                 // console.log("index is the length of the userData array")
                 setEventCreated(true)
-                setArrayOfEvents(eventArray)
+                // setArrayOfEvents(eventArray)
                 calendar.events.update();
                 console.log("eventCreated should be true")
               }else {
@@ -497,7 +500,7 @@ const DisplayAvailResults = () => {
         <div className="resultsIntro">
 
           <div className="resultsIntroText">
-            <h1>{eventName}</h1>
+            <h1>{meetingData ?meetingData.eventName :"Meeting"}</h1>
             <p>You are viewing the calendar in your time zone: <span className="text bold">{currentTimeZone}</span></p>
           </div>
           <ul>
