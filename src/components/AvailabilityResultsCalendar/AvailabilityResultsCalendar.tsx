@@ -8,7 +8,7 @@ import { DayPilot, DayPilotCalendar } from "@daypilot/daypilot-lite-react";
 //components
 import rightArrow from "../../assets/right-arrow.png"
 import leftArrow from "../../assets/left-arrow.png"
-
+import { useEffectOnce } from "../../CustomHooks";
 
 //styles
 // import "./DisplayAvailability.css";
@@ -89,31 +89,58 @@ const AvailabilityResultsCalendar= ({meetingData, timeZoneOffset}:PropsInfo) => 
   // setCalendarYear(year);
 
 
-  useEffect(() => {
+  // useEffect(() => {
 
     
-    console.log("about to call createEventList")
+  //   console.log("about to call createEventList")
+  //   try{
+  //     if(!eventCreated && users){
+  //          setIsLoading(false);
+  //       createEventList(users);
 
+
+  //     calendar.update();
+  //     }else{
+  //       // calendar.update();
+  //      console.log("event already created or user data undefined")
+  //     //  console.log("eventCreate: ", eventCreated)
+  //     }
+
+  //   }
+  //   catch(error){
+  //     console.log(error)
+  //   }
+    
+  // }, [])
+
+  useEffectOnce(() => {
+      console.log("about to call createEventList")
+    try{
       if(!eventCreated && users){
            setIsLoading(false);
         createEventList(users);
 
 
-      // calendar.update();
+      calendar.update();
       }else{
-       console.log("userInfoData undefined")
+        // calendar.update();
+       console.log("event already created or user data undefined")
       //  console.log("eventCreate: ", eventCreated)
       }
-    
-  }, [users])
+
+    }
+    catch(error){
+      console.log(error)
+    }
+  })
 
 
   const createEventList = (userData:UserInfo[]) => {
 
     console.log("in createEventList");
   
-    if(!eventCreated && calendar !== undefined){
-    calendar.events.list = [];
+    if(!eventCreated ){
+    // calendar.events.list = [];
     console.log(calendar.events.list)
      userData!.every((user, index) => {
   
@@ -122,7 +149,8 @@ const AvailabilityResultsCalendar= ({meetingData, timeZoneOffset}:PropsInfo) => 
                   let user1array = user;
                   
                    // loop through the availability for the user
-                  user1array.availability!.forEach((availBlock) => {
+                  user1array.availability!.forEach((availBlock, index) => {
+                    console.log(index)
                     // for each object, get start and end value
                     let currentStart = new DayPilot.Date(availBlock.start);
                     let currentEnd = new DayPilot.Date(availBlock.end);
@@ -144,7 +172,6 @@ const AvailabilityResultsCalendar= ({meetingData, timeZoneOffset}:PropsInfo) => 
                     //  add the new event to the events list
                     if (calendar !== undefined && newEvent){
                       console.log("calendar should be initialized")
-                      console.log(calendar.events.list)
                       calendar.events.add(newEvent);
                       console.log(calendar.events.list)
                       console.log("new event added to calendar ")
@@ -294,6 +321,7 @@ const AvailabilityResultsCalendar= ({meetingData, timeZoneOffset}:PropsInfo) => 
                
                 return false
               }else {
+                setEventCreated(false)
                 return true
               }
         })
@@ -316,11 +344,11 @@ const AvailabilityResultsCalendar= ({meetingData, timeZoneOffset}:PropsInfo) => 
           } */}
 
           <div className="resultsCalendar" id="calendar">
-            {/* {
-              isLoading 
+            {
+              isLoading && !users && !eventCreated
               ? <p>Is loading.....</p>
     
-              :  */}
+              : 
               <DayPilotCalendar 
                       durationBarVisible={false}
                       startDate={date}
@@ -339,7 +367,7 @@ const AvailabilityResultsCalendar= ({meetingData, timeZoneOffset}:PropsInfo) => 
                         calendar = component && component.control;
                       }} 
                   />
-              {/* } */}
+              }
           </div>
         </div>
   )

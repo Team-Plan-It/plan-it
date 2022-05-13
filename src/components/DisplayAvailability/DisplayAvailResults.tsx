@@ -256,7 +256,7 @@ const DisplayAvailResults = () => {
   
 
   const createEventList = (userData:UserInfo[]) => {
-    const colorArray:string[] = ["#ff3db1", "#ff6b00", "#ffe500", "#49c491", "#4198f7", "#b03ce7"];
+    // const colorArray:string[] = ["#ff3db1", "#ff6b00", "#ffe500", "#49c491", "#4198f7", "#b03ce7"];
 
     // let eventArray:any[] = [];
 
