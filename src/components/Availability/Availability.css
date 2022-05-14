@@ -13,14 +13,11 @@
   background-color: #00000040;
 }
 
-
-
 .availabilityModal,
 .noAvailModal {
   position: absolute;
   display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   align-items: flex-start;
   min-width: 595px;
   top: 85px;
@@ -35,51 +32,90 @@
   padding: 160px 20px 30px 20px;
 }
 
+.availabilityModal{
+  padding: 0;
+  flex-direction: column;
+  justify-content: space-between;
+}
 
-.availabilityModal h1 {
-  align-self: center;
+/* modal content */
+.availabilityModalInfo{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  max-width: 315px;
+  padding: 20px 10px 20px 30px;
+  background-color: #677AA71A;
+  flex: 0 1 auto;
+  height: 100%;
+}
+
+.availabilityModalInfo h1 {
   font-size: 2.25rem;
-  margin-top: 840px;
+  padding-top: 40px;
+  padding-bottom: 15px;
 }
 
-.availabilityModal h2 {
-  padding-left: 30px;
+/* meeting name */
+.availabilityModalInfo h2 {
+  padding-bottom: 30px;
 }
 
-.availabilityModal p {
+.availabilityModalInfo p {
   font-size: 1rem;
   padding: 8px 0;
 }
-.availabilityModal .calendarHeader{
-  text-align: center;
-  padding-left: 0;
-}
-  
 
 /* span in text */
-.availabilityModal .text{
+.availabilityModalInfo .text {
   color: #1657F3;
 }
 
-/* timezone - bold && blue */
-.availabilityModal .text.bold {
+/* bold text */
+.availabilityModalInfo .bold {
   font-weight: 600;
 }
 
+
+/* form styles */
 .availabilityModal form{
+  position: relative;
+  display: flex;
+  /* flex-direction: column; */
+  /* padding: 2%; */
+}
+
+/* input container */
+.userNameInput{
   display: flex;
   flex-direction: column;
-  padding: 2%;
+  width: 315px;
+  background-color: #677AA71A;
+  padding: 20px 15px 20px 25px;
 }
 
 .availabilityModal input {
-  width: 345px;
+  width: 315px;
   height: 48px;
   background: #FFFFFF;
   border: 1px solid #C8C8C8;
   box-sizing: border-box;
   border-radius: 6px;
 }
+
+
+/* submit availability button */
+.availabilitySubmitBtn {
+  align-self: flex-start;
+  width: 150px;
+  padding: 10px;
+  margin-top: 20px;
+  position: relative;
+  right: -70px;
+  margin-top: 30px;
+}
+
 
 
 /* error messages styling */
@@ -90,6 +126,7 @@
 .availabilityModal .errorMessage {
   display: flex;
   align-items: center;
+  background-color: #FFFFFF;
   color: #000000;
   font-size: .8rem;
   border-radius: 5px;
@@ -98,7 +135,7 @@
   margin-top: 10px;
   margin-bottom: 10px;
   padding: 0;
-  width: 345px;
+  width: 315px;
 }
 
 
@@ -120,6 +157,16 @@
 
 
 /* calendar header */
+.calendarContainer{
+    position: relative;
+    margin-left: 2%;
+    margin-top: -345px;
+}
+.availabilityModal .calendarHeader {
+  text-align: left;
+  padding-left: 0;
+}
+
 .calendarHeader {
   text-align: center;
   /* width: 100%; */
@@ -134,15 +181,14 @@
 
 /* calendar styles */
 .calendar_default_main {
-  border: 1px solid #fff;;
-  /* border-left: 1px solid #fff;
-  border-right: 1px solid #fff;
-  border-bottom: 1px solid #fff; */
+  border: 1px solid #1657F3;;
   font-family: 'Lexend', sans-serif;
   font-size: 12px;
   border-radius: 15px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  margin-top: 10px;
+  margin-top: 5px;
+  padding-bottom: 10px;
+
 }
 
 .calendar_default_alldayheader_inner,
@@ -199,19 +245,10 @@
 }
 
 
-/* submit availability button */
-.availabilitySubmitBtn {
-  align-self: flex-end;
-  width: 150px;
-  padding: 10px;
-  margin-top: 20px;
-  position: relative;
-  right: -5px;
-  margin-top: 30px;
-}
 
 /* modal for when user enters no availability */
 .noAvailModal{
+  flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
   padding: 70px 50px 50px 50px;
@@ -230,14 +267,14 @@
 }
 
 /* media queries */
-@media only screen and (max-height: 975px) {
-  .availabilityModal h1 {
+/* @media only screen and (max-height: 975px) {
+  .availabilityModalInfo h1 {
     margin-top: 940px;
   }
 }
 
 @media only screen and (max-height: 820px) {
-  .availabilityModal h1 {
+  .availabilityModalInfo h1 {
     margin-top: 1025px;
   }
-}
+} */

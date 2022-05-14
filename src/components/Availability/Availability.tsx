@@ -120,6 +120,7 @@ const Availability = (props: any) => {
       }
       catch(error){
         if(error instanceof Error){
+          navigate("/error404");
           console.log("error message: ", error.message)
         }
       }
@@ -289,13 +290,20 @@ const Availability = (props: any) => {
           contentLabel="Availability page"
           style={{content: {WebkitOverflowScrolling: 'touch',}}}
           >
+            <div className="availabilityModalInfo">
+              <h1>Add <span className="text">Availability</span></h1>
+            
+              <h2>{eventName}</h2>
+
+              {/* <p>Please add your availability</p> */}
+              <p className="bold">Click and drag to add your availability.</p>
+              <p>Please note that you are inputting your availability in your local time <span className="text bold">{timezone}</span> and it will be converted to the coordinator's time zone <span className="text bold">{coordTimeZone}</span>.</p>
+            </div>
           
-          <h1>Add <span className="text">Availability</span></h1>
-      
-          <h2>{eventName}</h2>
           
           <form onSubmit={ onSubmit }>
            
+           <section className="userNameInput">
               <label htmlFor="userName">Name</label>
               <input 
                 id="userName"
@@ -308,27 +316,8 @@ const Availability = (props: any) => {
               />
               {/* error message if no name entered */}
               <ErrorMessage errors={errors} name="userName" as="p" className="errorMessage"/>
-          
 
-           
-              <p>Please add your availability</p>
-              <p>Click and drag to add your availability. Please note that you are inputting your availability in your local time <span className="text bold">{timezone}</span> and it will be converted to the coordinator's time zone <span className="text bold">{coordTimeZone}</span>.</p>
 
-              <div className="calendarContainer">
-                <div className="calendarHeader">
-                  <p>{calendarMonth} {calendarYear}</p>
-                </div>
-                <DayPilotCalendar 
-                  viewType={"Week"}
-                  headerDateFormat={"ddd dd"}
-                  startDate={selectedDate}
-                  onTimeRangeSelected={handleTimeSelected}
-                  onEventClick={handleEventClicked}
-                  durationBarVisible = {false}
-                  heightSpec={"Full"}
-                  cellHeight={25}
-                />
-              </div>
               <button
                 type="submit"
                 className="availabilitySubmitBtn"
@@ -338,6 +327,27 @@ const Availability = (props: any) => {
                 }}> 
                 Add Availability
               </button>
+           </section>
+          
+
+
+              <section className="calendarContainer">
+                <div className="calendarHeader">
+                  <p>{calendarMonth} {calendarYear}</p>
+                </div>
+                <DayPilotCalendar 
+                  viewType={"Week"}
+                  // headerDateFormat={"ddd MMMM dd yyyy"}
+                  headerDateFormat={"ddd dd"}
+                  startDate={selectedDate}
+                  onTimeRangeSelected={handleTimeSelected}
+                  onEventClick={handleEventClicked}
+                  durationBarVisible = {false}
+                  heightSpec={"Full"}
+                  cellHeight={20}
+                  width={"95%"}
+                />
+              </section>
            
           </form>
 

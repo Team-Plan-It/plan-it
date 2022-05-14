@@ -38,7 +38,7 @@
 }
 
 /* toggle weekends button */
-.toggleWeekends{
+/* .toggleWeekends{
   background-color: #D3D3D3;
   color: #000000;
   border: none;
@@ -52,9 +52,9 @@
 
 .toggleWeekends:hover{
   background-color: #D3D3D3;
-}
+} */
 
-.calendarHeader{
+/* .calendarHeader{
   padding-left: 53px;
   padding-top: 25px;
   text-align: left;
@@ -76,22 +76,22 @@
 
 .results .calendar_default_corner_inner{
   border-right: none;
-}
+} */
 
-.results .calendar_default_colheader_inner {
+/* .results .calendar_default_colheader_inner {
   display: flex;
   justify-content: flex-start;
   padding-left: 5px;
   border-right: none;
-  border-left: none;
+  border-left: none; */
   /* min-width: 130px; */
-}
+/* } */
 
-.results .calendar_default_cell_inner {
-  border-left: 1px solid grey;
+/* .results .calendar_default_cell_inner {
+  border-left: 1px solid grey; */
   /* min-width: 140px; */
   /* max-width: 170px; */
-}
+/* } */
 
 /* events styling  */
 /* .results .calendar_default_event_inner{
@@ -112,14 +112,14 @@
 } */
 
 /* events with square ends  */
-.results .calendar_default_event_inner {
+/* .results .calendar_default_event_inner {
   width: 29px;
   padding: 6px 0 0 6px;
   font-weight: 600;
   margin-left: 10px;
   border-radius: 0;
   margin-right: 10px;
-}
+} */
 /* background for each user */
 .results .calendar_default_event_inner {
   background: #D3D3D3;
@@ -156,7 +156,7 @@
   border: 2px solid #b03ce7;
 }
 
-.results div.overlap>div.calendar_default_event_inner{
+/* .results div.overlap>div.calendar_default_event_inner{
   width: 100%;
   padding: 0;
   background: rgb(231, 148, 148);
@@ -169,7 +169,7 @@
   width: 100%;
   left: 0;
   border-radius: none;
-}
+} */
 
 
 

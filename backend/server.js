@@ -9,14 +9,14 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use('/dates', meetDateRoute);
+
 require('../backend/config/db.config')
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.resolve(__dirname, "../build")));
 }
 
-app.use('/dates', meetDateRoute);
-
-const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
+const PORT = process.env.PORT 
+app.listen(PORT, '0.0.0.0', () => {
 console.log('Listening on port ' + PORT);
 });
