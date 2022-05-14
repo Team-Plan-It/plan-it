@@ -205,6 +205,7 @@ const DisplayAvailResults = () => {
 
     }catch(error:unknown){
       if(error instanceof Error){
+        navigate("/error404");
         console.log("error message: ", error.message)
       }
     }

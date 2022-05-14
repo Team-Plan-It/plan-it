@@ -120,6 +120,7 @@ const Availability = (props: any) => {
       }
       catch(error){
         if(error instanceof Error){
+          navigate("/error404");
           console.log("error message: ", error.message)
         }
       }

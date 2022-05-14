@@ -58,7 +58,7 @@ interface PropsInfo{
 // {meetingData, timeZoneOffset}:PropsInfo
 const AvailabilityResultsCalendar = ({meetingNumID}:PropsInfo) => {
   let calendar = DayPilot.Calendar;
-
+  let navigate = useNavigate();
 
   //initialize state
   // user info array
@@ -139,6 +139,7 @@ const AvailabilityResultsCalendar = ({meetingNumID}:PropsInfo) => {
 
     }catch(error:unknown){
       if(error instanceof Error){
+        navigate("/error404");
         console.log("error message: ", error.message)
       }
     }
