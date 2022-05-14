@@ -6,20 +6,25 @@
 
 .overlapInfo{
   width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
+/* header */
 .overlapInfoIntro {
   display: flex;
   flex-direction: column;
-  height: 140px;
-  /* width: 100%; */
-  padding: 2%;
+  padding: 4% 6%;
 } 
 
 
 .overlapInfoIntro h1{
   margin-bottom: 20px;
-  font-size: 2rem;
+  font-size: 2.25rem;
+}
+
+.overlapInfoIntro h2{
+  font-size: 1.5rem;
 }
 
 /* blue text */
@@ -33,7 +38,7 @@
 /* button to navigate to home and add a new event */
 .overlapInfoIntro button{
   align-self: flex-end;
-  width: 205px;
+  min-width: 205px;
   text-align: center;
   margin-top: -50px;
 }
@@ -43,34 +48,64 @@
   text-align: center;
   background-color: #1657F3;
   color: #ffffff;
+  font-size: 1rem;
+  line-height: 22px;
+  font-weight: 600;
+  padding: 4px;
 }
 
 /* buttons for availability times or calendar view */
 .toggleButtons{
   display: flex;
   justify-content: center;
-
+  padding-top: 30px;
+  background-color: #E5E5E5;
 }
 
 .toggleButtons button{
-  background-color: #ffffff;
+  background-color: #E5E5E5;
   color: #000000;
   border: none;
   border-radius: 0;
-  border-bottom: 2px solid #1657F3;
-  margin: 10px 5px;
+  margin: 10px 35px;
+  font-size: 1.25rem;
+  font-weight: 400;
+  padding: 0 0 7px 0;
 }
 
 .toggleButtons button:hover{
-  background-color: #ffffff;
+  background-color: #E5E5E5;
   color: #1657F3;
 }
 
+.toggleButtons .border{
+  border-bottom: 5px solid #1657F3;
+}
+
+/* container for overlap info */
+.overlapContainer{
+  overflow: hidden;
+  background-color: #E5E5E5;
+  display: flex;
+  flex: 1 1 auto;
+  /* min-height: 70%; */
+}
+/* make container slide in from left */
 .overlapInfoDetails{
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #E5E5E5;
+  animation-duration: 1.5s;
+  animation-name: slideinright;
+  position: relative;
+  width: 100%;
+  /* left: 100px; */
+ 
 }
 
+/* header if not all have completed availability */
 .overlapInfoDetails h2{
   align-self: center;
   font-size: 1.5rem;
@@ -80,63 +115,72 @@
   margin-bottom: 25px;
 }
 
-.availbleTimes {
-  width: 100%;
+/* container ul for day items */
+.overlapInfoDetails ul {
+  width: 70%;
+}
+
+/* each day container */
+.overlapInfoDetails li {
+  background-color: #ffffff;
+  border-radius: 10px;
+  margin: 20px 0;
 }
 
 /* day of the week and date */
 .overlapInfoDetails .day {
-  font-size: 1.5rem;
-  margin-bottom: 10px;
-  text-align: left;
-}
-
-.overlapInfoDetails .dayTimes,
-.overlapInfoDetails .noAvail{
-  margin-left: 3%;
-  margin-right: 1%;
-  margin-bottom: 30px;
   font-size: 1rem;
+  text-align: left;
+  font-weight: 500;
+  padding: 30px 0 10px 40px;
+}
+.day .text{
+  font-size: 1.5rem;
 }
 
+.overlapInfoDetails .dayTimes{
+  width: 95%;
+  padding-bottom: 10px;
+}
 .dayTimes li{
   display: flex;
-  justify-content: flex-start;
   align-items: center;
   width: 100%;
   margin-right: 20px;
-  border: 1px solid #BABABA;
-  border-radius: 10px;
+  border: none;
   margin: 7px 0;
   padding: 2px;
 }
 
 /* timeblocks of availability */
-.timeP{
-  font-family: 'Source Sans Pro', sans-serif;
-  font-size: 1rem;
-  font-weight: 600;
-  line-height: 24px;
-  min-width: 165px;
-  padding-left: 10px;
-  margin-right: 20px;
-}
-
 .availDisplay{
   display: flex;
-  width: 100%;
+  flex-direction: column;
   justify-content: space-between;
-  align-items: center;
+  width: 100%;
+  align-items: left;
+  padding: 10px 40px;
 }
-
-.overlapInfoDetails .length {
-  color: #1657F3;
-  font-family: "Lexend", sans-serif;
-  font-size: 1.1rem;
-  font-weight: 400;
+/* time */
+.timeP{
+  font-size: 1.13rem;
+  font-weight: 500;
   line-height: 22px;
+  min-width: 165px;
+  padding: 5px 0;
 }
 
+/* text of length all are available */
+.overlapInfoDetails .length {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 18px;
+}
+.availDisplay .text{
+  font-weight: 600;
+}
+
+/* user display */
 .userNames{
   display: flex;
   justify-content: flex-end;
@@ -152,58 +196,74 @@
   height: 20px;
   font-size: 1rem;
   font-weight: 600;
-  margin: 0 2px;
+  border: 2px solid #ffffff;
+  position: relative;
+  margin-left: -6px;
 }
+
+
 
 .userNames li.user1  {
   background-color: #ff3db1;
-  border: 3px solid #ff3db1;
+  z-index: 1;
 }
 
 .userNames li.user2  {
   background-color: #ff6b00;
-  border: 3px solid #ff6b00;
+  z-index: 2;
 }
 
-.userNames .user3  {
+.userNames li.user3  {
   background-color: #ffe500;
-  border: 3px solid #ffe500;
+  z-index: 3;
 }
 
-.userNames .user4  {
+.userNames li.user4  {
   background-color: #49c491;
-  border: 3px solid #49c491;
+  z-index: 4;
 }
 
-.userNames .user5  {
+.userNames li.user5  {
   background-color: #4198f7;
-  border: 3px solid #4198f7;
+  z-index: 5;
 }
 
-.userNames .user6  {
+.userNames li.user6  {
   background-color: #b03ce7;
-  border: 3px solid #b03ce7;
+  z-index: 6;
 }
 
+/* num of users */
+.userNames .userLength{
+  color: #383C4080;
+  padding-left: 15px;
+  font-weight: 500;
+}
 
 
 /* message when no availability */
-.overlapInfoDetails h3{
+.overlapInfoDetails .noAvail{
   font-size: 1.4rem;
   text-align: center;
   margin: 40px 20px;
 }
 
 
-
-
-/* button to calendar view */
-.navToResults {
-  align-self: center;
-  width: 200px;
-  margin-top: 5%;
+/* calendar component container */
+.calendarComponent{
+  overflow: hidden;
 }
 
+@keyframes slideinright {
+  from {
+    right: 600px;
+    /* width: 300%; */
+  }
+  to {
+   right: 0;
+    width: 100%;
+  }
+}
 
 /* media queries */
 @media only screen and (max-width: 1025px){
@@ -216,7 +276,7 @@
     align-self: flex-end;
     width: 200px;
     text-align: center;
-    margin-top: 20px;
+    margin-top: -30px;
     margin-bottom: 10px;
   }
 }

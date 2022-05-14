@@ -1,4 +1,4 @@
-
+import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -8,10 +8,10 @@ import { DayPilot, DayPilotCalendar } from "@daypilot/daypilot-lite-react";
 //components
 import rightArrow from "../../assets/right-arrow.png"
 import leftArrow from "../../assets/left-arrow.png"
-import { useEffectOnce } from "../../CustomHooks";
 
 //styles
-// import "./DisplayAvailability.css";
+import "./AvailabilityResultsCalendar.css";
+
 
 // types
 type Availability = {
@@ -50,15 +50,15 @@ interface MeetingInfo {
   availabilityArray: AvailabilityArray;
 }
 interface PropsInfo{
-  meetingData:MeetingInfo;
-  timeZoneOffset:number;
+  meetingData?:MeetingInfo;
+  timeZoneOffset?:number;
+  meetingNumID?: string;
 }
 
-const AvailabilityResultsCalendar= ({meetingData, timeZoneOffset}:PropsInfo) => {
+// {meetingData, timeZoneOffset}:PropsInfo
+const AvailabilityResultsCalendar = ({meetingNumID}:PropsInfo) => {
   let calendar = DayPilot.Calendar;
 
-  // deconstruct info from data
-  const { eventName, length, date, timezone, emails, meetingNumber, users, availabilityArray } = meetingData;
 
   //initialize state
   // user info array
@@ -66,73 +66,101 @@ const AvailabilityResultsCalendar= ({meetingData, timeZoneOffset}:PropsInfo) => 
   // if an event has been created
   const [ eventCreated, setEventCreated ] = useState<boolean>(false);
   // calendar month
-  // const [ calendarMonth, setCalendarMonth ] = useState<string>();
+  const [ calendarMonth, setCalendarMonth ] = useState<string>();
   // calendar year
-  // const [ calendarYear , setCalendarYear ] = useState<number>();
+  const [ calendarYear , setCalendarYear ] = useState<number>();
   // loading
   const [ isLoading, setIsLoading ] = useState<boolean>(true);
     // timeZoneOffset
-  // const [ timeZoneOffset, setTimeZoneOffset ] = useState<number>();
+  const [ timeZoneOffset, setTimeZoneOffset ] = useState<number>();
    // timezone of invitee/person using this page
-  // const [ currentTimeZone, setCurrentTimeZone ] = useState<string>();
+  const [ currentTimeZone, setCurrentTimeZone ] = useState<string>();
+  // date selected by coordinator
+  const [ selectedDate, setSelectedDate ] = useState<string>();
   // show or hide weekends of results calendar
   const [ showWeekends, setShowWeekends ] = useState<boolean>(true);
-  // all events created
-  const [ allEventsCreated, setAllEventsCreated ] = useState<boolean>(false);
+  // meeting data
+  const [ meetingData, setMeetingData ] = useState<MeetingInfo>();
 
 
-  // get month as string from event date
-  const month = new Date(date).toLocaleString('default', {month: "long"});
-  // setCalendarMonth(month);
-  //get year
-  const year = new Date(date).getFullYear();
-  // setCalendarYear(year);
 
 
-  // useEffect(() => {
+  // on page load
+  useEffect(() => {
+    console.log("inside useEffect")
+    getData();
 
+    // get timezoneoffest
+    const timeZoneOffset = new Date().getTimezoneOffset();
+    // console.log("timezoneOFfset=",timeZoneOffset);
+    setTimeZoneOffset(timeZoneOffset);
+
+    // get current timeZone
+    const eventTimeZone = new Date().toLocaleTimeString(undefined, {timeZoneName: "short"}).split(" ")[2];
+    setCurrentTimeZone(eventTimeZone);
     
-  //   console.log("about to call createEventList")
-  //   try{
-  //     if(!eventCreated && users){
-  //          setIsLoading(false);
-  //       createEventList(users);
+  }, [])
 
-
-  //     calendar.update();
-  //     }else{
-  //       // calendar.update();
-  //      console.log("event already created or user data undefined")
-  //     //  console.log("eventCreate: ", eventCreated)
-  //     }
-
-  //   }
-  //   catch(error){
-  //     console.log(error)
-  //   }
-    
-  // }, [])
-
-  useEffectOnce(() => {
-      console.log("about to call createEventList")
+  // axios call in async function
+  const getData = async () => {
+  
     try{
-      if(!eventCreated && users){
+
+        console.log("isLoading: ", isLoading)
+        const response = await axios.get(`http://localhost:4000/dates/results/${meetingNumID}`);
+        
+        console.log("in try of getData function with axios call")
+        // console.log(response)
+        if(response !== undefined){
            setIsLoading(false);
-        createEventList(users);
+                   
+           // deconstruct info from data
+           const { eventName, length, date, timezone, emails, meetingNumber, users, availabilityArray } = response.data[0]!;
 
+           
+           // set event created to false
+           setEventCreated(false)
+           // save data in state
+           setMeetingData(response.data[0])
+           setSelectedDate(date);
+           setUserInfoData(users);
+            
+            // get month as string from event date
+            const month = new Date(date).toLocaleString('default', {month: "long"});
+            setCalendarMonth(month);
+            //get year
+            const year = new Date(date).getFullYear();
+            setCalendarYear(year);
 
-      calendar.update();
-      }else{
-        // calendar.update();
-       console.log("event already created or user data undefined")
-      //  console.log("eventCreate: ", eventCreated)
+        }else{
+          console.log("response undefined for results")
+        }
+        
+
+    }catch(error:unknown){
+      if(error instanceof Error){
+        console.log("error message: ", error.message)
       }
+    }
+  }
 
-    }
-    catch(error){
-      console.log(error)
-    }
-  })
+
+
+  useEffect(() => {
+
+     console.log("about to call createEventList")
+  
+       if(userInfoData && !eventCreated){
+         createEventList(userInfoData);
+        // createOverlapEvent();
+        calendar.update();
+        // console.log(calendar.events.list)
+       }else{
+        //  console.log("userInfoData undefined")
+        //  console.log("eventCreate: ", eventCreated)
+       }
+    
+  }, [userInfoData])
 
 
   const createEventList = (userData:UserInfo[]) => {
@@ -330,28 +358,24 @@ const AvailabilityResultsCalendar= ({meetingData, timeZoneOffset}:PropsInfo) => 
 
   return(
      <div className="resultsCal"> 
-            {/* {calendarYear && calendarMonth */}
-            {/* ?  */}
             <div className="resultsCalIntro">
+                <p>{calendarMonth} {calendarYear} </p>
                 <button className="toggleWeekends" onClick={() => setShowWeekends(!showWeekends)}>
                   {showWeekends 
                     ?<>Hide Weekends <span><img src={leftArrow} alt="left arrow" /></span></> 
                     :<>Show Weekends <span><img src={rightArrow} alt="right arrow" /></span></>}  
                 </button>
-                <p>{month} {year} </p>
               </div>
-            {/* : null
-          } */}
 
           <div className="resultsCalendar" id="calendar">
             {
-              isLoading && !users && !eventCreated
+              isLoading && !userInfoData && eventCreated
               ? <p>Is loading.....</p>
     
               : 
               <DayPilotCalendar 
                       durationBarVisible={false}
-                      startDate={date}
+                      startDate={selectedDate}
                       viewType = {showWeekends ?"Week" :"WorkWeek"}
                       headerDateFormat={"ddd dd"}
                       heightSpec={"Full"}
