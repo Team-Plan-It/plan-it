@@ -31,7 +31,7 @@
 }
 
 /* calendar styling */
-.resultsCalendar .calendar_default_main {
+.resultsCalendar.calendar_default_main {
   min-width: 1200px;
   padding-bottom: 20px;
   border: 1px solid #E5E5E5;
@@ -139,6 +139,12 @@
     width: 100%;
   }
 }
+
+/* add media query for laptop */
+/* 
+@media only screen and (max-width: 1280px){
+
+} */
 
 
 /* right and left arrow icon from <a href="https://www.flaticon.com/free-icons/next"title="next icons">Next icons created by Roundicons - Flaticon</a> */
