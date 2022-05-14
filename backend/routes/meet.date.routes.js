@@ -8,19 +8,26 @@ const mailer = require('../utils/mailer');
 
 // POST route that creates a meeting date
 meetDateRoute.route('/add').post(function (req, res) {
-  let meetDateModel = new MeetDateModel(req.body);
-  meetDateModel.save()
-    .then(dateSaved => {
+  try{
+    let meetDateModel = new MeetDateModel(req.body);
+    meetDateModel.save()
+      .then(dateSaved => {
         // for (let i=0; i<req.body.emails.length; i++) {
         //     console.log(req.body.emails[i]);
         //     mailer.sendMail();
         // }
         
         return res.status(200).json({'dateSaved': 'Date in added successfully'});
-    })
-    .catch(err => {
+      })
+      .catch(err => {
         return res.status(400).send("unable to save to database");
     });
+
+  } catch(err) {
+    console.error(err)
+    res.status(500).send();
+  }
+  
 });
 
 // GET route that gets the meeting object which is found through the :meetingNum parameter

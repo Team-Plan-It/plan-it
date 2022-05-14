@@ -24,7 +24,7 @@ const App: React.FC = () => {
             <Route path="/availability/:id" element={ <Availability />}/>
             <Route path="/overlapping/:id" element={<Overlap />} />
             <Route path="/results/:id" element={ <DisplayAvailResults />} />
-            <Route path='/error404' element={<Error404 />}/>
+            <Route element={<Error404 />}/>
           </Routes>
         </main>
       </div>
