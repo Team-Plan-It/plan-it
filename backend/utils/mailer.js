@@ -16,7 +16,7 @@ const nodemailerMailgun = nodemailer.createTransport(mg(auth));
 module.exports.sendMail = (email, meetingNumber) => {
     nodemailerMailgun.sendMail({
         from: 'no-reply@plan-it.team',
-        to: `${email}`,
+        to: "johnsaguay@gmail.com",
         subject: 'Choose your availability',
         text: `Click on this link so then you can add your availability for this date http://plan-it.team/availability/${meetingNumber}`,
     })

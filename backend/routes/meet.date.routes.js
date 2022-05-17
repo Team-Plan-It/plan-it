@@ -1,6 +1,6 @@
 const meetDateRoute = require('express').Router()
-const { useResolvedPath } = require('react-router-dom');
-const { formatWithOptions } = require('util');
+// const { useResolvedPath } = require('react-router-dom');
+// const { formatWithOptions } = require('util');
 const MeetDateModel = require('../models/MeetDateModel');
 const UserModel = require('../models/UserModel');
 const AvailbilityModel = require('../models/AvailabilityObjectModel');
@@ -13,7 +13,8 @@ meetDateRoute.route('/add').post(function (req, res) {
     .then(dateSaved => {
         // for (let i=0; i<req.body.emails.length; i++) {
         //     console.log(req.body.emails[i]);
-        //     mailer.sendMail();
+        //     console.log(meetDateModel.meetingNumber)
+        //     mailer.sendMail(meetDateModel.meetingNumber);
         // }
         
         return res.status(200).json({'dateSaved': 'Date in added successfully'});
@@ -44,24 +45,24 @@ meetDateRoute.route("/availability/:meetingNumber").post(async function (req, re
         let availID = user["availability"][i]["id"]
         let availabilityObject = new AvailbilityModel({userName: userName, availability: availability})
 
-        if (availID == 0  ) {
-            let meeting = await MeetDateModel.updateOne({ meetingNumber: meetingNumber }, {$push: {"availabilityArray.sunday": availabilityObject}})
-        } else if (availID == 1) {
-            let meeting = await MeetDateModel.updateOne({ meetingNumber: meetingNumber }, {$push: {"availabilityArray.monday": availabilityObject}})
-        } else if (availID == 2) {
-            let meeting = await MeetDateModel.updateOne({ meetingNumber: meetingNumber }, {$push: {"availabilityArray.tuesday": availabilityObject}})
-        } else if (availID == 3) {
-            let meeting = await MeetDateModel.updateOne({ meetingNumber: meetingNumber }, {$push: {"availabilityArray.wednesday": availabilityObject}})
-        } else if (availID == 4) {
-            let meeting = await MeetDateModel.updateOne({ meetingNumber: meetingNumber }, {$push: {"availabilityArray.thursday": availabilityObject}})
-        } else if (availID == 5) {
-            let meeting = await MeetDateModel.updateOne({ meetingNumber: meetingNumber }, {$push: {"availabilityArray.friday": availabilityObject}})
-        } else if (availID == 6) {
-            let meeting = await MeetDateModel.updateOne({ meetingNumber: meetingNumber }, {$push: {"availabilityArray.saturday": availabilityObject}})
+        if (availID === 0  ) {
+            await MeetDateModel.updateOne({ meetingNumber: meetingNumber }, {$push: {"availabilityArray.sunday": availabilityObject}})
+        } else if (availID === 1) {
+            await MeetDateModel.updateOne({ meetingNumber: meetingNumber }, {$push: {"availabilityArray.monday": availabilityObject}})
+        } else if (availID === 2) {
+            await MeetDateModel.updateOne({ meetingNumber: meetingNumber }, {$push: {"availabilityArray.tuesday": availabilityObject}})
+        } else if (availID === 3) {
+            await MeetDateModel.updateOne({ meetingNumber: meetingNumber }, {$push: {"availabilityArray.wednesday": availabilityObject}})
+        } else if (availID === 4) {
+            await MeetDateModel.updateOne({ meetingNumber: meetingNumber }, {$push: {"availabilityArray.thursday": availabilityObject}})
+        } else if (availID === 5) {
+            await MeetDateModel.updateOne({ meetingNumber: meetingNumber }, {$push: {"availabilityArray.friday": availabilityObject}})
+        } else if (availID === 6) {
+            await MeetDateModel.updateOne({ meetingNumber: meetingNumber }, {$push: {"availabilityArray.saturday": availabilityObject}})
         } 
         availabilityObject.save()
     }
-    let mainMeeting = await MeetDateModel.updateOne({ meetingNumber: meetingNumber }, { $push: { users: user } })
+    await MeetDateModel.updateOne({ meetingNumber: meetingNumber }, { $push: { users: user } })
     user.save()
       .then(userSaved => {
         return res.status(200).json({'userSaved': 'User in added successfully'});
@@ -113,15 +114,15 @@ meetDateRoute.route("/overlapping/:meetingNumber").get( async function (req, res
                 amPmTime = "12:00 am - 12:30 am";
                 timeString = `${dateString}T00:00:00`;
             } else {
-                if (i % 2 !== 0) {
-                    counter++;
-                }
+              if (i % 2 !== 0) {
+                  counter++;
+              }
 
-                if (i < 9){
-                  timeString = i % 2 === 0 ?`${dateString}T0${(i - counter)/2}:00:00` :`${dateString}T0${(i - counter)/2}:30:00`
-                }else{
-                  timeString = i % 2 === 0 ?`${dateString}T${(i - counter)/2}:00:00` :`${dateString}T${(i - counter)/2}:30:00`
-                }
+              if (i < 9){
+                timeString = i % 2 === 0 ?`${dateString}T0${(i - counter)/2}:00:00` :`${dateString}T0${(i - counter)/2}:30:00`
+              }else{
+                timeString = i % 2 === 0 ?`${dateString}T${(i - counter)/2}:00:00` :`${dateString}T${(i - counter)/2}:30:00`
+              }
     
               if(i < 24){
                 if (i === 1){
