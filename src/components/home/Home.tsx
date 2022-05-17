@@ -401,8 +401,8 @@ const Home:React.FC = () => {
                   <DayPilotNavigator 
                     selectMode={"week"}
                     startDate={today}
-                    cellHeight={width > 750 ?60 :40}
-                    cellWidth={width > 750 ?60 :40}
+                    cellHeight={width! > 750 ?60 :40}
+                    cellWidth={width! > 750 ?60 :40}
                     titleHeight={70}
                     autoFocusOnClick={true}
                     selectionDay={chosenDay}
