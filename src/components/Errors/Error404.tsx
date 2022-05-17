@@ -10,13 +10,17 @@ const Error404 = () => {
   let navigate = useNavigate();
 
   return(
-    <div className="errorPage">
-      <Error404Image />
+    <main className="errorPage">
+      <div className="imageContainer">
+        <Error404Image />
+      </div>
       <h1>Whoops! Lost in Space?</h1>
-      <p>The page you are looking for cannot be found :(</p>
-      <p>We suggest you contact the coordinator or go back to home</p>
+      <div className="textContainer">
+        <p>The page you are looking for cannot be found :(</p>
+        <p>We suggest you contact the coordinator or go back to home</p>
+      </div>
       <button className="error404Btn" onClick={() => navigate("/")}>Go back home</button>
-    </div>
+    </main>
   )
 }
 

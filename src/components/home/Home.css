@@ -507,6 +507,12 @@ div.navigator_default_select.navigator_default_weekend .navigator_default_cell_b
   }
 
   @media only screen and (max-width: 496px){
+    /* background of all modals */
+    .background {
+        height: 75vh;
+      }
+
+      /* welcome modal */
     .welcomeModal{
       top: 2%;
       right: 3%;
@@ -547,6 +553,15 @@ div.navigator_default_select.navigator_default_weekend .navigator_default_cell_b
     }
     .formEventCalendar p{
       padding-left: 10px;
+    }
+
+    /* success modal */
+    .successModal{
+      top: 2%;
+      right: 3%;
+      bottom: 2%;
+      left: 3%;
+      overflow: hidden;
     }
   }
 

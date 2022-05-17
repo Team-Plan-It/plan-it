@@ -135,22 +135,22 @@ const Home:React.FC = () => {
     
     
     let attendees = [1];
-    console.log(_emails.length)
-    console.log(numOfAttendees.length)
-    console.log(maxNumOfEmails)
+    // console.log(_emails.length)
+    // console.log(numOfAttendees.length)
+    // console.log(maxNumOfEmails)
     
     // && numOfAttendees.length < 6
     if(_emails.length > 0  && _emails.length < 6){
       setInputtedEmails(_emails);
-      console.log(_emails.length)
+      // console.log(_emails.length)
       setNoEmails(false);
 
       for (let i= 0; i < _emails.length; i++){
         attendees.push(i + 2)
       }
       setNumOfAttendees(attendees);
-      console.log(attendees.length)
-      console.log(numOfAttendees.length)
+      // console.log(attendees.length)
+      // console.log(numOfAttendees.length)
 
       if(attendees.length === 6){
         setMaxNumOfEmails(true);
@@ -210,7 +210,6 @@ const Home:React.FC = () => {
         .catch(error => console.log(error));
       // reset form fields
       reset();
-      // setChosenDay(new DayPilot.Date().value);
       setNoDate(false);
       setSchedModalIsOpen(false); // closes scheduling modal
       setSuccessModalIsOpen(true); // opens success modal
@@ -237,7 +236,6 @@ const Home:React.FC = () => {
                 aria-hidden={true}
                 durationBarVisible={false}
                 startDate={today}
-                // viewType={"WorkWeek"}
                 viewType = {"Week"}
                 headerDateFormat={"ddd dd"}
                 heightSpec={"Full"}
@@ -251,6 +249,8 @@ const Home:React.FC = () => {
                 }} 
               />
         </div>
+
+        {/* welcome modal */}
        
         <Modal
           className={"welcomeModal"}
@@ -398,8 +398,6 @@ const Home:React.FC = () => {
               <section className="formEventCalendar">
                 <p>Choose a week</p>
         
-                {/* <div className="calendarContainer"> */}
-
                   <DayPilotNavigator 
                     selectMode={"week"}
                     startDate={today}
@@ -436,7 +434,7 @@ const Home:React.FC = () => {
                   
                   />
 
-                {/* </div> */}
+     
                 {/* error message if no date selected */}
                 {
                   noDate 
@@ -449,7 +447,7 @@ const Home:React.FC = () => {
                   type="submit"
                   className="meetingSubmitBtn"
                   onClick={() => {
-                    console.log(inputtedEmails.length)
+                    // console.log(inputtedEmails.length)
                     if(inputtedEmails.length > 0 && chosenDay){
                       setNoEmails(false);
                       setNoDate(false);
@@ -489,7 +487,6 @@ const Home:React.FC = () => {
           <div className="successMessages">
             <h2>Link was <span>Successfully Sent</span></h2>
             <div className="imageContainer">
-                {/* <AirplaneIcon /> */}
                 <img src={airplane} alt="blue paper airplane against light blue clouds" />
             </div>
             <button onClick={closeSuccessModal}>Add availability</button>
