@@ -14,6 +14,7 @@ import { DayPilot, DayPilotNavigator, DayPilotCalendar } from "@daypilot/daypilo
 
 //components
 import Sidebar from "../Sidebar/Sidebar";
+import { useViewport } from "../../CustomHooks";
 
 //assets
 // import AirplaneIcon from "../../assets/paperAirplane.js";
@@ -38,10 +39,6 @@ type UserTimeZone = string;
 type Email = string;
 type meetingNumber = string;
 
-// type FormValues = {
-//   NameOfEvent: string; 
-// }
-
 
 
 type FormData = {
@@ -57,6 +54,9 @@ type FormData = {
 const Home:React.FC = () => {
   // initialize useForm
   const { register, handleSubmit, setValue, formState: { errors}, reset } = useForm<FormData>();
+
+  // init custom hook
+  const { width } = useViewport();
 
   let calendar = new DayPilot.Calendar("calendar");
 
@@ -92,6 +92,7 @@ const Home:React.FC = () => {
   const [ successModalIsOpen, setSuccessModalIsOpen ] = useState<boolean>(false);
   // the meeting number
   const [ meetingNumID, setMeetingNumID ] = useState<string>();
+ 
   
   // if (process.env.NODE_ENV === 'development') {
   //       axios.defaults.baseURL = process.env.REACT_APP_BASE_URL_LOCAL;
@@ -110,15 +111,18 @@ const Home:React.FC = () => {
   
   }, [])
 
-  // open welocme modal
+  // open welcome modal
   useEffect(() => {
     setWelcomeModalIsOpen(true)
   }, [])
 
 
+
+
   //  open scheduling modal to schedule meeting
   const openSchedulingModal = () => {
     setSchedModalIsOpen(true);
+    setWelcomeModalIsOpen(false);
   }
 
   // when scheduling modal is closed
@@ -131,26 +135,36 @@ const Home:React.FC = () => {
     
     
     let attendees = [1];
+    console.log(_emails.length)
+    console.log(numOfAttendees.length)
+    console.log(maxNumOfEmails)
     
-    
-    if(_emails.length > 0 && numOfAttendees.length < 6 && !maxNumOfEmails){
+    // && numOfAttendees.length < 6
+    if(_emails.length > 0  && _emails.length < 6){
       setInputtedEmails(_emails);
-      console.log()
+      console.log(_emails.length)
       setNoEmails(false);
 
       for (let i= 0; i < _emails.length; i++){
         attendees.push(i + 2)
       }
       setNumOfAttendees(attendees);
+      console.log(attendees.length)
+      console.log(numOfAttendees.length)
 
-      if(inputtedEmails.length === 4){
+      if(attendees.length === 6){
         setMaxNumOfEmails(true);
+      }else{
+        setMaxNumOfEmails(false);
       }
 
+    // }else if(_emails.length === 5){
+    //   setMaxNumOfEmails(true);
     }else if(_emails.length === 0 && numOfAttendees.length <= 6){
       // if no emails in email array
       setNoEmails(true);
-      setNumOfAttendees(attendees);
+      setNumOfAttendees([1]);
+      setMaxNumOfEmails(false);
     }
   }
   
@@ -219,8 +233,6 @@ const Home:React.FC = () => {
       <div className="homeIntro">
         <div className="background">
 
-            {/* <h2 className="bgIntro">Team Meeting</h2>
-            <p className="bgIntro">You are viewing the calendar in your time zone: <span className="text bold">EST</span></p> */}
             <DayPilotCalendar 
                 aria-hidden={true}
                 durationBarVisible={false}
@@ -250,30 +262,24 @@ const Home:React.FC = () => {
           style={{content: {WebkitOverflowScrolling: 'touch',}}}
         >
           <img src={blueTextLogo} alt="plan-it paper airplane logo with blue text"/>
-          <h1>Welcome, ready to save some mental capacity?</h1>
+          <h1>Welcome, ready to schedule your next meeting?</h1>
           <h2>How it works</h2>
           <ul>
             <li>
-              <h3>Meeting <span>Details</span></h3>
               <div className="imageContainer">
                 <MeetingIcon />
-               
               </div>
               <p>Set the calendar parameters to your liking.</p>
             </li>
             <li>
-              <h3>Add <span>Availability</span></h3>
               <div className="imageContainer">
-                <AvailabilityIcon />
-               
+                <AvailabilityIcon />            
               </div>
               <p>Everyone is emailed a link to add their availability.</p>
             </li>
             <li>
-              <h3>View <span>Overlapped Times</span></h3>
               <div className="imageContainer">
                 <OverlapIcon />
-
               </div>
               <p>View overlapping times amongst your team.</p>
             </li>
@@ -293,172 +299,178 @@ const Home:React.FC = () => {
           className={"scheduleModal"}
           overlayClassName={"scheduleOverlay"}
         >
-          <h2>Meeting <span className="text">Details</span></h2>
-          <div className="homeInput">
-            <form onSubmit={ onSubmit }>
-              <section className="formEventDetails">
-                {/* input for name of meeting */}
-                <label htmlFor="eventName"> Name of event </label>
-                <input 
-                  id="eventName"
-                  placeholder= {"Enter name here..." }
-                  className={errors.eventName ?"error" :"success"}
-                  aria-label="Enter name here"
-                  aria-invalid={errors.eventName ?"true" :"false"}
-                  {...register("eventName", { required: "Name is required"})}
-                  />
-                  {/* error message if no name entered */}
-                  <ErrorMessage errors={errors} name="eventName" as="p" className="errorMessage"/>
-            
-                
-                
-                {/* input for length of meeting */}
-                <label htmlFor="length">How long will your event be?</label>
-              
-                  <select 
-                    id="length"
-                    className={errors.length ?"error" :"success"}
-                    aria-invalid={errors.length ?"true" :"false"}
-                    {...register("length", {required: `Length is required` })}
-                    >
-                      <option value="">Select</option>
-                      <option value="15">15 minutes</option>
-                      <option value="30">30 minutes</option>
-                      <option value="45">45 minutes</option>
-                      <option value="60">1 hour</option>
-                      <option value="90">1 hour 30 minutes</option>
-                      <option value="120">2 hours</option>
-                  </select>
- 
-                {/* error message if no time selected */}
-               
-                <ErrorMessage errors={errors} name="length" as="p" className="errorMessage"/>
-                  
+          <div className="scheduleModalContainer">
 
-
-                {/* input for email addressess */}
-                  <label >Invite up to 5 other participants
-                    <ReactMultiEmail 
-                      placeholder="Add an Email..."
-                      className={noEmails ?"error" :"success emails"}
-                      emails={inputtedEmails}
-                      onChange={(_emails:string[]) => {handleEmailChange(_emails)}}
-                      validateEmail={ email => { return isEmail(email)}} //return Boolean
-                      getLabel={(
-                        email: string,
-                        index: number,
-                        removeEmail: (index: number) => void, 
-                      ) => {
-                        return(
-                          <div data-tag key={index}>
-                            {email}
-                            <span data-tag-handle onClick={() => removeEmail(index)}>
-                              x
-                            </span>
-                          </div>
-                        )
-                      }}
+            <h2>Meeting <span className="text">Details</span></h2>
+            <div className="homeInput">
+              <form onSubmit={ onSubmit }>
+                <section className="formEventDetails">
+                  {/* input for name of meeting */}
+                  <label htmlFor="eventName"> Name of event </label>
+                  <input 
+                    id="eventName"
+                    placeholder= {"Enter name here..." }
+                    className={errors.eventName ?"error" :"success"}
+                    aria-label="Enter name here"
+                    aria-invalid={errors.eventName ?"true" :"false"}
+                    {...register("eventName", { required: "Name is required"})}
                     />
-    
-                    {/* error message if no emails entered */}
-                    {
-                      noEmails
-                      ?<p className="errorMessage">Please enter an email address</p>
-                      :null
-                    }   
-                  
-                  
-                  {maxNumOfEmails
-                  ?
-                    <div className="errorMessage maxEmails">
-                      <div>
-                      <p>Maximum number of invitees reached</p>
-                      <p>If you enter more email addresses, only the first 5 emails will be sent the link</p>
-                      </div>
-                    </div>
-                 
-                  :null
-                  }
-                  </label>
-
-
-                {/* displays current time zone of user */}
-                <p className="timezoneMessage"><span className="bold">Your time shows as</span> <span className="text bold">{timezone}</span>.</p>
-                <p className="timezoneMessage"> This means everyone's times will be converted to {timezone} for you.</p>
-            </section>
-
-            <section className="formEventCalendar">
-              <p>Choose a week</p>
-      
-              <DayPilotNavigator 
-                selectMode={"week"}
-                startDate={today}
-                cellHeight={60}
-                cellWidth={60}
-                titleHeight={70}
-                autoFocusOnClick={true}
-                selectionDay={chosenDay}
-                onVisibleRangeChanged={(args:any) =>{console.log(args)} }
-                select={chosenDay}
-                rowsPerMonth={"Auto"}
-                ref={(component:any | void) => {
-                  dpNav = component && component.control}}
-                onTimeRangeSelected={(args:any) => {
-                  
-                  // check that a date was entered and that it didn't default to the first day of the month
-                  let todayDate = new Date();
-                  todayDate.setHours(0,0,0,0);
-                  todayDate.toUTCString();
-                  let firstDay = new DayPilot.Date(todayDate).firstDayOfMonth();
-
-                
-                
-                  if(args.day === firstDay){
-                    console.log("they are the same")
-                  }else{
-                    setNoDate(false);
-                    console.log(args.day.value, "was selected");
-                    setChosenDay(args.day.value);
-                  }
-                  
-                }}
-                
+                    {/* error message if no name entered */}
+                    <ErrorMessage errors={errors} name="eventName" as="p" className="errorMessage"/>
               
-              />
+                  
+                  
+                  {/* input for length of meeting */}
+                  <label htmlFor="length">How long will your event be?</label>
+                
+                    <select 
+                      id="length"
+                      className={errors.length ?"error" :"success"}
+                      aria-invalid={errors.length ?"true" :"false"}
+                      {...register("length", {required: `Length is required` })}
+                      >
+                        <option value="">Select</option>
+                        <option value="15">15 minutes</option>
+                        <option value="30">30 minutes</option>
+                        <option value="45">45 minutes</option>
+                        <option value="60">1 hour</option>
+                        <option value="90">1 hour 30 minutes</option>
+                        <option value="120">2 hours</option>
+                    </select>
+  
+                  {/* error message if no time selected */}
+                
+                  <ErrorMessage errors={errors} name="length" as="p" className="errorMessage"/>
+                    
 
-              {/* error message if no date selected */}
-              {
-                noDate 
-                ?<p className="errorMessage">Please select a date</p>
-                :null
-              }
 
-              {/*  button to submit form */}
-              <button
-                type="submit"
-                className="meetingSubmitBtn"
-                onClick={() => {
-                  console.log(inputtedEmails.length)
-                  if(inputtedEmails.length > 0 && chosenDay){
-                    setNoEmails(false);
-                    setNoDate(false);
-                    setValue("date", chosenDay ?chosenDay :null);
-                    setValue("timezone", timezone ?timezone :"");
-                    setValue("emails", inputtedEmails ?inputtedEmails :[])
-                  }else if (inputtedEmails.length === 0 && !chosenDay){
-                    setNoEmails(true);
-                    setNoDate(true);
-                  }else if (!chosenDay){
-                    setNoDate(true);
-                  }else if (inputtedEmails.length === 0 && chosenDay){
-                     setNoEmails(true);
-                  }
-          
-                }}>
-                Generate Link
-              </button>
-              </section>       
-            </form>
+                  {/* input for email addressess */}
+                    <label >Invite up to 5 other participants
+                      <ReactMultiEmail 
+                        placeholder="Add an Email..."
+                        className={noEmails ?"error" :"success emails"}
+                        emails={inputtedEmails}
+                        onChange={(_emails:string[]) => {handleEmailChange(_emails)}}
+                        validateEmail={ email => { return isEmail(email)}} //return Boolean
+                        getLabel={(
+                          email: string,
+                          index: number,
+                          removeEmail: (index: number) => void, 
+                        ) => {
+                          return(
+                            <div data-tag key={index}>
+                              {email}
+                              <span data-tag-handle onClick={() => removeEmail(index)}>
+                                x
+                              </span>
+                            </div>
+                          )
+                        }}
+                      />
+      
+                      {/* error message if no emails entered */}
+                      {
+                        noEmails
+                        ?<p className="errorMessage">Please enter an email address</p>
+                        :null
+                      }   
+                    
+                    
+                    {maxNumOfEmails || inputtedEmails.length === 5
+                    ?
+                      <div className="errorMessage maxEmails">
+                        <div>
+                        <p>Maximum number of invitees reached</p>
+                        <p>If you enter more email addresses, only the first 5 emails will be sent the link</p>
+                        </div>
+                      </div>
+                  
+                    :null
+                    }
+                    </label>
+
+
+                  {/* displays current time zone of user */}
+                  <p className="timezoneMessage"><span className="bold">Your time shows as</span> <span className="text bold">{timezone}</span>.</p>
+                  <p className="timezoneMessage"> This means everyone's times will be converted to {timezone} for you.</p>
+              </section>
+
+              <section className="formEventCalendar">
+                <p>Choose a week</p>
+        
+                {/* <div className="calendarContainer"> */}
+
+                  <DayPilotNavigator 
+                    selectMode={"week"}
+                    startDate={today}
+                    cellHeight={width > 750 ?60 :40}
+                    cellWidth={width > 750 ?60 :40}
+                    titleHeight={70}
+                    autoFocusOnClick={true}
+                    selectionDay={chosenDay}
+                    onVisibleRangeChanged={(args:any) =>{console.log(args)} }
+                    select={chosenDay}
+                    rowsPerMonth={"Auto"}
+                    ref={(component:any | void) => {
+                      dpNav = component && component.control}}
+                    onTimeRangeSelected={(args:any) => {
+                      
+                      // check that a date was entered and that it didn't default to the first day of the month
+                      let todayDate = new Date();
+                      todayDate.setHours(0,0,0,0);
+                      todayDate.toUTCString();
+                      let firstDay = new DayPilot.Date(todayDate).firstDayOfMonth();
+
+                    
+                    
+                      if(args.day === firstDay){
+                        console.log("they are the same")
+                      }else{
+                        setNoDate(false);
+                        console.log(args.day.value, "was selected");
+                        setChosenDay(args.day.value);
+                      }
+                      
+                    }}
+                    
+                  
+                  />
+
+                {/* </div> */}
+                {/* error message if no date selected */}
+                {
+                  noDate 
+                  ?<p className="errorMessage">Please select a date</p>
+                  :null
+                }
+
+                {/*  button to submit form */}
+                <button
+                  type="submit"
+                  className="meetingSubmitBtn"
+                  onClick={() => {
+                    console.log(inputtedEmails.length)
+                    if(inputtedEmails.length > 0 && chosenDay){
+                      setNoEmails(false);
+                      setNoDate(false);
+                      setValue("date", chosenDay ?chosenDay :null);
+                      setValue("timezone", timezone ?timezone :"");
+                      setValue("emails", inputtedEmails ?inputtedEmails :[])
+                    }else if (inputtedEmails.length === 0 && !chosenDay){
+                      setNoEmails(true);
+                      setNoDate(true);
+                    }else if (!chosenDay){
+                      setNoDate(true);
+                    }else if (inputtedEmails.length === 0 && chosenDay){
+                      setNoEmails(true);
+                    }
+            
+                  }}>
+                  Generate Link
+                </button>
+                </section>       
+              </form>
+            </div>
           </div>
 
         </Modal>
