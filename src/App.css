@@ -39,6 +39,7 @@ button {
   text-align: center;
   color: #FFFFFF;
   background-color: #1657F3;
+  width: 175px;
   border-radius: 8px;
   padding: 8px 20px;
   transition: 0.3s;
