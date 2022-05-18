@@ -113,6 +113,14 @@ const DisplayAvailResults = () => {
   // show or hide weekends of results calendar
   const [ showWeekends, setShowWeekends ] = useState<boolean>(true);
 
+  if (process.env.REACT_APP_NODE_ENV === 'development') {
+    axios.defaults.baseURL = process.env.REACT_APP_BASE_URL_LOCAL;
+    console.log(axios.defaults.baseURL)            
+  } else if (process.env.REACT_APP_NODE_ENV === 'production') {
+    axios.defaults.baseURL = process.env.REACT_APP_BASE_DOMAIN_PROD;   
+    console.log(axios.defaults.baseURL)
+  }
+
 
   // arrays of each users events
   // const [ user1eventArray, setUser1eventArray ] = useState<UserInfo>();
@@ -146,7 +154,8 @@ const DisplayAvailResults = () => {
     try{
 
         console.log("isLoading: ", isLoading)
-        const response = await axios.get(`http://localhost:4000/dates/results/${meetingNumID}`);
+        const resultsUrl = `/dates/results/${meetingNumID}`
+        const response = await axios.get(resultsUrl);
         
         console.log("in try of getData function with axios call")
         // console.log(response)

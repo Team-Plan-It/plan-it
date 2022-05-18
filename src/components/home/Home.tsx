@@ -94,20 +94,20 @@ const Home:React.FC = () => {
   const [ meetingNumID, setMeetingNumID ] = useState<string>();
  
   
-  // if (process.env.NODE_ENV === 'development') {
-  //       axios.defaults.baseURL = process.env.REACT_APP_BASE_URL_LOCAL;
-  //       console.log(axios.defaults.baseURL)            
-  // } else if (process.env.NODE_ENV === 'production') {
-  //       axios.defaults.baseURL = process.env.REACT_APP_BASE_DOMAIN_PROD;   
-  // }
-
-
+  if (process.env.REACT_APP_NODE_ENV === 'development') {
+        axios.defaults.baseURL = process.env.REACT_APP_BASE_URL_LOCAL;
+        console.log(axios.defaults.baseURL)            
+  } else if (process.env.REACT_APP_NODE_ENV === 'production') {
+        axios.defaults.baseURL = process.env.REACT_APP_BASE_DOMAIN_PROD;   
+        console.log(axios.defaults.baseURL)
+  }
 
   // get timezone of user
   useEffect(() => {
     const eventTimeZone = new Date().toLocaleTimeString(undefined, {timeZoneName: "short"}).split(" ")[2];
     // console.log(eventTimeZone)
     setTimezone(eventTimeZone);
+    
   
   }, [])
 
@@ -202,7 +202,8 @@ const Home:React.FC = () => {
       data.eventName = capitalName;
      
       // axios POST request that adds the meeting to the database
-      axios.post("http://localhost:4000/dates/add", data)
+      const url = `/dates/add`
+      axios.post(url, data)
         .then(res => {
           // console.log(data)
           console.log('Successfully added meeting to database')

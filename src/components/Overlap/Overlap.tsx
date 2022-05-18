@@ -141,15 +141,25 @@ const Overlap:React.FC= () => {
   const [ thursdayAllAvail, setThursdayAllAvail ] = useState<AllAvailObj[]>();
   const [ fridayAllAvail, setFridayAllAvail ] = useState<AllAvailObj[]>();
   const [ saturdayAllAvail, setSaturdayAllAvail ] = useState<AllAvailObj[]>();
+  
+  if (process.env.REACT_APP_NODE_ENV === 'development') {
+    axios.defaults.baseURL = process.env.REACT_APP_BASE_URL_LOCAL;
+    console.log(axios.defaults.baseURL)            
+  } else if (process.env.REACT_APP_NODE_ENV === 'production') {
+    axios.defaults.baseURL = process.env.REACT_APP_BASE_DOMAIN_PROD;   
+    console.log(axios.defaults.baseURL)
+  }
 
 
   const getMeetingData = async () => {
     // console.log("isLoading: ", isLoading)
     try{
+      const meetingResultsUrl = `/dates/results/${meetingNumID}`
+      const overlappingUrl = `/dates/overlapping/${meetingNumID}`
       const [meetingResponse, overlapResponse ] = await Promise.all([
-        
-      axios.get(`http://localhost:4000/dates/results/${meetingNumID}`),
-      axios.get(`http://localhost:4000/dates/overlapping/${meetingNumID}`)]);
+      
+      axios.get(meetingResultsUrl),
+      axios.get(overlappingUrl)]);
       
       if(meetingResponse !== undefined && overlapResponse !== undefined){
         console.log("in try of getMeetingData function with axios call")

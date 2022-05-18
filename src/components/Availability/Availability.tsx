@@ -73,12 +73,22 @@ const Availability = (props: any) => {
   // all data to be sent to axios post
   const [ allData, setAllData ] = useState<FormData>();
 
+  if (process.env.REACT_APP_NODE_ENV === 'development') {
+    axios.defaults.baseURL = process.env.REACT_APP_BASE_URL_LOCAL;
+    console.log(axios.defaults.baseURL)            
+  } else if (process.env.REACT_APP_NODE_ENV === 'production') {
+    axios.defaults.baseURL = process.env.REACT_APP_BASE_DOMAIN_PROD;   
+    console.log(axios.defaults.baseURL)
+  }
+
   // get timezone of user
   useEffect(() => {
     // async function for axios call
     const getData = async() => {
       try{
-        const response = await axios.get(`http://localhost:4000/dates/results/${meetingNumID}`);
+        const url = `dates/results/${meetingNumID}`
+        const response = await axios.get(url);
+        console.log("got submitted");
 
         if(response !== undefined){
 
@@ -200,7 +210,8 @@ const Availability = (props: any) => {
     console.log("user has no availability to enter")
 
        // axios POST
-    axios.post(`http://localhost:4000/dates/availability/${meetingNumID}`, allData)
+    const noAvailUrl = `/dates/availability/${meetingNumID}`
+    axios.post(noAvailUrl, allData)
     .then(() => {
       navigate(`/overlapping/${meetingNumID}`, { 
         state: {
@@ -244,7 +255,8 @@ const Availability = (props: any) => {
     console.log(data)
 
     // axios POST
-    axios.post(`http://localhost:4000/dates/availability/${meetingNumID}`, data)
+    const postUrl = `/dates/availability/${meetingNumID}`
+    axios.post(postUrl, data)
     .then(() => {
       navigate(`/overlapping/${meetingNumID}`, { 
         state: {
