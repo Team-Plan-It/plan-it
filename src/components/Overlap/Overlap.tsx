@@ -8,6 +8,7 @@ import { DayPilot } from "@daypilot/daypilot-lite-react";
 //components
 import Sidebar from "../Sidebar/Sidebar";
 import AvailabiltyResultsCalendar from "../AvailabilityResultsCalendar/AvailabilityResultsCalendar";
+import { useViewport } from "../../CustomHooks";
 
 //styles
 import "./Overlap.css";
@@ -89,6 +90,9 @@ const Overlap:React.FC= () => {
   // init navigate
   let navigate = useNavigate();
 
+  // init custom hook for viewport
+  const { width, height } = useViewport();
+
   // init state
   // loading
   const [ isLoadingMeetingData, setIsLoadingMeetingData ] = useState<boolean>(true);
@@ -115,13 +119,13 @@ const Overlap:React.FC= () => {
   const [ showCalendar, setShowCalendar ] = useState<boolean>(false);
 
   // results arrays
-  const [ sundayResultsArray , setSundayResultsArray ] = useState<DayObjects[]>();
-  const [ mondayResultsArray , setMondayResultsArray ] = useState<DayObjects[]>();
-  const [ tuesdayResultsArray , setTuesdayResultsArray ] = useState<DayObjects[]>();
-  const [ wednesdayResultsArray , setWednesdayResultsArray ] = useState<DayObjects[]>();
-  const [ thursdayResultsArray , setThursdayResultsArray ] = useState<DayObjects[]>();
-  const [ fridayResultsArray , setFridayResultsArray ] = useState<DayObjects[]>();
-  const [ saturdayResultsArray , setSaturdayResultsArray ] = useState<DayObjects[]>();
+  // const [ sundayResultsArray , setSundayResultsArray ] = useState<DayObjects[]>();
+  // const [ mondayResultsArray , setMondayResultsArray ] = useState<DayObjects[]>();
+  // const [ tuesdayResultsArray , setTuesdayResultsArray ] = useState<DayObjects[]>();
+  // const [ wednesdayResultsArray , setWednesdayResultsArray ] = useState<DayObjects[]>();
+  // const [ thursdayResultsArray , setThursdayResultsArray ] = useState<DayObjects[]>();
+  // const [ fridayResultsArray , setFridayResultsArray ] = useState<DayObjects[]>();
+  // const [ saturdayResultsArray , setSaturdayResultsArray ] = useState<DayObjects[]>();
 
   // dates
   const [ sundayDate, setSundayDate ] = useState<DateInfo>();
@@ -294,9 +298,10 @@ const Overlap:React.FC= () => {
     if(arrayOfDayArrays.day2array.length > 0){
       console.log("in tuesday")
       const tuesdayDate = getDates(arrayOfDayArrays.day2array[0]);
+      // console.log(tuesdayDate);
       setTuesdayDate(tuesdayDate);
       const tuesdayResults = checkDayArray(arrayOfDayArrays.day2array);
-
+      // console.log(tuesdayResults)
       tuesdayResults.forEach((timeblock:DayObjects, index:number) => {
         let convertedTimeString = convertTimeString(timeblock.timeString!);
         tuesdayResults[index].convertedTimeString = convertedTimeString;
@@ -467,7 +472,7 @@ const Overlap:React.FC= () => {
     // go through array looking for array length === numOfAttendees
     if(userNames){
       console.log("usernames is defined")
-      resultsArray.map(timeblock => {
+      resultsArray.forEach(timeblock => {
         // console.log(timeblock.array.length, userNames!.length);
         if(timeblock.array.length === userNames!.length){
           if(!startTime && !endTime){
@@ -476,7 +481,7 @@ const Overlap:React.FC= () => {
             // set end time as start time plus 30 minutes
             endTime = new DayPilot.Date(timeblock.convertedTimeString);
             endTime = endTime.addMinutes(30);
-            console.log("should be init of start and endtime");
+            console.log("in init of start and endtime");
           }else if(timeblock.convertedTimeString === endTime){
             // check if convertedTimeString same as end time
             // if true, change endtime to results starttime plus 30 minutes
@@ -529,10 +534,10 @@ const Overlap:React.FC= () => {
             <p className="banner">You are viewing the times in: {currentTimeZone}</p>
 
             <div className="toggleButtons">
-              <button className={!showCalendar ?"border" :""} onClick={() => {
+              <button className={!showCalendar ?"border" :"overlapBtn"} onClick={() => {
                 setShowCalendar(false);
                 }}>Available Times</button>
-              <button className={showCalendar ?"border" :""} onClick={() => {
+              <button className={showCalendar ?"border" :"calendarBtn"} onClick={() => {
                 setShowCalendar(true);
               }}>Calendar View</button>
             </div>
@@ -862,6 +867,11 @@ const Overlap:React.FC= () => {
               </div>
             }
             </div>
+          {
+            // ADD condition for when width too small to display results calendar
+            // width! < 
+            // <p>For best results, please view calendar results on a larger screen</p>
+          }
           </div>
         </div>
       }

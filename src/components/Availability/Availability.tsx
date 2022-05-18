@@ -199,7 +199,7 @@ const Availability = (props: any) => {
 
   const handleNoAvailClose = () => {
     // user has no availability to submit
-    console.log(allData);
+    // console.log(allData);
     console.log("user has no availability to enter")
 
        // axios POST
@@ -241,10 +241,10 @@ const Availability = (props: any) => {
       availBlock.end = newEnd;
 
 
-      console.log(currentStart, currentEnd)
-      console.log(availBlock.start, availBlock.end)
+      // console.log(currentStart, currentEnd)
+      // console.log(availBlock.start, availBlock.end)
     })
-    console.log(data)
+    // console.log(data)
 
     // axios POST
     axios.post(`http://localhost:4000/dates/availability/${meetingNumID}`, data)
@@ -303,7 +303,7 @@ const Availability = (props: any) => {
             </div>
           
           {
-            width! >= 810 && height! >= 810 || (orientation === "landscape" && width! > 700)
+           (width! >= 810 && height! >= 810) || (orientation === "landscape" && width! > 700)
            ? <form onSubmit={ onSubmit }>
             
             <section className="userNameInput">
