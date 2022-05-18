@@ -6,7 +6,8 @@ import Home from "./components/home/Home";
 import Availability from "./components/Availability/Availability";
 // import DisplayAvailResults from "./components/DisplayAvailability/DisplayAvailResults";
 import Error404 from "./components/Errors/Error404";
-import Overlap from "./components/Overlap/Overlap"
+import Overlap from "./components/Overlap/Overlap";
+import { ViewportProvider } from "./CustomHooks";
 
 //styles
 import "./App.css";
@@ -15,6 +16,8 @@ import "./App.css";
 
 const App: React.FC = () => {
   return (
+    <ViewportProvider>
+
     <Router>
       <div className="App">
 
@@ -30,6 +33,7 @@ const App: React.FC = () => {
       </div>
 
     </Router>
+    </ViewportProvider>
   );
 }
 

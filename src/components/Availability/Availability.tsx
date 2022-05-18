@@ -11,6 +11,7 @@ import { DayPilot, DayPilotCalendar } from "@daypilot/daypilot-lite-react";
 // components
 import Sidebar from "../Sidebar/Sidebar";
 import blueTextLogo from "../../assets/blueLetterLogo.png";
+import { useOrientation, useViewport } from "../../CustomHooks";
 
 //styles
 import "./Availability.css";
@@ -33,7 +34,6 @@ type FormData = {
 
 const Availability = (props: any) => {
 
-
   // get meetingID from useParams of url
   const meetingNumID = useParams().id;
   
@@ -46,6 +46,12 @@ const Availability = (props: any) => {
 
   // init modal
    Modal.setAppElement('#root');
+
+  //  init custom hook for device orientation
+  const orientation = useOrientation();
+
+  // init custom hook for window height and width
+  const { width, height } = useViewport();
 
   // initialize state
   // all availabilites selected by user
@@ -104,7 +110,7 @@ const Availability = (props: any) => {
           // get timezoneoffest
           // const timeZoneOffset = -180;
           const timeZoneOffset = new Date().getTimezoneOffset();
-          console.log("timezoneOFfset=",timeZoneOffset);
+          // console.log("timezoneOFfset=",timeZoneOffset);
           setTimeZoneOffset(timeZoneOffset);
 
           // determine number of meeting attendees
@@ -132,10 +138,7 @@ const Availability = (props: any) => {
     
   }, [])
 
-  // open modal
-  // useEffect(() => {
-  //   setAvailabilityModalIsOpen(true);
-  // })
+
 
   // function to put time in hours/minutes in am/pm format
   const timeFormatCalc = (time:any) => {
@@ -196,7 +199,7 @@ const Availability = (props: any) => {
 
   const handleNoAvailClose = () => {
     // user has no availability to submit
-    console.log(allData);
+    // console.log(allData);
     console.log("user has no availability to enter")
 
        // axios POST
@@ -238,10 +241,10 @@ const Availability = (props: any) => {
       availBlock.end = newEnd;
 
 
-      console.log(currentStart, currentEnd)
-      console.log(availBlock.start, availBlock.end)
+      // console.log(currentStart, currentEnd)
+      // console.log(availBlock.start, availBlock.end)
     })
-    console.log(data)
+    // console.log(data)
 
     // axios POST
     axios.post(`http://localhost:4000/dates/availability/${meetingNumID}`, data)
@@ -286,7 +289,6 @@ const Availability = (props: any) => {
           overlayClassName={"availabilityOverlay"}
           isOpen={availabilityModalIsOpen}
           shouldCloseOnOverlayClick={false}
-          // onRequestClose={() => setAvailabilityModalIsOpen(false)}
           contentLabel="Availability page"
           style={{content: {WebkitOverflowScrolling: 'touch',}}}
           >
@@ -295,61 +297,72 @@ const Availability = (props: any) => {
             
               <h2>{eventName}</h2>
 
-              {/* <p>Please add your availability</p> */}
+          
               <p className="bold">Click and drag to add your availability.</p>
               <p>Please note that you are inputting your availability in your local time <span className="text bold">{timezone}</span> and it will be converted to the coordinator's time zone <span className="text bold">{coordTimeZone}</span>.</p>
             </div>
           
-          
-          <form onSubmit={ onSubmit }>
-           
-           <section className="userNameInput">
-              <label htmlFor="userName">Name</label>
-              <input 
-                id="userName"
-                type="text" 
-                className={errors.userName ?"error" :"success"}
-                placeholder={"Input text"}
-                aria-label="Enter name here"
-                aria-invalid={errors.userName ?"true" :"false"}
-                {...register("userName", {required: "Name is required" })} 
-              />
-              {/* error message if no name entered */}
-              <ErrorMessage errors={errors} name="userName" as="p" className="errorMessage"/>
-
-
-              <button
-                type="submit"
-                className="availabilitySubmitBtn"
-                onClick={() => {
-                  setValue("availability", eventArray ?eventArray :[])
-                  setValue("timezone", timezone ?timezone :"")
-                }}> 
-                Add Availability
-              </button>
-           </section>
-          
-
-
-              <section className="calendarContainer">
-                <div className="calendarHeader">
-                  <p>{calendarMonth} {calendarYear}</p>
-                </div>
-                <DayPilotCalendar 
-                  viewType={"Week"}
-                  // headerDateFormat={"ddd MMMM dd yyyy"}
-                  headerDateFormat={"ddd dd"}
-                  startDate={selectedDate}
-                  onTimeRangeSelected={handleTimeSelected}
-                  onEventClick={handleEventClicked}
-                  durationBarVisible = {false}
-                  heightSpec={"Full"}
-                  cellHeight={20}
-                  width={"95%"}
+          {
+           (width! >= 810 && height! >= 810) || (orientation === "landscape" && width! > 700)
+           ? <form onSubmit={ onSubmit }>
+            
+            <section className="userNameInput">
+                <label htmlFor="userName">Name</label>
+                <input 
+                  id="userName"
+                  type="text" 
+                  className={errors.userName ?"error" :"success"}
+                  placeholder={"Input text"}
+                  aria-label="Enter name here"
+                  aria-invalid={errors.userName ?"true" :"false"}
+                  {...register("userName", {required: "Name is required" })} 
                 />
-              </section>
-           
-          </form>
+                {/* error message if no name entered */}
+                <ErrorMessage errors={errors} name="userName" as="p" className="errorMessage"/>
+
+
+                <button
+                  type="submit"
+                  className="availabilitySubmitBtn"
+                  onClick={() => {
+                    setValue("availability", eventArray ?eventArray :[])
+                    setValue("timezone", timezone ?timezone :"")
+                  }}> 
+                  Add Availability
+                </button>
+            </section>
+            
+
+
+                <section className="calendarContainer">
+                  <div className="calendarHeader">
+                    <p>{calendarMonth} {calendarYear}</p>
+                  </div>
+                  <DayPilotCalendar 
+                    viewType={"Week"}
+                    // headerDateFormat={"ddd MMMM dd yyyy"}
+                    headerDateFormat={"ddd dd"}
+                    startDate={selectedDate}
+                    onTimeRangeSelected={handleTimeSelected}
+                    onEventClick={handleEventClicked}
+                    durationBarVisible = {false}
+                    heightSpec={"Full"}
+                    cellHeight={20}
+                    width={"95%"}
+                  />
+                </section>
+            
+            </form>
+            
+            : <div className="deviceMessage">
+                <p>This app is best used on a larger screen, such as a laptop or desktop computer.</p>
+                {
+                  (orientation === "landscape" && width! > 700) || (orientation === "portrait" && width! > 700)
+                  ?<p>Turn your phone to landscape for a better view.</p>
+                  :null
+                }
+            </div>
+          }
 
         </Modal>
 

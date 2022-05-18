@@ -74,7 +74,7 @@ const AvailabilityResultsCalendar = ({meetingNumID}:PropsInfo) => {
     // timeZoneOffset
   const [ timeZoneOffset, setTimeZoneOffset ] = useState<number>();
    // timezone of invitee/person using this page
-  const [ currentTimeZone, setCurrentTimeZone ] = useState<string>();
+  // const [ currentTimeZone, setCurrentTimeZone ] = useState<string>();
   // date selected by coordinator
   const [ selectedDate, setSelectedDate ] = useState<string>();
   // show or hide weekends of results calendar
@@ -96,8 +96,8 @@ const AvailabilityResultsCalendar = ({meetingNumID}:PropsInfo) => {
     setTimeZoneOffset(timeZoneOffset);
 
     // get current timeZone
-    const eventTimeZone = new Date().toLocaleTimeString(undefined, {timeZoneName: "short"}).split(" ")[2];
-    setCurrentTimeZone(eventTimeZone);
+    // const eventTimeZone = new Date().toLocaleTimeString(undefined, {timeZoneName: "short"}).split(" ")[2];
+    // setCurrentTimeZone(eventTimeZone);
     
   }, [])
 
@@ -383,7 +383,8 @@ const AvailabilityResultsCalendar = ({meetingNumID}:PropsInfo) => {
                       showToolTip={"true"}
                       id={"calendar"}
                       cellHeight={15}
-                      width={"98%"}
+                      columnWidth={100}
+                      // width={"90%"}
                       CssOnly={true}
                       eventMoveHandling={"Disabled"}
                       eventResizeHandling={"Diasbled"}
