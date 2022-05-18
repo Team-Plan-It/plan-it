@@ -58,11 +58,14 @@ const Home:React.FC = () => {
   // init custom hook
   const { width } = useViewport();
 
+  //  init calendar and navigator plug-ins
   let calendar = new DayPilot.Calendar("calendar");
 
   let dpNav =  new DayPilot.Navigator("dpNav");
  
   let today = new DayPilot.Date();
+
+  let lastDate:DayPilot.Date = null;
 
   let navigate = useNavigate();
 
@@ -301,7 +304,7 @@ const Home:React.FC = () => {
         >
           <div className="scheduleModalContainer">
 
-            <h2>Meeting <span className="text">Details</span></h2>
+            <h1>Meeting <span className="text">Details</span></h1>
             <div className="homeInput">
               <form onSubmit={ onSubmit }>
                 <section className="formEventDetails">
@@ -412,23 +415,39 @@ const Home:React.FC = () => {
                     ref={(component:any | void) => {
                       dpNav = component && component.control}}
                     onTimeRangeSelected={(args:any) => {
-                      
-                      // check that a date was entered and that it didn't default to the first day of the month
-                      let todayDate = new Date();
-                      todayDate.setHours(0,0,0,0);
-                      todayDate.toUTCString();
-                      let firstDay = new DayPilot.Date(todayDate).firstDayOfMonth();
-
-                    
-                    
-                      if(args.day === firstDay){
-                        console.log("they are the same")
-                      }else{
+                      //  check that the day selected was not in the past
+                      if (args.day < DayPilot.Date.today()) {
+                        args.preventDefault();
+                        dpNav.select(lastDate, {dontNotify: true, dontFocus: true});
+                      }
+                      else {
+                        lastDate = args.start;
                         setNoDate(false);
                         console.log(args.day.value, "was selected");
                         setChosenDay(args.day.value);
                       }
+
                       
+                      // check that a date was entered and that it didn't default to the first day of the month
+                      // let todayDate = new Date();
+                      // todayDate.setHours(0,0,0,0);
+                      // todayDate.toUTCString();
+                      // let firstDay = new DayPilot.Date(todayDate).firstDayOfMonth();
+
+                      // if(args.day === firstDay){
+                      //   console.log("they are the same")
+                      // }else{
+                      //   setNoDate(false);
+                      //   console.log(args.day.value, "was selected");
+                      //   setChosenDay(args.day.value);
+                      // }
+                      
+                    }}
+                    onBeforeCellRender={(args:any) => {
+                      // give any cells before today's date a classname as a disabled cell
+                      if (args.cell.day < DayPilot.Date.today()) {
+                        args.cell.cssClass = "navigator-disabled-cell";
+                      }
                     }}
                     
                   
