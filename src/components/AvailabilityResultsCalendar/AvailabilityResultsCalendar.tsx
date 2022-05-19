@@ -73,8 +73,6 @@ const AvailabilityResultsCalendar = ({meetingNumID}:PropsInfo) => {
   const [ isLoading, setIsLoading ] = useState<boolean>(true);
     // timeZoneOffset
   const [ timeZoneOffset, setTimeZoneOffset ] = useState<number>();
-   // timezone of invitee/person using this page
-  // const [ currentTimeZone, setCurrentTimeZone ] = useState<string>();
   // date selected by coordinator
   const [ selectedDate, setSelectedDate ] = useState<string>();
   // show or hide weekends of results calendar
@@ -82,48 +80,33 @@ const AvailabilityResultsCalendar = ({meetingNumID}:PropsInfo) => {
   // meeting data
   const [ meetingData, setMeetingData ] = useState<MeetingInfo>();
 
-  if (process.env.REACT_APP_NODE_ENV === 'development') {
-    axios.defaults.baseURL = process.env.REACT_APP_BASE_URL_LOCAL;
-    console.log(axios.defaults.baseURL)            
-  } else if (process.env.REACT_APP_NODE_ENV === 'production') {
-    axios.defaults.baseURL = process.env.REACT_APP_BASE_DOMAIN_PROD;   
-    console.log(axios.defaults.baseURL)
-  }
-
+  axios.defaults.baseURL = process.env.REACT_APP_BASE_URL_LOCAL;
 
 
   // on page load
   useEffect(() => {
-    console.log("inside useEffect")
+    let abortController = new AbortController();
     getData();
-
+    
     // get timezoneoffest
     const timeZoneOffset = new Date().getTimezoneOffset();
-    // console.log("timezoneOFfset=",timeZoneOffset);
     setTimeZoneOffset(timeZoneOffset);
 
-    // get current timeZone
-    // const eventTimeZone = new Date().toLocaleTimeString(undefined, {timeZoneName: "short"}).split(" ")[2];
-    // setCurrentTimeZone(eventTimeZone);
-    
+    return () => { abortController.abort(); }
   }, [])
 
   // axios call in async function
   const getData = async () => {
   
     try{
-
-        console.log("isLoading: ", isLoading)
         const resultsUrl = `/dates/results/${meetingNumID}`
         const response = await axios.get(resultsUrl);
-        
-        console.log("in try of getData function with axios call")
-        // console.log(response)
+    
         if(response !== undefined){
            setIsLoading(false);
                    
            // deconstruct info from data
-           const { eventName, length, date, timezone, emails, meetingNumber, users, availabilityArray } = response.data[0]!;
+           const { date,  users } = response.data[0]!;
 
            
            // set event created to false
@@ -156,29 +139,18 @@ const AvailabilityResultsCalendar = ({meetingNumID}:PropsInfo) => {
 
 
   useEffect(() => {
-
-     console.log("about to call createEventList")
-  
-       if(userInfoData && !eventCreated){
-         createEventList(userInfoData);
-        // createOverlapEvent();
-        calendar.update();
-        // console.log(calendar.events.list)
-       }else{
-        //  console.log("userInfoData undefined")
-        //  console.log("eventCreate: ", eventCreated)
-       }
-    
+    let abortController = new AbortController();
+    if(userInfoData && !eventCreated){
+      createEventList(userInfoData);
+    calendar.update();
+    }
+    return () => { abortController.abort(); }
   }, [userInfoData])
 
 
   const createEventList = (userData:UserInfo[]) => {
-
-    console.log("in createEventList");
   
     if(!eventCreated ){
-    // calendar.events.list = [];
-    console.log(calendar.events.list)
      userData!.every((user, index) => {
   
              switch(index){
@@ -187,7 +159,6 @@ const AvailabilityResultsCalendar = ({meetingNumID}:PropsInfo) => {
                   
                    // loop through the availability for the user
                   user1array.availability!.forEach((availBlock, index) => {
-                    console.log(index)
                     // for each object, get start and end value
                     let currentStart = new DayPilot.Date(availBlock.start);
                     let currentEnd = new DayPilot.Date(availBlock.end);
@@ -205,13 +176,9 @@ const AvailabilityResultsCalendar = ({meetingNumID}:PropsInfo) => {
                       cssClass:"user1",
                       ref:"user1"
                      });
-                     console.log("new event was created")
                     //  add the new event to the events list
                     if (calendar !== undefined && newEvent){
-                      console.log("calendar should be initialized")
                       calendar.events.add(newEvent);
-                      console.log(calendar.events.list)
-                      console.log("new event added to calendar ")
                     }else{
                       console.log("calendar not initialized")
                     }
@@ -351,11 +318,8 @@ const AvailabilityResultsCalendar = ({meetingNumID}:PropsInfo) => {
              }
   
               if (index === userData!.length -1){
-                console.log("index is the length of the userData array")
                 setEventCreated(true)
                 calendar.events.update();
-                console.log("eventCreated should be true")
-               
                 return false
               }else {
                 setEventCreated(false)

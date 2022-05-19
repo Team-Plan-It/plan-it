@@ -5,8 +5,8 @@ const meetDateRoute = require('./routes/meet.date.routes')
 require('dotenv').config();
 
 const app = express()
-
-app.use(cors({credentials: true, origin: 'http://localhost:4000'}));
+// {credentials: true, origin: 'http://localhost:4000'}
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
