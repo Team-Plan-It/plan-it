@@ -5,9 +5,9 @@
   "main": "server.js",
   "scripts": {
     "test": "nodemon server.js",
-    "start": "node server.js",
+    "start": "node --inspect server.js",
     "dev": "nodemon server.js",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false cd .. && npm install && npm run build"
+    "heroku-postbuild": "cd .. && npm install && npm run build"
   },
   "author": "",
   "license": "ISC",
