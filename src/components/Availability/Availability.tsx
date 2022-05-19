@@ -73,13 +73,14 @@ const Availability = (props: any) => {
   // all data to be sent to axios post
   const [ allData, setAllData ] = useState<FormData>();
 
-  if (process.env.REACT_APP_NODE_ENV === 'development') {
-    axios.defaults.baseURL = process.env.REACT_APP_BASE_URL_LOCAL;
-    console.log(axios.defaults.baseURL)            
-  } else if (process.env.REACT_APP_NODE_ENV === 'production') {
-    axios.defaults.baseURL = process.env.REACT_APP_BASE_DOMAIN_PROD;   
-    console.log(axios.defaults.baseURL)
-  }
+  // if (process.env.REACT_APP_NODE_ENV === 'development') {
+  //   axios.defaults.baseURL = process.env.REACT_APP_BASE_URL_LOCAL;
+  //   console.log(axios.defaults.baseURL)            
+  // } else if (process.env.REACT_APP_NODE_ENV === 'production') {
+  //   axios.defaults.baseURL = process.env.REACT_APP_BASE_DOMAIN_PROD;   
+  //   console.log(axios.defaults.baseURL)
+  // }
+  axios.defaults.baseURL = process.env.REACT_APP_BASE_URL_LOCAL
 
   // get timezone of user
   useEffect(() => {

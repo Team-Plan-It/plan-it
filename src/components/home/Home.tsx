@@ -4,7 +4,6 @@ import { ErrorMessage } from "@hookform/error-message";
 import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
 
-// require('dotenv').config()
 import axios from "axios";
 
 import { ReactMultiEmail, isEmail } from 'react-multi-email';
@@ -17,7 +16,6 @@ import Sidebar from "../Sidebar/Sidebar";
 import { useViewport } from "../../CustomHooks";
 
 //assets
-// import AirplaneIcon from "../../assets/paperAirplane.js";
 import airplane from "../../assets/paperAirplane.png";
 import AvailabilityIcon from "../../assets/availability.js";
 import MeetingIcon from "../../assets/meetingDetails.js";
@@ -92,28 +90,24 @@ const Home:React.FC = () => {
   const [ successModalIsOpen, setSuccessModalIsOpen ] = useState<boolean>(false);
   // the meeting number
   const [ meetingNumID, setMeetingNumID ] = useState<string>();
+
+  axios.defaults.baseURL = process.env.REACT_APP_BASE_URL_LOCAL
  
   
-  if (process.env.REACT_APP_NODE_ENV === 'development') {
-        axios.defaults.baseURL = process.env.REACT_APP_BASE_URL_LOCAL;
-        console.log(axios.defaults.baseURL)            
-  } else if (process.env.REACT_APP_NODE_ENV === 'production') {
-        axios.defaults.baseURL = process.env.REACT_APP_BASE_DOMAIN_PROD;   
-        console.log(axios.defaults.baseURL)
-  }
-
   // get timezone of user
   useEffect(() => {
+    let abortController = new AbortController();
     const eventTimeZone = new Date().toLocaleTimeString(undefined, {timeZoneName: "short"}).split(" ")[2];
-    // console.log(eventTimeZone)
     setTimezone(eventTimeZone);
     
-  
+    return () => { abortController.abort(); }
   }, [])
 
   // open welcome modal
   useEffect(() => {
+    let abortController = new AbortController();
     setWelcomeModalIsOpen(true)
+    return () => { abortController.abort(); }
   }, [])
 
 
@@ -135,22 +129,16 @@ const Home:React.FC = () => {
     
     
     let attendees = [1];
-    // console.log(_emails.length)
-    // console.log(numOfAttendees.length)
-    // console.log(maxNumOfEmails)
     
     // && numOfAttendees.length < 6
     if(_emails.length > 0  && _emails.length < 6){
       setInputtedEmails(_emails);
-      // console.log(_emails.length)
       setNoEmails(false);
 
       for (let i= 0; i < _emails.length; i++){
         attendees.push(i + 2)
       }
       setNumOfAttendees(attendees);
-      // console.log(attendees.length)
-      // console.log(numOfAttendees.length)
 
       if(attendees.length === 6){
         setMaxNumOfEmails(true);
@@ -205,7 +193,6 @@ const Home:React.FC = () => {
       const url = `/dates/add`
       axios.post(url, data)
         .then(res => {
-          // console.log(data)
           console.log('Successfully added meeting to database')
         })
         .catch(error => console.log(error));
@@ -407,7 +394,7 @@ const Home:React.FC = () => {
                     titleHeight={70}
                     autoFocusOnClick={true}
                     selectionDay={chosenDay}
-                    onVisibleRangeChanged={(args:any) =>{console.log(args)} }
+                    onVisibleRangeChanged={(args:any) =>{} }
                     select={chosenDay}
                     rowsPerMonth={"Auto"}
                     ref={(component:any | void) => {
@@ -426,7 +413,6 @@ const Home:React.FC = () => {
                         console.log("they are the same")
                       }else{
                         setNoDate(false);
-                        console.log(args.day.value, "was selected");
                         setChosenDay(args.day.value);
                       }
                       
