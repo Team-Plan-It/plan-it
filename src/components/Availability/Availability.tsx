@@ -255,7 +255,7 @@ const Availability = (props: any) => {
   return(
     <div className="availability">
         <Sidebar numOfAttendees={numOfAttendees} results={false}/>
-        <div className="background">
+        {/* <div className="background">
             <h2 className="bgIntro">{eventName}</h2>
             <DayPilotCalendar 
                 aria-hidden={true}
@@ -274,7 +274,7 @@ const Availability = (props: any) => {
                   calendar = component && component.control;
                 }} 
               />
-        </div>
+        </div> */}
         <Modal 
           className={"availabilityModal"}
           overlayClassName={"availabilityOverlay"}

@@ -221,7 +221,7 @@ const Home:React.FC = () => {
       }
      
       <div className="homeIntro">
-        <div className="background">
+        {/* <div className="background">
 
             <DayPilotCalendar 
                 aria-hidden={true}
@@ -239,7 +239,7 @@ const Home:React.FC = () => {
                   calendar = component && component.control;
                 }} 
               />
-        </div>
+        </div> */}
 
         {/* welcome modal */}
        
