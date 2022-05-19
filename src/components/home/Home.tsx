@@ -413,21 +413,6 @@ const Home:React.FC = () => {
                         setNoDate(false);
                         setChosenDay(args.day.value);
                       }
-
-                      
-                      // check that a date was entered and that it didn't default to the first day of the month
-                      // let todayDate = new Date();
-                      // todayDate.setHours(0,0,0,0);
-                      // todayDate.toUTCString();
-                      // let firstDay = new DayPilot.Date(todayDate).firstDayOfMonth();
-
-                      // if(args.day === firstDay){
-                      //   console.log("they are the same")
-                      // }else{
-                      //   setNoDate(false);
-                      //   console.log(args.day.value, "was selected");
-                      //   setChosenDay(args.day.value);
-                      // }
                       
                     }}
                     onBeforeCellRender={(args:any) => {
@@ -453,7 +438,6 @@ const Home:React.FC = () => {
                   type="submit"
                   className="meetingSubmitBtn"
                   onClick={() => {
-                    // console.log(inputtedEmails.length)
                     if(inputtedEmails.length > 0 && chosenDay){
                       setNoEmails(false);
                       setNoDate(false);
