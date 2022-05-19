@@ -9,7 +9,7 @@ import axios from "axios";
 import { ReactMultiEmail, isEmail } from 'react-multi-email';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import { DayPilot, DayPilotNavigator, DayPilotCalendar } from "@daypilot/daypilot-lite-react";
+import { DayPilot, DayPilotNavigator } from "@daypilot/daypilot-lite-react";
 
 //components
 import Sidebar from "../Sidebar/Sidebar";
@@ -56,9 +56,7 @@ const Home:React.FC = () => {
   // init custom hook
   const { width } = useViewport();
 
-  //  init calendar and navigator plug-ins
-  let calendar = new DayPilot.Calendar("calendar");
-
+  //  init navigator plug-ins
   let dpNav =  new DayPilot.Navigator("dpNav");
  
   let today = new DayPilot.Date();
@@ -95,21 +93,18 @@ const Home:React.FC = () => {
   const [ meetingNumID, setMeetingNumID ] = useState<string>();
 
   axios.defaults.baseURL = process.env.REACT_APP_BASE_URL_LOCAL
- 
   
-  // get timezone of user
-  useEffect(() => {
-    let abortController = new AbortController();
-    const eventTimeZone = new Date().toLocaleTimeString(undefined, {timeZoneName: "short"}).split(" ")[2];
-    setTimezone(eventTimeZone);
-    
-    return () => { abortController.abort(); }
-  }, [])
-
+  
+  
   // open welcome modal
   useEffect(() => {
     let abortController = new AbortController();
-    setWelcomeModalIsOpen(true)
+    setWelcomeModalIsOpen(true);
+
+
+    // get timezone of user
+    const eventTimeZone = new Date().toLocaleTimeString(undefined, {timeZoneName: "short"}).split(" ")[2];
+      setTimezone(eventTimeZone);
     return () => { abortController.abort(); }
   }, [])
 
@@ -172,7 +167,7 @@ const Home:React.FC = () => {
   
 
   // when user clicks generate link button to submit form
-  const onSubmit = handleSubmit(data => {
+  const onSubmit = handleSubmit((data)=> {
     
     
     // user needs to have selected a date and entered an email addresss in order to run the axios POST call
@@ -183,9 +178,11 @@ const Home:React.FC = () => {
       data.meetingNumber = rndNumString;
       setMeetingNumID(rndNumString);
 
+      console.log(data)
       // capitalize event name
       const name = data.eventName;
       const words = name.split(" ");
+
       const capitalWords = words.map(word => {
         return word[0].toUpperCase() + word.slice(1);
       });
@@ -194,16 +191,22 @@ const Home:React.FC = () => {
      
       // axios POST request that adds the meeting to the database
       const url = `/dates/add`
-      axios.post(url, data)
+       axios.post(url, data)
         .then(res => {
           console.log('Successfully added meeting to database')
         })
-        .catch(error => console.log(error));
-      // reset form fields
-      reset();
-      setNoDate(false);
-      setSchedModalIsOpen(false); // closes scheduling modal
-      setSuccessModalIsOpen(true); // opens success modal
+        .catch(error =>  {
+          if(error instanceof Error){
+            navigate("/error404");
+            console.log("error message: ", error.message)
+          }
+        });
+        // reset form fields
+        // reset();
+        setNoDate(false);
+        setSchedModalIsOpen(false); // closes scheduling modal
+        setSuccessModalIsOpen(true); // opens success modal
+      
     }else if(!chosenDay){
       setNoDate(true);
     }else if (noEmails){
@@ -221,25 +224,9 @@ const Home:React.FC = () => {
       }
      
       <div className="homeIntro">
-        {/* <div className="background">
+        <div className="background">
 
-            <DayPilotCalendar 
-                aria-hidden={true}
-                durationBarVisible={false}
-                startDate={today}
-                viewType = {"Week"}
-                headerDateFormat={"ddd dd"}
-                heightSpec={"Full"}
-                showToolTip={"true"}
-                cellHeight={15}
-                columnWidth={100}
-                width={"98%"}
-                timeRangeSelectedHandling={"Disabled"}
-                ref={(component:any | void) => {
-                  calendar = component && component.control;
-                }} 
-              />
-        </div> */}
+        </div>
 
         {/* welcome modal */}
        

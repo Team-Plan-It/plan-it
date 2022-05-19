@@ -4,8 +4,14 @@
 }
 
 .availability .background{
-  height: 95vh;
-  padding-top: 0;
+  background-image: url("../../assets/calendar.png");
+  background-color: #ababab;
+  background-repeat: none;
+  background-position: left top;
+  background-size: cover;
+  overflow: hidden;
+  width: calc(100vw - 274px);
+  height: 100vh;
 }
 
 .ReactModal__Overlay {

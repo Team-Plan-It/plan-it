@@ -255,26 +255,9 @@ const Availability = (props: any) => {
   return(
     <div className="availability">
         <Sidebar numOfAttendees={numOfAttendees} results={false}/>
-        {/* <div className="background">
-            <h2 className="bgIntro">{eventName}</h2>
-            <DayPilotCalendar 
-                aria-hidden={true}
-                durationBarVisible={false}
-                startDate={selectedDate}
-                // viewType={"WorkWeek"}
-                viewType = {"Week"}
-                headerDateFormat={"ddd dd"}
-                heightSpec={"Full"}
-                showToolTip={"true"}
-                cellHeight={16}
-                columnWidth={100}
-                width={"98%"}
-                timeRangeSelectedHandling={"Disabled"}
-                ref={(component:any | void) => {
-                  calendar = component && component.control;
-                }} 
-              />
-        </div> */}
+        <div className="background">
+           
+        </div>
         <Modal 
           className={"availabilityModal"}
           overlayClassName={"availabilityOverlay"}
