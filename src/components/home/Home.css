@@ -139,7 +139,7 @@
   top: 5%;
 }
 
-.scheduleModal h2 {
+.scheduleModal h1 {
   font-size: 1.8rem;
   margin-top: 2%;
   margin-bottom: 5%;
@@ -344,6 +344,7 @@ p.timezoneMessage:nth-of-type(1){
   color: #383c40;
   background: #ffffff;
   text-align: center;
+  font-weight: 500;
 }
 
 .navigator_default_cell_text {
@@ -376,6 +377,12 @@ p.timezoneMessage:nth-of-type(1){
 div.navigator_default_select.navigator_default_weekend .navigator_default_cell_box{
   opacity: 0.2;
 
+}
+
+/* disabled cells */
+.navigator-disabled-cell{
+  color: #575757;
+  font-weight: 100;
 }
 
 
