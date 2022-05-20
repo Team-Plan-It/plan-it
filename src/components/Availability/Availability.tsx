@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import Modal from "react-modal";
@@ -45,7 +45,7 @@ const Availability = (props: any) => {
   const { register, handleSubmit, setValue, formState: { errors}, reset } = useForm<FormData>();
 
   // init modal
-   Modal.setAppElement('#root');
+  Modal.setAppElement('#root');
 
   //  init custom hook for device orientation
   const orientation = useOrientation();
@@ -79,13 +79,17 @@ const Availability = (props: any) => {
   // all data to be sent to axios post
   const [ allData, setAllData ] = useState<FormData>();
 
+  axios.defaults.baseURL = process.env.REACT_APP_BASE_URL_LOCAL
+
   // get timezone of user
   useEffect(() => {
     // async function for axios call
+    let abortController = new AbortController();
     const getData = async() => {
       try{
-        const response = await axios.get(`http://localhost:4000/dates/results/${meetingNumID}`);
-
+        const url = `dates/results/${meetingNumID}`
+        const response = await axios.get(url);
+      
         if(response !== undefined){
 
           //deconstruct data from response
@@ -108,9 +112,7 @@ const Availability = (props: any) => {
           setTimezone(eventTimeZone);
 
           // get timezoneoffest
-          // const timeZoneOffset = -180;
           const timeZoneOffset = new Date().getTimezoneOffset();
-          // console.log("timezoneOFfset=",timeZoneOffset);
           setTimeZoneOffset(timeZoneOffset);
 
           // determine number of meeting attendees
@@ -135,6 +137,7 @@ const Availability = (props: any) => {
     setAvailabilityModalIsOpen(true);
     // make axios call to get data
     getData();
+    return () => { abortController.abort(); }
     
   }, [])
 
@@ -155,13 +158,11 @@ const Availability = (props: any) => {
 
   // creates an event when the user clicks on a time block
   const handleTimeSelected = (args:any) => {
-    console.log('event created');
-    // console.log(meetingNumID['id']);
     // the two parameters of the event time block in string format
     // eg. "2022-04-05T09:00:00"
     const start = args.start;
     const end = args.end;
-    
+  
     // get day of week number
     const dayOfWeek = start.getDayOfWeek();
 
@@ -188,22 +189,16 @@ const Availability = (props: any) => {
 
   // deletes the event when the user clicks on it
   const handleEventClicked = (args: any) => {
-    console.log('event deleted');
-
     const dp = args.control;
-   
     dp.events.remove(args.e);
-    // console.log(dp.events);
     setEventArray(dp.events.list);
   }
 
   const handleNoAvailClose = () => {
     // user has no availability to submit
-    // console.log(allData);
-    console.log("user has no availability to enter")
-
-       // axios POST
-    axios.post(`http://localhost:4000/dates/availability/${meetingNumID}`, allData)
+    // axios POST
+    const noAvailUrl = `/dates/availability/${meetingNumID}`
+    axios.post(noAvailUrl, allData)
     .then(() => {
       navigate(`/overlapping/${meetingNumID}`, { 
         state: {
@@ -219,7 +214,6 @@ const Availability = (props: any) => {
 
   // makes axios post call when user submits availability form
   const onSubmit = handleSubmit<FormData>(data => {
-    // console.log(data);
     
     if(data.availability.length === 0){
       setAllData(data);
@@ -240,14 +234,11 @@ const Availability = (props: any) => {
       availBlock.start = newStart;
       availBlock.end = newEnd;
 
-
-      // console.log(currentStart, currentEnd)
-      // console.log(availBlock.start, availBlock.end)
     })
-    // console.log(data)
 
     // axios POST
-    axios.post(`http://localhost:4000/dates/availability/${meetingNumID}`, data)
+    const postUrl = `/dates/availability/${meetingNumID}`
+    axios.post(postUrl, data)
     .then(() => {
       navigate(`/overlapping/${meetingNumID}`, { 
         state: {
@@ -257,7 +248,7 @@ const Availability = (props: any) => {
     })
 
     //reset form fields
-    reset();
+    // reset();
     }
   })
 

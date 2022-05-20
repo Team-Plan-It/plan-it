@@ -97,10 +97,6 @@ const Overlap:React.FC= () => {
   // loading
   const [ isLoadingMeetingData, setIsLoadingMeetingData ] = useState<boolean>(true);
   const [ isLoadingOverlapData, setIsLoadingOverlapData ] = useState<boolean>(true);
-  // // event name
-  // const [ eventName, setEventName ] = useState<string>();
-  // // length of meeting
-  // const [ meetingLength, setMeetingLength ] = useState<string>();
   // meeting data
   const [ meetingData, setMeetingData ] = useState<MeetingInfo>();
   // user names
@@ -109,23 +105,12 @@ const Overlap:React.FC= () => {
   const [ numOfAttendees, setNumOfAttendees ] = useState<number[]>();
   // overlap data
   const [ overlapData, setOverlapData ] = useState<AllDayArrays>();
-  // // availability array
-  // const [ availabiltyArray, setAvailabilityArray ] = useState();
   // timeZoneOffset
   const [ timeZoneOffset, setTimeZoneOffset ] = useState<number>();
    // timezone of invitee/person using this page
   const [ currentTimeZone, setCurrentTimeZone ] = useState<string>();
   // show calendar view
   const [ showCalendar, setShowCalendar ] = useState<boolean>(false);
-
-  // results arrays
-  // const [ sundayResultsArray , setSundayResultsArray ] = useState<DayObjects[]>();
-  // const [ mondayResultsArray , setMondayResultsArray ] = useState<DayObjects[]>();
-  // const [ tuesdayResultsArray , setTuesdayResultsArray ] = useState<DayObjects[]>();
-  // const [ wednesdayResultsArray , setWednesdayResultsArray ] = useState<DayObjects[]>();
-  // const [ thursdayResultsArray , setThursdayResultsArray ] = useState<DayObjects[]>();
-  // const [ fridayResultsArray , setFridayResultsArray ] = useState<DayObjects[]>();
-  // const [ saturdayResultsArray , setSaturdayResultsArray ] = useState<DayObjects[]>();
 
   // dates
   const [ sundayDate, setSundayDate ] = useState<DateInfo>();
@@ -145,23 +130,24 @@ const Overlap:React.FC= () => {
   const [ thursdayAllAvail, setThursdayAllAvail ] = useState<AllAvailObj[]>();
   const [ fridayAllAvail, setFridayAllAvail ] = useState<AllAvailObj[]>();
   const [ saturdayAllAvail, setSaturdayAllAvail ] = useState<AllAvailObj[]>();
+  
+  axios.defaults.baseURL = process.env.REACT_APP_BASE_URL_LOCAL
 
 
   const getMeetingData = async () => {
-    // console.log("isLoading: ", isLoading)
     try{
+      const meetingResultsUrl = `/dates/results/${meetingNumID}`
+      const overlappingUrl = `/dates/overlapping/${meetingNumID}`
       const [meetingResponse, overlapResponse ] = await Promise.all([
-        
-      axios.get(`http://localhost:4000/dates/results/${meetingNumID}`),
-      axios.get(`http://localhost:4000/dates/overlapping/${meetingNumID}`)]);
+      
+      axios.get(meetingResultsUrl),
+      axios.get(overlappingUrl)]);
       
       if(meetingResponse !== undefined && overlapResponse !== undefined){
-        console.log("in try of getMeetingData function with axios call")
-        // console.log(response)
         setIsLoadingMeetingData(false)
 
         // deconstruct info from data
-           const { eventName, length, date, timezone, emails, meetingNumber, users, availabilityArray } = meetingResponse.data[0]!;
+           const { emails, users } = meetingResponse.data[0]!;
 
         // save data in state
         setMeetingData(meetingResponse.data[0]); 
@@ -187,7 +173,6 @@ const Overlap:React.FC= () => {
 
         // get timezoneoffest
         const timeZoneOffset = new Date().getTimezoneOffset();
-        // console.log("timezoneOffset=",timeZoneOffset);
         setTimeZoneOffset(timeZoneOffset);
 
         // get current timeZone
@@ -205,21 +190,22 @@ const Overlap:React.FC= () => {
 
 
   useEffect(() => {
-    // getOverlapData();
+    let abortController = new AbortController();
     getMeetingData();
-    
+    return () => { abortController.abort(); }
   }, [])
 
   useEffect(() => {
+    let abortController = new AbortController();
     if(overlapData !== undefined && meetingData !== undefined && userNames && numOfAttendees && userNames.length === numOfAttendees.length){
-      console.log("calling checkOverlapArrays")
       checkOverlapArrays(overlapData);
+      console.log("its called! overlapdata useeffect")
     }
+    return () => { abortController.abort(); }
   }, [overlapData])
 
   // function to get the day, month and year
   const getDates = (timeblock:DayObjects) => {
-    console.log("in getDates function")
     const convertedTime = new Date(timeblock.timeString!);
 
     // get date
@@ -232,11 +218,8 @@ const Overlap:React.FC= () => {
 
   // check each day array of overlapping results for timeslots that have length > 0
   const checkOverlapArrays = (arrayOfDayArrays:AllDayArrays) => {
-    console.log("in checkOverlapArrays");
-
     //function to filter out timeslots that have a length > 0
     const checkDayArray = (dayArray:DayObjects[]) => {
-      console.log("in checkDayArray")
       const timeslotsWithAvail:any = dayArray.filter(timeslot => {return timeslot.array.length > 0})
     
       return timeslotsWithAvail;
@@ -244,11 +227,8 @@ const Overlap:React.FC= () => {
 
     // function to get current timeString and convert it to local time of browser
     const convertTimeString = (timeString:string) => {
-      console.log("in convertedTimeString")
-      // console.log(timeString)
       const currentTimeString = new DayPilot.Date(timeString);
       const convertedTimeString = currentTimeString.addMinutes(-timeZoneOffset!);
-      // console.log(currentTimeString, convertedTimeString);
       return convertedTimeString;
     }
 
@@ -266,15 +246,12 @@ const Overlap:React.FC= () => {
         let convertedTimeString = convertTimeString(timeblock.timeString!);
         sundayResults[index].convertedTimeString = convertedTimeString;
       })
-      // setSundayResultsArray(sundayResults);
-
       // get availability blocks when all attendees are available and save in state
       const sundayAvailBlocks = getAvailableBlocks(sundayResults);
       setSundayAllAvail(sundayAvailBlocks!);
     }
    
     if(arrayOfDayArrays.day1array.length > 0){
-      console.log("in monday")
       const mondayDate = getDates(arrayOfDayArrays.day1array[0]);
       setMondayDate(mondayDate);
 
@@ -284,39 +261,29 @@ const Overlap:React.FC= () => {
         let convertedTimeString = convertTimeString(timeblock.timeString!);
         mondayResults[index].convertedTimeString = convertedTimeString;
       })
-      // setMondayResultsArray(mondayResults);
 
       const mondayAvailBlocks = getAvailableBlocks(mondayResults);
-      // console.log(mondayResults)
-      // console.log(mondayAvailBlocks!.length)
       if(mondayAvailBlocks !== undefined){
         setMondayAllAvail(mondayAvailBlocks!);
-        // console.log(mondayAvailBlocks)
       }
     }
 
     if(arrayOfDayArrays.day2array.length > 0){
-      console.log("in tuesday")
       const tuesdayDate = getDates(arrayOfDayArrays.day2array[0]);
-      // console.log(tuesdayDate);
+     
       setTuesdayDate(tuesdayDate);
       const tuesdayResults = checkDayArray(arrayOfDayArrays.day2array);
-      // console.log(tuesdayResults)
       tuesdayResults.forEach((timeblock:DayObjects, index:number) => {
         let convertedTimeString = convertTimeString(timeblock.timeString!);
         tuesdayResults[index].convertedTimeString = convertedTimeString;
       })
-      // setTuesdayResultsArray(tuesdayResults);
-      // console.log(tuesdayResults)
       const tuesdayAvailBlocks = getAvailableBlocks(tuesdayResults);
       if(tuesdayAvailBlocks !== undefined){
         setTuesdayAllAvail(tuesdayAvailBlocks!);
-        // console.log(tuesdayAvailBlocks)
       }
     }
 
     if(arrayOfDayArrays.day3array.length > 0){
-      console.log("in wednesday")
       const wednesdayDate = getDates(arrayOfDayArrays.day3array[0]);
       setWednesdayDate(wednesdayDate);
       const wednesdayResults = checkDayArray(arrayOfDayArrays.day3array);
@@ -325,7 +292,6 @@ const Overlap:React.FC= () => {
         let convertedTimeString = convertTimeString(timeblock.timeString!);
         wednesdayResults[index].convertedTimeString = convertedTimeString;
       })
-      // setWednesdayResultsArray(wednesdayResults);
 
       const wednesdayAvailBlocks = getAvailableBlocks(wednesdayResults);
       if(wednesdayAvailBlocks !== undefined){
@@ -334,7 +300,6 @@ const Overlap:React.FC= () => {
     }
 
     if(arrayOfDayArrays.day4array.length > 0){
-      console.log("in thursday")
       const thursdayDate = getDates(arrayOfDayArrays.day4array[0]);
       setThursdayDate(thursdayDate);
       const thursdayResults = checkDayArray(arrayOfDayArrays.day4array);
@@ -343,7 +308,6 @@ const Overlap:React.FC= () => {
         let convertedTimeString = convertTimeString(timeblock.timeString!);
         thursdayResults[index].convertedTimeString = convertedTimeString;
       })
-      // setThursdayResultsArray(thursdayResults);
 
       const thursdayAvailBlocks = getAvailableBlocks(thursdayResults);
       if(thursdayAvailBlocks !== undefined){
@@ -352,7 +316,6 @@ const Overlap:React.FC= () => {
     }
 
     if(arrayOfDayArrays.day5array.length > 0){
-      console.log("in friday")
       const fridayDate = getDates(arrayOfDayArrays.day5array[0]);
       setFridayDate(fridayDate);
       const fridayResults = checkDayArray(arrayOfDayArrays.day5array);
@@ -361,7 +324,6 @@ const Overlap:React.FC= () => {
         let convertedTimeString = convertTimeString(timeblock.timeString!);
         fridayResults[index].convertedTimeString = convertedTimeString;
       })
-      // setFridayResultsArray(fridayResults);
 
       const fridayAvailBlocks = getAvailableBlocks(fridayResults);
       if(fridayAvailBlocks !== undefined){
@@ -370,7 +332,6 @@ const Overlap:React.FC= () => {
     }
 
     if(arrayOfDayArrays.day6array.length > 0){
-      console.log("in saturday")
       const saturdayDate = getDates(arrayOfDayArrays.day6array[0]);
       setSaturdayDate(saturdayDate);
       const saturdayResults = checkDayArray(arrayOfDayArrays.day6array);
@@ -379,7 +340,6 @@ const Overlap:React.FC= () => {
         let convertedTimeString = convertTimeString(timeblock.timeString!);
         saturdayResults[index].convertedTimeString = convertedTimeString;
       })
-      // setSaturdayResultsArray(saturdayResults);
 
       const saturdayAvailBlocks = getAvailableBlocks(saturdayResults);
       if(saturdayAvailBlocks !== undefined){
@@ -390,7 +350,6 @@ const Overlap:React.FC= () => {
 
 
   const convertAvailTimeString = (timeblock:AllAvailObj) => {
-    // console.log(timeblock)
     let startAmPm = "am";
     let endAmPm = "am";
     // get start and end time
@@ -437,15 +396,12 @@ const Overlap:React.FC= () => {
     // get length of timeblock
     const endTimeOfBlock = timeblock.end.getTimePart();
     const startTimeOfBlock = timeblock.start.getTimePart();
-    // console.log(endTimeOfBlock, startTimeOfBlock)
     const diffTime = endTimeOfBlock - startTimeOfBlock;
-    // console.log(diffTime)
     let seconds = Math.floor(diffTime / 1000);
     let minutes = Math.floor(seconds / 60);
     let hours = Math.floor(minutes / 60);
 
     minutes = minutes % 60;
-    // console.log(`time of timeblock is: ${hours} hours, ${minutes} minutes, ${seconds} seconds`)
     let lengthOfTimeBlock = "";
     if(hours === 0){
       lengthOfTimeBlock = `${minutes} minutes`
@@ -468,12 +424,10 @@ const Overlap:React.FC= () => {
     let startTime:DayPilot.Date;
     let endTime:DayPilot.Date;
     let allAvailBlocks:AllAvailObj[] = [];
-    console.log("in getAvailabileBlocks")
     // go through array looking for array length === numOfAttendees
     if(userNames){
-      console.log("usernames is defined")
       resultsArray.forEach(timeblock => {
-        // console.log(timeblock.array.length, userNames!.length);
+  
         if(timeblock.array.length === userNames!.length){
           if(!startTime && !endTime){
            // set start time as time of first timeString
@@ -481,13 +435,12 @@ const Overlap:React.FC= () => {
             // set end time as start time plus 30 minutes
             endTime = new DayPilot.Date(timeblock.convertedTimeString);
             endTime = endTime.addMinutes(30);
-            console.log("in init of start and endtime");
+        
           }else if(timeblock.convertedTimeString === endTime){
             // check if convertedTimeString same as end time
             // if true, change endtime to results starttime plus 30 minutes
             endTime = new DayPilot.Date(timeblock.convertedTimeString);
             endTime = endTime.addMinutes(30);
-            console.log("start time the same, changing end time")
 
           }else{
             // start and end time are defined but start time of current timestring does not equel the end time => it is a new timeblock
@@ -499,16 +452,15 @@ const Overlap:React.FC= () => {
             endTime = new DayPilot.Date(timeblock.convertedTimeString);
             endTime = endTime.addMinutes(30);
           }
-          // console.log(startTime, endTime)
+    
         }else{
           console.log("array length not equal to userName length")
         }
       })
       if(startTime !== undefined && endTime !== undefined){
         allAvailBlocks.push({ start:startTime, end:endTime })
-        // console.log(allAvailBlocks)
+    
       }
-      // console.log(allAvailBlocks)
       return allAvailBlocks;
     }else {
       console.log("usernames not defined")
@@ -597,7 +549,6 @@ const Overlap:React.FC= () => {
                                 </ul>
                             </>
                           : null
-                          // :<p className="noAvail">No availability</p>
                         }
                       </li>
                       <li>
@@ -613,7 +564,7 @@ const Overlap:React.FC= () => {
                                 <ul className="dayTimes">
                                   {
                                     mondayAllAvail.map((timeblock) => {
-                                      //  console.log(timeblock)
+                        
                                         const timeResults = convertAvailTimeString(timeblock);
                                         const { startHour, startMinString, startAmPm, endHour, endMinString, endAmPm, lengthOfTimeBlock } = timeResults;
                                         return(
@@ -641,7 +592,6 @@ const Overlap:React.FC= () => {
                                 </ul>
                             </>
                           : null
-                          // :<p className="noAvail">No availability</p>
                         }
                       </li>
                       <li>
@@ -682,7 +632,6 @@ const Overlap:React.FC= () => {
                                 </ul>
                             </>
                           : null
-                          // :<p className="noAvail">No availability</p>
                         }
                       </li>
                       <li>
@@ -723,7 +672,6 @@ const Overlap:React.FC= () => {
                                 </ul>
                             </>
                           : null
-                          // :<p className="noAvail">No availability</p>
                         }
                       </li>
                       <li>
@@ -764,7 +712,6 @@ const Overlap:React.FC= () => {
                                 </ul>
                             </>
                           : null
-                          // :<p className="noAvail">No availability</p>
                         }
                       </li>
                       <li>
@@ -805,7 +752,6 @@ const Overlap:React.FC= () => {
                                 </ul>
                             </>
                           : null
-                          // :<p className="noAvail">No availability</p>
                         }
                       </li>
                       <li>
@@ -846,7 +792,6 @@ const Overlap:React.FC= () => {
                                 </ul>
                             </>
                           : null
-                          // :<p className="noAvail">No availability</p>
                         }
                       </li>
                       <li key={"noAvailList"}>
@@ -867,11 +812,6 @@ const Overlap:React.FC= () => {
               </div>
             }
             </div>
-          {
-            // ADD condition for when width too small to display results calendar
-            // width! < 
-            // <p>For best results, please view calendar results on a larger screen</p>
-          }
           </div>
         </div>
       }

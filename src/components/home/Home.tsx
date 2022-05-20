@@ -4,20 +4,18 @@ import { ErrorMessage } from "@hookform/error-message";
 import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
 
-// require('dotenv').config()
 import axios from "axios";
 
 import { ReactMultiEmail, isEmail } from 'react-multi-email';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import { DayPilot, DayPilotNavigator, DayPilotCalendar } from "@daypilot/daypilot-lite-react";
+import { DayPilot, DayPilotNavigator } from "@daypilot/daypilot-lite-react";
 
 //components
 import Sidebar from "../Sidebar/Sidebar";
 import { useViewport } from "../../CustomHooks";
 
 //assets
-// import AirplaneIcon from "../../assets/paperAirplane.js";
 import airplane from "../../assets/paperAirplane.png";
 import AvailabilityIcon from "../../assets/availability.js";
 import MeetingIcon from "../../assets/meetingDetails.js";
@@ -58,9 +56,7 @@ const Home:React.FC = () => {
   // init custom hook
   const { width } = useViewport();
 
-  //  init calendar and navigator plug-ins
-  let calendar = new DayPilot.Calendar("calendar");
-
+  //  init navigator plug-ins
   let dpNav =  new DayPilot.Navigator("dpNav");
  
   let today = new DayPilot.Date();
@@ -95,28 +91,21 @@ const Home:React.FC = () => {
   const [ successModalIsOpen, setSuccessModalIsOpen ] = useState<boolean>(false);
   // the meeting number
   const [ meetingNumID, setMeetingNumID ] = useState<string>();
- 
+
+  axios.defaults.baseURL = process.env.REACT_APP_BASE_URL_LOCAL
   
-  // if (process.env.NODE_ENV === 'development') {
-  //       axios.defaults.baseURL = process.env.REACT_APP_BASE_URL_LOCAL;
-  //       console.log(axios.defaults.baseURL)            
-  // } else if (process.env.NODE_ENV === 'production') {
-  //       axios.defaults.baseURL = process.env.REACT_APP_BASE_DOMAIN_PROD;   
-  // }
-
-
-
-  // get timezone of user
-  useEffect(() => {
-    const eventTimeZone = new Date().toLocaleTimeString(undefined, {timeZoneName: "short"}).split(" ")[2];
-    // console.log(eventTimeZone)
-    setTimezone(eventTimeZone);
   
-  }, [])
-
+  
   // open welcome modal
   useEffect(() => {
-    setWelcomeModalIsOpen(true)
+    let abortController = new AbortController();
+    setWelcomeModalIsOpen(true);
+
+
+    // get timezone of user
+    const eventTimeZone = new Date().toLocaleTimeString(undefined, {timeZoneName: "short"}).split(" ")[2];
+      setTimezone(eventTimeZone);
+    return () => { abortController.abort(); }
   }, [])
 
 
@@ -138,22 +127,16 @@ const Home:React.FC = () => {
     
     
     let attendees = [1];
-    // console.log(_emails.length)
-    // console.log(numOfAttendees.length)
-    // console.log(maxNumOfEmails)
     
     // && numOfAttendees.length < 6
     if(_emails.length > 0  && _emails.length < 6){
       setInputtedEmails(_emails);
-      // console.log(_emails.length)
       setNoEmails(false);
 
       for (let i= 0; i < _emails.length; i++){
         attendees.push(i + 2)
       }
       setNumOfAttendees(attendees);
-      // console.log(attendees.length)
-      // console.log(numOfAttendees.length)
 
       if(attendees.length === 6){
         setMaxNumOfEmails(true);
@@ -184,7 +167,7 @@ const Home:React.FC = () => {
   
 
   // when user clicks generate link button to submit form
-  const onSubmit = handleSubmit(data => {
+  const onSubmit = handleSubmit((data)=> {
     
     
     // user needs to have selected a date and entered an email addresss in order to run the axios POST call
@@ -195,9 +178,11 @@ const Home:React.FC = () => {
       data.meetingNumber = rndNumString;
       setMeetingNumID(rndNumString);
 
+      console.log(data)
       // capitalize event name
       const name = data.eventName;
       const words = name.split(" ");
+
       const capitalWords = words.map(word => {
         return word[0].toUpperCase() + word.slice(1);
       });
@@ -205,22 +190,23 @@ const Home:React.FC = () => {
       data.eventName = capitalName;
      
       // axios POST request that adds the meeting to the database
-      axios.post("http://localhost:4000/dates/add", data)
+      const url = `/dates/add`
+       axios.post(url, data)
         .then(res => {
-          // console.log(data)
           console.log('Successfully added meeting to database')
         })
-        .catch(error => {
+        .catch(error =>  {
           if(error instanceof Error){
             navigate("/error404");
-            console.log("error message: ", error.message);
+            console.log("error message: ", error.message)
           }
         });
-      // reset form fields
-      reset();
-      setNoDate(false);
-      setSchedModalIsOpen(false); // closes scheduling modal
-      setSuccessModalIsOpen(true); // opens success modal
+        // reset form fields
+        // reset();
+        setNoDate(false);
+        setSchedModalIsOpen(false); // closes scheduling modal
+        setSuccessModalIsOpen(true); // opens success modal
+      
     }else if(!chosenDay){
       setNoDate(true);
     }else if (noEmails){
@@ -240,7 +226,6 @@ const Home:React.FC = () => {
       <div className="homeIntro">
         <div className="background">
 
-         
         </div>
 
         {/* welcome modal */}
@@ -399,7 +384,7 @@ const Home:React.FC = () => {
                     titleHeight={70}
                     autoFocusOnClick={true}
                     selectionDay={chosenDay}
-                    onVisibleRangeChanged={(args:any) =>{console.log(args)} }
+                    onVisibleRangeChanged={(args:any) =>{} }
                     select={chosenDay}
                     rowsPerMonth={"Auto"}
                     ref={(component:any | void) => {
@@ -413,24 +398,8 @@ const Home:React.FC = () => {
                       else {
                         lastDate = args.start;
                         setNoDate(false);
-                        console.log(args.day.value, "was selected");
                         setChosenDay(args.day.value);
                       }
-
-                      
-                      // check that a date was entered and that it didn't default to the first day of the month
-                      // let todayDate = new Date();
-                      // todayDate.setHours(0,0,0,0);
-                      // todayDate.toUTCString();
-                      // let firstDay = new DayPilot.Date(todayDate).firstDayOfMonth();
-
-                      // if(args.day === firstDay){
-                      //   console.log("they are the same")
-                      // }else{
-                      //   setNoDate(false);
-                      //   console.log(args.day.value, "was selected");
-                      //   setChosenDay(args.day.value);
-                      // }
                       
                     }}
                     onBeforeCellRender={(args:any) => {
@@ -456,7 +425,6 @@ const Home:React.FC = () => {
                   type="submit"
                   className="meetingSubmitBtn"
                   onClick={() => {
-                    // console.log(inputtedEmails.length)
                     if(inputtedEmails.length > 0 && chosenDay){
                       setNoEmails(false);
                       setNoDate(false);
