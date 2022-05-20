@@ -207,7 +207,12 @@ const Home:React.FC = () => {
           // console.log(data)
           console.log('Successfully added meeting to database')
         })
-        .catch(error => console.log(error));
+        .catch(error => {
+          if(error instanceof Error){
+            navigate("/error404");
+            console.log("error message: ", error.message);
+          }
+        });
       // reset form fields
       reset();
       setNoDate(false);
@@ -232,22 +237,7 @@ const Home:React.FC = () => {
       <div className="homeIntro">
         <div className="background">
 
-            <DayPilotCalendar 
-                aria-hidden={true}
-                durationBarVisible={false}
-                startDate={today}
-                viewType = {"Week"}
-                headerDateFormat={"ddd dd"}
-                heightSpec={"Full"}
-                showToolTip={"true"}
-                cellHeight={15}
-                columnWidth={100}
-                width={"98%"}
-                timeRangeSelectedHandling={"Disabled"}
-                ref={(component:any | void) => {
-                  calendar = component && component.control;
-                }} 
-              />
+         
         </div>
 
         {/* welcome modal */}
