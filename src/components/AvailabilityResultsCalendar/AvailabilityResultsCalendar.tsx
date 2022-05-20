@@ -106,7 +106,7 @@ const AvailabilityResultsCalendar = ({meetingNumID}:PropsInfo) => {
   
     try{
 
-        console.log("isLoading: ", isLoading)
+        // console.log("isLoading: ", isLoading)
         const response = await axios.get(`http://localhost:4000/dates/results/${meetingNumID}`);
         
         console.log("in try of getData function with axios call")
@@ -133,7 +133,7 @@ const AvailabilityResultsCalendar = ({meetingNumID}:PropsInfo) => {
             setCalendarYear(year);
 
         }else{
-          console.log("response undefined for results")
+          // console.log("response undefined for results")
         }
         
 
@@ -149,7 +149,7 @@ const AvailabilityResultsCalendar = ({meetingNumID}:PropsInfo) => {
 
   useEffect(() => {
 
-     console.log("about to call createEventList")
+    //  console.log("about to call createEventList")
   
        if(userInfoData && !eventCreated){
          createEventList(userInfoData);
@@ -170,7 +170,7 @@ const AvailabilityResultsCalendar = ({meetingNumID}:PropsInfo) => {
   
     if(!eventCreated ){
     // calendar.events.list = [];
-    console.log(calendar.events.list)
+    // console.log(calendar.events.list)
      userData!.every((user, index) => {
   
              switch(index){
@@ -179,7 +179,7 @@ const AvailabilityResultsCalendar = ({meetingNumID}:PropsInfo) => {
                   
                    // loop through the availability for the user
                   user1array.availability!.forEach((availBlock, index) => {
-                    console.log(index)
+                    // console.log(index)
                     // for each object, get start and end value
                     let currentStart = new DayPilot.Date(availBlock.start);
                     let currentEnd = new DayPilot.Date(availBlock.end);
@@ -197,15 +197,15 @@ const AvailabilityResultsCalendar = ({meetingNumID}:PropsInfo) => {
                       cssClass:"user1",
                       ref:"user1"
                      });
-                     console.log("new event was created")
+                    //  console.log("new event was created")
                     //  add the new event to the events list
                     if (calendar !== undefined && newEvent){
-                      console.log("calendar should be initialized")
+                      // console.log("calendar should be initialized")
                       calendar.events.add(newEvent);
-                      console.log(calendar.events.list)
-                      console.log("new event added to calendar ")
+                      // console.log(calendar.events.list)
+                      // console.log("new event added to calendar ")
                     }else{
-                      console.log("calendar not initialized")
+                      // console.log("calendar not initialized")
                     }
                   })
                   break;
@@ -343,10 +343,10 @@ const AvailabilityResultsCalendar = ({meetingNumID}:PropsInfo) => {
              }
   
               if (index === userData!.length -1){
-                console.log("index is the length of the userData array")
+                // console.log("index is the length of the userData array")
                 setEventCreated(true)
                 calendar.events.update();
-                console.log("eventCreated should be true")
+                // console.log("eventCreated should be true")
                
                 return false
               }else {
