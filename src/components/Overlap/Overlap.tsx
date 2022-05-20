@@ -7,7 +7,7 @@ import { DayPilot } from "@daypilot/daypilot-lite-react";
 
 //components
 import Sidebar from "../Sidebar/Sidebar";
-// import AvailabiltyResultsCalendar from "../AvailabilityResultsCalendar/AvailabilityResultsCalendar";
+import AvailabiltyResultsCalendar from "../AvailabilityResultsCalendar/AvailabilityResultsCalendar";
 import { useViewport } from "../../CustomHooks";
 
 //styles
@@ -489,9 +489,9 @@ const Overlap:React.FC= () => {
               <button className={!showCalendar ?"border" :"overlapBtn"} onClick={() => {
                 setShowCalendar(false);
                 }}>Available Times</button>
-              {/* <button className={showCalendar ?"border" :"calendarBtn"} onClick={() => {
+              <button className={showCalendar ?"border" :"calendarBtn"} onClick={() => {
                 setShowCalendar(true);
-              }}>Calendar View</button> */}
+              }}>Calendar View</button>
             </div>
             <div className="overlapContainer">
 
@@ -808,7 +808,7 @@ const Overlap:React.FC= () => {
               </div>
 
             :<div className="calendarComponent">
-              {/* <AvailabiltyResultsCalendar meetingNumID={meetingNumID}/> */}
+              <AvailabiltyResultsCalendar meetingNumID={meetingNumID}/>
               </div>
             }
             </div>
